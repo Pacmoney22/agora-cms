@@ -1,4 +1,4 @@
-# NextGen CMS -- End User Guide
+# Agora CMS -- End User Guide
 
 **Version 2.0 | February 2026**
 
@@ -28,9 +28,9 @@
 
 ## 1. Introduction
 
-### What Is NextGen CMS?
+### What Is Agora CMS?
 
-NextGen CMS is a modern, all-in-one content management system that combines a visual drag-and-drop page builder with full e-commerce, event management, and online learning capabilities. Whether you are publishing blog articles, selling physical and digital products, organizing conferences, or delivering online courses, NextGen CMS provides the tools you need -- all from a single admin dashboard.
+Agora CMS is a modern, all-in-one content management system that combines a visual drag-and-drop page builder with full e-commerce, event management, and online learning capabilities. Whether you are publishing blog articles, selling physical and digital products, organizing conferences, or delivering online courses, NextGen CMS provides the tools you need -- all from a single admin dashboard.
 
 ### Key Features
 
@@ -67,7 +67,7 @@ No programming or developer knowledge is required.
 
 ### Accessing the Admin Dashboard
 
-The NextGen CMS admin dashboard is where you manage all content, products, orders, events, and settings.
+The Agora CMS admin dashboard is where you manage all content, products, orders, events, and settings.
 
 - **Development environment:** `http://localhost:3300`
 - **Production environment:** `https://yourdomain.com/admin`
