@@ -30,7 +30,7 @@
 
 ### What Is Agora CMS?
 
-Agora CMS is a modern, all-in-one content management system that combines a visual drag-and-drop page builder with full e-commerce, event management, and online learning capabilities. Whether you are publishing blog articles, selling physical and digital products, organizing conferences, or delivering online courses, NextGen CMS provides the tools you need -- all from a single admin dashboard.
+Agora CMS is a modern, all-in-one content management system that combines a visual drag-and-drop page builder with full e-commerce, event management, and online learning capabilities. Whether you are publishing blog articles, selling physical and digital products, organizing conferences, or delivering online courses, Agora CMS provides the tools you need -- all from a single admin dashboard.
 
 ### Key Features
 
@@ -51,7 +51,7 @@ Agora CMS is a modern, all-in-one content management system that combines a visu
 
 ### Who Should Use This Guide
 
-This guide is written for non-technical users who work with NextGen CMS on a day-to-day basis, including:
+This guide is written for non-technical users who work with Agora CMS on a day-to-day basis, including:
 
 - **Content Editors** who create and manage pages, articles, and media
 - **Store Managers** who manage products, orders, and promotions
@@ -80,11 +80,11 @@ The system comes pre-configured with demo accounts for each role. Use these to e
 
 | Role | Email | Password | What You Can Do |
 |------|-------|----------|-----------------|
-| **Viewer** | viewer@nextgen-cms.dev | Password123! | View all content and data in read-only mode |
-| **Editor** | editor@nextgen-cms.dev | Password123! | Create and edit pages, articles, and media |
-| **Store Manager** | manager@nextgen-cms.dev | Password123! | Manage products, orders, coupons, and customers |
-| **Admin** | admin@nextgen-cms.dev | Password123! | Full site configuration, settings, and content management |
-| **Super Admin** | superadmin@nextgen-cms.dev | Password123! | Everything above plus user management and system administration |
+| **Viewer** | viewer@Agora-cms.dev | Password123! | View all content and data in read-only mode |
+| **Editor** | editor@Agora-cms.dev | Password123! | Create and edit pages, articles, and media |
+| **Store Manager** | manager@Agora-cms.dev | Password123! | Manage products, orders, coupons, and customers |
+| **Admin** | admin@Agora-cms.dev | Password123! | Full site configuration, settings, and content management |
+| **Super Admin** | superadmin@Agora-cms.dev | Password123! | Everything above plus user management and system administration |
 
 > **Warning:** Change all default passwords immediately when deploying to a production environment. These credentials are for demonstration purposes only.
 
@@ -161,7 +161,7 @@ The page builder interface has three main areas:
 
 ### Component Library
 
-NextGen CMS includes 88 pre-built components organized across 14 categories. Below is the complete library.
+Agora CMS includes 88 pre-built components organized across 14 categories. Below is the complete library.
 
 #### Layout Components (8)
 
@@ -373,7 +373,7 @@ Speed up your workflow with these keyboard shortcuts:
 
 ### Saving and Publishing
 
-NextGen CMS auto-saves your work every 30 seconds, so you will not lose changes if you accidentally close your browser.
+Agora CMS auto-saves your work every 30 seconds, so you will not lose changes if you accidentally close your browser.
 
 - **Save Draft** -- Click the **Save** button to manually save your work as a draft. The page will not be visible to the public.
 - **Preview** -- Click **Preview** to see exactly how the page will appear to visitors before you publish.
@@ -579,7 +579,7 @@ The media library is the central repository for all images, videos, and document
 
 ### Image Optimization
 
-NextGen CMS automatically processes every image you upload to ensure fast page loading:
+Agora CMS automatically processes every image you upload to ensure fast page loading:
 
 | Optimization | What Happens |
 |--------------|-------------|
@@ -614,7 +614,7 @@ To insert an image or other media file into a page:
 
 ## 6. Navigation Management
 
-Navigation menus help visitors explore your site. NextGen CMS supports multiple menus in different locations, each with hierarchical (nested) items.
+Navigation menus help visitors explore your site. Agora CMS supports multiple menus in different locations, each with hierarchical (nested) items.
 
 ### Creating Navigation Menus
 
@@ -679,7 +679,7 @@ Changes take effect immediately on your live site.
 
 ## 7. SEO Optimization
 
-NextGen CMS includes a built-in SEO analyzer that evaluates your pages and provides a letter grade with specific recommendations for improvement.
+Agora CMS includes a built-in SEO analyzer that evaluates your pages and provides a letter grade with specific recommendations for improvement.
 
 ### SEO Analyzer
 
@@ -745,7 +745,7 @@ Your title tag is one of the most important SEO elements. It appears in search r
 - **Brand name:** Consider adding your brand name at the end, separated by a pipe or dash.
 
 ```
-Good:  "Premium Wireless Headphones - Free Shipping | NextGen Store"
+Good:  "Premium Wireless Headphones - Free Shipping | Agora Store"
 Bad:   "Headphones"
 ```
 
@@ -824,7 +824,7 @@ You can search and filter your redirect list to find specific rules.
 
 ### Sitemap
 
-NextGen CMS automatically generates an XML sitemap for search engines. Your sitemap is available at:
+Agora CMS automatically generates an XML sitemap for search engines. Your sitemap is available at:
 
 ```
 https://yourdomain.com/sitemap.xml
@@ -862,7 +862,7 @@ Sitemap: https://yourdomain.com/sitemap.xml
 
 ### Structured Data (JSON-LD)
 
-NextGen CMS automatically generates structured data in JSON-LD format. Structured data helps search engines understand your content and can enable rich results in search listings (star ratings, pricing, availability, breadcrumbs).
+Agora CMS automatically generates structured data in JSON-LD format. Structured data helps search engines understand your content and can enable rich results in search listings (star ratings, pricing, availability, breadcrumbs).
 
 **Automatically generated structured data includes:**
 
@@ -878,7 +878,7 @@ No manual configuration is required. The structured data is generated from your 
 
 ## 8. Product Management
 
-NextGen CMS supports five distinct product types to accommodate different business models. Each type has specialized features tailored to its delivery method.
+Agora CMS supports five distinct product types to accommodate different business models. Each type has specialized features tailored to its delivery method.
 
 ### Product Types Overview
 
@@ -1044,7 +1044,7 @@ Variants let a single product have multiple options, such as different colors an
 
 #### Generating Variant Combinations
 
-After adding your attributes, NextGen CMS can automatically generate all possible combinations:
+After adding your attributes, Agora CMS can automatically generate all possible combinations:
 
 1. Click **Generate Variants**.
 2. Select which attribute combinations to create (or generate all of them).
@@ -1356,7 +1356,7 @@ Leave these blank for a coupon with no time restriction. Expired coupons are aut
 
 ## 11. Event Management
 
-NextGen CMS provides a full-featured event management system for organizing in-person, virtual, and hybrid events of any scale -- from small workshops to multi-day conferences.
+Agora CMS provides a full-featured event management system for organizing in-person, virtual, and hybrid events of any scale -- from small workshops to multi-day conferences.
 
 ### Creating an Event
 
@@ -1567,7 +1567,7 @@ The exhibitor scanner is a lead capture tool for exhibitors and sponsors at your
 
 ## 12. Online Courses & LMS
 
-NextGen CMS includes a full Learning Management System (LMS) for creating, selling, and delivering online courses.
+Agora CMS includes a full Learning Management System (LMS) for creating, selling, and delivering online courses.
 
 ### Creating a Course
 
@@ -1687,7 +1687,7 @@ To configure certificate settings:
 
 ## 13. Email Templates
 
-NextGen CMS includes a built-in email template system with 22 pre-built templates that are automatically sent when specific events occur in the system.
+Agora CMS includes a built-in email template system with 22 pre-built templates that are automatically sent when specific events occur in the system.
 
 ### Template Categories
 
@@ -1774,7 +1774,7 @@ You can create templates in two ways:
 
 ## 14. User Management & Roles
 
-NextGen CMS uses a role-based access control system with six permission levels.
+Agora CMS uses a role-based access control system with six permission levels.
 
 ### User Roles
 
@@ -1975,7 +1975,7 @@ The Settings section contains all global configuration options for your site. Ac
 - **Resolution:** Shoot at a minimum of 1200 x 1200 pixels.
 - **Angles:** Capture the product from front, back, side, and detail views.
 - **Consistency:** Use the same lighting, background, and framing for all products to create a professional, cohesive catalog.
-- **Format:** Save as JPG for photographs at 80-90% quality. NextGen CMS will handle WebP conversion automatically.
+- **Format:** Save as JPG for photographs at 80-90% quality. Agora CMS will handle WebP conversion automatically.
 
 ### Order Management Workflow
 
@@ -2089,18 +2089,7 @@ If you cannot resolve an issue using the solutions above:
 
 1. **Check this guide** -- Use your browser's find function (Ctrl+F or Cmd+F) to search for keywords related to your issue.
 2. **Review system logs** -- Go to Settings > System > Logs to view error messages and system events (Admin or Super Admin access required).
-3. **Contact support:**
-   - Email: support@nextgen-cms.com
-   - When contacting support, please include:
-     - Your email address and role
-     - A description of the issue
-     - Steps to reproduce the problem
-     - Screenshots showing the issue (if applicable)
-     - Your browser name and version
-4. **Community forum:** https://community.nextgen-cms.com
-5. **Video tutorials:** https://nextgen-cms.com/tutorials
 
 ---
 
-*NextGen CMS End User Guide -- Version 2.0 -- February 2026*
-*For the latest updates, visit https://nextgen-cms.com/docs*
+*Agora CMS End User Guide -- Version 2.0 -- February 2026*
