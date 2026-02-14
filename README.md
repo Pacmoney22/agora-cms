@@ -1,4 +1,4 @@
-# NextGen CMS
+# Agora CMS
 
 A modern, all-in-one platform combining a headless CMS, e-commerce engine, learning management system (LMS), and drag-and-drop visual page builder. Built as a TypeScript monorepo with Turborepo and pnpm workspaces.
 
