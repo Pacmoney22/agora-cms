@@ -3,8 +3,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import type { ProductDto, ProductVariant, ConfigurationStep } from '@nextgen-cms/shared';
-import { formatPrice } from '@nextgen-cms/shared';
+import type { ProductDto, ProductVariant, ConfigurationStep } from '@agora-cms/shared';
+import { formatPrice } from '@agora-cms/shared';
 import { getProduct } from '@/lib/api';
 import { useCart } from '@/lib/cart-context';
 

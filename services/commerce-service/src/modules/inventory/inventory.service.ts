@@ -2,7 +2,7 @@ import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { v4 as uuidv4 } from 'uuid';
 import { Kafka, Producer } from 'kafkajs';
-import { EVENTS, type ProductDto, type ProductVariant } from '@nextgen-cms/shared';
+import { EVENTS, type ProductDto, type ProductVariant } from '@agora-cms/shared';
 import { ProductService } from '../products/product.service';
 
 export interface InventoryLevel {

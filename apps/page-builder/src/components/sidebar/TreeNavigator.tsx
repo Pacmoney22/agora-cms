@@ -4,7 +4,7 @@ import React from 'react';
 import { clsx } from 'clsx';
 import { useBuilderStore } from '@/stores/builder-store';
 import { getComponent } from '@/lib/component-registry';
-import type { ComponentInstance } from '@nextgen-cms/shared';
+import type { ComponentInstance } from '@agora-cms/shared';
 
 export const TreeNavigator: React.FC = () => {
   const { componentTree, selectedInstanceId, selectComponent } = useBuilderStore();

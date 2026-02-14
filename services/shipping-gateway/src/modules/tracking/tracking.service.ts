@@ -1,6 +1,6 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import type { ICarrierAdapter, TrackingResult } from '@nextgen-cms/shared';
+import type { ICarrierAdapter, TrackingResult } from '@agora-cms/shared';
 import { CARRIER_ADAPTERS, REDIS_CLIENT } from '../rates/rate-aggregator.service';
 import Redis from 'ioredis';
 

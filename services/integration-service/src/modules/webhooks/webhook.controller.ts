@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiHeader, ApiResponse } from '@nestjs/swagger';
 import { Request } from 'express';
-import type { IPaymentGateway } from '@nextgen-cms/shared';
+import type { IPaymentGateway } from '@agora-cms/shared';
 import { PAYMENT_GATEWAY } from '../stripe/stripe.module';
 
 @ApiTags('webhooks')

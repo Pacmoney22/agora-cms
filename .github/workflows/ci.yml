@@ -27,7 +27,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
 
       - name: Generate Prisma Client
-        run: pnpm --filter @nextgen-cms/database db:generate
+        run: pnpm --filter @agora-cms/database db:generate
 
       - name: Lint
         run: pnpm lint
@@ -52,7 +52,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
 
       - name: Generate Prisma Client
-        run: pnpm --filter @nextgen-cms/database db:generate
+        run: pnpm --filter @agora-cms/database db:generate
 
       - name: Run Tests
         run: pnpm test
@@ -65,9 +65,9 @@ jobs:
       postgres:
         image: postgres:16-alpine
         env:
-          POSTGRES_USER: nextgen
-          POSTGRES_PASSWORD: nextgen_test
-          POSTGRES_DB: nextgen_cms_test
+          POSTGRES_USER: agora
+          POSTGRES_PASSWORD: agora_test
+          POSTGRES_DB: agora_cms_test
         ports:
           - 5432:5432
         options: >-
@@ -87,7 +87,7 @@ jobs:
           --health-retries 5
 
     env:
-      DATABASE_URL: postgresql://nextgen:nextgen_test@localhost:5432/nextgen_cms_test
+      DATABASE_URL: postgresql://agora:agora_test@localhost:5432/agora_cms_test
       REDIS_URL: redis://localhost:6379
 
     steps:
@@ -103,7 +103,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
 
       - name: Generate Prisma Client
-        run: pnpm --filter @nextgen-cms/database db:generate
+        run: pnpm --filter @agora-cms/database db:generate
 
       - name: Run Migrations
         run: pnpm db:migrate

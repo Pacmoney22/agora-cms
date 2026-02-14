@@ -1,6 +1,6 @@
 # Testing Guide
 
-Comprehensive testing guide for NextGen CMS.
+Comprehensive testing guide for Agora CMS.
 
 ## Table of Contents
 
@@ -15,7 +15,7 @@ Comprehensive testing guide for NextGen CMS.
 
 ## Overview
 
-NextGen CMS uses a comprehensive testing strategy with three types of tests:
+Agora CMS uses a comprehensive testing strategy with three types of tests:
 
 1. **Unit Tests** - Test individual functions and services in isolation
 2. **Integration Tests** - Test API endpoints and service interactions
@@ -72,7 +72,7 @@ describe('Pages API (Integration)', () => {
 ```typescript
 test('should login with valid credentials', async ({ page }) => {
   await page.goto('/');
-  await page.fill('input[type="email"]', 'admin@nextgen-cms.dev');
+  await page.fill('input[type="email"]', 'admin@agora-cms.dev');
   await page.fill('input[type="password"]', 'Password123!');
   await page.click('button[type="submit"]');
   await expect(page).toHaveURL(/\/dashboard/);
@@ -136,20 +136,20 @@ pnpm test:e2e:debug
 
 ```bash
 # Content service tests
-pnpm --filter @nextgen-cms/content-service test
-pnpm --filter @nextgen-cms/content-service test:cov
-pnpm --filter @nextgen-cms/content-service test:integration
+pnpm --filter @agora-cms/content-service test
+pnpm --filter @agora-cms/content-service test:cov
+pnpm --filter @agora-cms/content-service test:integration
 
 # Commerce service tests
-pnpm --filter @nextgen-cms/commerce-service test
-pnpm --filter @nextgen-cms/commerce-service test:cov
+pnpm --filter @agora-cms/commerce-service test
+pnpm --filter @agora-cms/commerce-service test:cov
 ```
 
 ### Watch Mode
 
 ```bash
 # Run tests in watch mode
-pnpm --filter @nextgen-cms/content-service test:watch
+pnpm --filter @agora-cms/content-service test:watch
 ```
 
 ## Test Structure
@@ -253,7 +253,7 @@ describe('Pages API (Integration)', () => {
     // Get auth token
     const loginRes = await request(app.getHttpServer())
       .post('/api/v1/auth/login')
-      .send({ email: 'admin@nextgen-cms.dev', password: 'Password123!' });
+      .send({ email: 'admin@agora-cms.dev', password: 'Password123!' });
 
     authToken = loginRes.body.accessToken;
   });
@@ -279,7 +279,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Authentication Flow', () => {
   test('should login successfully', async ({ page }) => {
     await page.goto('/');
-    await page.fill('input[type="email"]', 'admin@nextgen-cms.dev');
+    await page.fill('input[type="email"]', 'admin@agora-cms.dev');
     await page.fill('input[type="password"]', 'Password123!');
     await page.click('button[type="submit"]');
     await expect(page).toHaveURL(/\/dashboard/);
@@ -342,7 +342,7 @@ See `.github/workflows/ci.yml`:
 - name: Run Integration Tests
   run: pnpm test:integration
   env:
-    DATABASE_URL: postgresql://nextgen:test@localhost:5432/nextgen_test
+    DATABASE_URL: postgresql://agora:test@localhost:5432/agora_test
     REDIS_URL: redis://localhost:6379
 
 - name: Run E2E Tests
@@ -379,10 +379,10 @@ See `.github/workflows/ci.yml`:
 
 ```bash
 # Run specific test file
-pnpm --filter @nextgen-cms/content-service test -- auth.service.spec.ts
+pnpm --filter @agora-cms/content-service test -- auth.service.spec.ts
 
 # Run with verbose output
-pnpm --filter @nextgen-cms/content-service test -- --verbose
+pnpm --filter @agora-cms/content-service test -- --verbose
 
 # Run in debug mode
 node --inspect-brk node_modules/.bin/jest --runInBand
@@ -421,7 +421,7 @@ test('long running test', async () => {
 
 **Solution**: Ensure test database is running and migrations are applied:
 ```bash
-DATABASE_URL=postgresql://localhost:5432/nextgen_test pnpm db:migrate
+DATABASE_URL=postgresql://localhost:5432/agora_test pnpm db:migrate
 ```
 
 **Issue**: Redis connection errors

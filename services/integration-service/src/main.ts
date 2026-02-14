@@ -16,7 +16,7 @@ async function bootstrap() {
   );
 
   const config = new DocumentBuilder()
-    .setTitle('NextGen CMS Integration Service')
+    .setTitle('Agora CMS Integration Service')
     .setDescription('Payment, Analytics & CRM integration APIs')
     .setVersion('1.0')
     .addTag('stripe', 'Payment processing via Stripe')

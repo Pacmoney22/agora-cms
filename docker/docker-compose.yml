@@ -3,24 +3,24 @@ version: "3.9"
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: nextgen-postgres
+    container_name: agora-postgres
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: nextgen
-      POSTGRES_PASSWORD: nextgen_dev
-      POSTGRES_DB: nextgen_cms
+      POSTGRES_USER: agora
+      POSTGRES_PASSWORD: agora_dev
+      POSTGRES_DB: agora_cms
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U nextgen"]
+      test: ["CMD-SHELL", "pg_isready -U agora"]
       interval: 5s
       timeout: 5s
       retries: 5
 
   redis:
     image: redis:7-alpine
-    container_name: nextgen-redis
+    container_name: agora-redis
     ports:
       - "6379:6379"
     command: redis-server --appendonly yes
@@ -34,7 +34,7 @@ services:
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.12.0
-    container_name: nextgen-elasticsearch
+    container_name: agora-elasticsearch
     ports:
       - "9200:9200"
     environment:
@@ -51,7 +51,7 @@ services:
 
   kafka:
     image: confluentinc/cp-kafka:7.6.0
-    container_name: nextgen-kafka
+    container_name: agora-kafka
     ports:
       - "9092:9092"
     environment:
@@ -65,7 +65,7 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      CLUSTER_ID: "nextgen-cms-local-cluster"
+      CLUSTER_ID: "agora-cms-local-cluster"
     volumes:
       - kafka_data:/var/lib/kafka/data
     healthcheck:
@@ -76,7 +76,7 @@ services:
 
   minio:
     image: minio/minio:latest
-    container_name: nextgen-minio
+    container_name: agora-minio
     ports:
       - "9000:9000"
       - "9001:9001"
@@ -94,22 +94,22 @@ services:
 
   minio-init:
     image: minio/mc:latest
-    container_name: nextgen-minio-init
+    container_name: agora-minio-init
     depends_on:
       minio:
         condition: service_healthy
     entrypoint: >
       /bin/sh -c "
       mc alias set local http://minio:9000 minioadmin minioadmin;
-      mc mb --ignore-existing local/nextgen-media;
-      mc mb --ignore-existing local/nextgen-labels;
-      mc anonymous set download local/nextgen-media;
+      mc mb --ignore-existing local/agora-media;
+      mc mb --ignore-existing local/agora-labels;
+      mc anonymous set download local/agora-media;
       exit 0;
       "
 
   kong:
     image: kong:3.6
-    container_name: nextgen-kong
+    container_name: agora-kong
     ports:
       - "8000:8000"
       - "8001:8001"
@@ -128,7 +128,7 @@ services:
   # Optional debug tools - start with: docker compose --profile debug up
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
-    container_name: nextgen-kafka-ui
+    container_name: agora-kafka-ui
     ports:
       - "8080:8080"
     environment:
@@ -141,7 +141,7 @@ services:
 
   redis-commander:
     image: rediscommander/redis-commander:latest
-    container_name: nextgen-redis-commander
+    container_name: agora-redis-commander
     ports:
       - "8081:8081"
     environment:

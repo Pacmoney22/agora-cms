@@ -15,8 +15,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const general = settings?.general;
 
   return {
-    title: seo?.defaultTitle || general?.siteName || 'NextGen CMS - Storefront',
-    description: seo?.defaultDescription || 'E-commerce storefront powered by NextGen CMS',
+    title: seo?.defaultTitle || general?.siteName || 'Agora CMS - Storefront',
+    description: seo?.defaultDescription || 'E-commerce storefront powered by Agora CMS',
     openGraph: {
       title: seo?.defaultTitle || general?.siteName,
       description: seo?.defaultDescription || undefined,

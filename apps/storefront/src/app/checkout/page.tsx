@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { formatPrice } from '@nextgen-cms/shared';
-import type { Address } from '@nextgen-cms/shared';
+import { formatPrice } from '@agora-cms/shared';
+import type { Address } from '@agora-cms/shared';
 import { useCart } from '@/lib/cart-context';
 import { processCheckout } from '@/lib/api';
 

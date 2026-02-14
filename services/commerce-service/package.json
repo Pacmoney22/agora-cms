@@ -1,8 +1,8 @@
 {
-  "name": "@nextgen-cms/commerce-service",
+  "name": "@agora-cms/commerce-service",
   "version": "0.1.0",
   "private": true,
-  "description": "NextGen CMS Commerce Service - NestJS API for products, cart, checkout, and orders",
+  "description": "Agora CMS Commerce Service - NestJS API for products, cart, checkout, and orders",
   "scripts": {
     "dev": "nest start --watch",
     "build": "nest build",
@@ -21,8 +21,8 @@
     "@nestjs/platform-express": "^10.3.0",
     "@nestjs/schedule": "^4.0.0",
     "@nestjs/swagger": "^7.2.0",
-    "@nextgen-cms/database": "workspace:*",
-    "@nextgen-cms/shared": "workspace:*",
+    "@agora-cms/database": "workspace:*",
+    "@agora-cms/shared": "workspace:*",
     "@prisma/client": "^6.19.2",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
@@ -36,7 +36,7 @@
   "devDependencies": {
     "@nestjs/cli": "^10.3.0",
     "@nestjs/testing": "^10.3.0",
-    "@nextgen-cms/tsconfig": "workspace:*",
+    "@agora-cms/tsconfig": "workspace:*",
     "@types/jest": "^29.5.12",
     "@types/supertest": "^6.0.2",
     "@types/uuid": "^9.0.7",

@@ -14,7 +14,7 @@ import type {
   AddressValidationRequest,
   AddressValidationResult,
   ICarrierAdapter,
-} from '@nextgen-cms/shared';
+} from '@agora-cms/shared';
 import { RateAggregatorService } from './rate-aggregator.service';
 import { CARRIER_ADAPTERS } from './rate-aggregator.service';
 

@@ -1,4 +1,4 @@
-import type { PageDto } from '@nextgen-cms/shared';
+import type { PageDto } from '@agora-cms/shared';
 
 const CONTENT_API_BASE_URL =
   process.env.NEXT_PUBLIC_CONTENT_API_URL ?? 'http://localhost:3001';

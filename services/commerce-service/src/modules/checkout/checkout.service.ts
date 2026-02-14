@@ -11,7 +11,7 @@ import {
   type OrderDto,
   type OrderLineItem,
   type Address,
-} from '@nextgen-cms/shared';
+} from '@agora-cms/shared';
 import { CartService } from '../cart/cart.service';
 import { OrderService } from '../orders/order.service';
 import { ReservationService } from '../inventory/reservation.service';

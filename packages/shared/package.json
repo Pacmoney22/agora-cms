@@ -1,5 +1,5 @@
 {
-  "name": "@nextgen-cms/shared",
+  "name": "@agora-cms/shared",
   "version": "0.0.0",
   "private": true,
   "main": "./src/index.ts",
@@ -14,7 +14,7 @@
     "zod": "^3.24.0"
   },
   "devDependencies": {
-    "@nextgen-cms/tsconfig": "workspace:*",
+    "@agora-cms/tsconfig": "workspace:*",
     "@types/node": "^22.0.0",
     "jest": "^29.7.0",
     "ts-jest": "^29.2.0",

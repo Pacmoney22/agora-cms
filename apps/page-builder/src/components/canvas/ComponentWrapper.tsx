@@ -5,7 +5,7 @@ import { useDraggable } from '@dnd-kit/core';
 import { clsx } from 'clsx';
 import { useBuilderStore } from '@/stores/builder-store';
 import { getComponent } from '@/lib/component-registry';
-import type { ComponentInstance } from '@nextgen-cms/shared';
+import type { ComponentInstance } from '@agora-cms/shared';
 
 interface ComponentWrapperProps {
   instance: ComponentInstance;

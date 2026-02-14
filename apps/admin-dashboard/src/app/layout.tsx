@@ -8,8 +8,8 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'NextGen CMS - Admin Dashboard',
-  description: 'Administration dashboard for NextGen CMS',
+  title: 'Agora CMS - Admin Dashboard',
+  description: 'Administration dashboard for Agora CMS',
 };
 
 export default function RootLayout({

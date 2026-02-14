@@ -4,7 +4,7 @@ import type {
   CartDto,
   OrderDto,
   Address,
-} from '@nextgen-cms/shared';
+} from '@agora-cms/shared';
 
 // ---------------------------------------------------------------------------
 // Service-specific base URLs (bypass Kong in dev mode)

@@ -33,7 +33,7 @@ async function bootstrap() {
 
   // Swagger documentation
   const swaggerConfig = new DocumentBuilder()
-    .setTitle('NextGen CMS Commerce Service')
+    .setTitle('Agora CMS Commerce Service')
     .setDescription(
       'API for products, variants, categories, cart, checkout, orders, fulfillment, inventory, coupons, license keys, and service bookings',
     )

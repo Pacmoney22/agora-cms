@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { prisma } from '@nextgen-cms/database';
+import { prisma } from '@agora-cms/database';
 import { OrderController } from './order.controller';
 import { OrderService } from './order.service';
 import { ProductsModule } from '../products/product.module';

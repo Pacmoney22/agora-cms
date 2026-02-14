@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { AuthService } from '../auth.service';
-import type { JwtPayload } from '@nextgen-cms/shared';
+import type { JwtPayload } from '@agora-cms/shared';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {

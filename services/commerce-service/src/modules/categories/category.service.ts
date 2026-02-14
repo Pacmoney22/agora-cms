@@ -6,7 +6,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { generateSlug, type PaginatedResponse } from '@nextgen-cms/shared';
+import { generateSlug, type PaginatedResponse } from '@agora-cms/shared';
 
 export interface CategoryDto {
   id: string;

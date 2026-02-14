@@ -5,7 +5,7 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'NextGen CMS - Page Builder',
+  title: 'Agora CMS - Page Builder',
   description: 'Visual drag-and-drop page builder',
 };
 

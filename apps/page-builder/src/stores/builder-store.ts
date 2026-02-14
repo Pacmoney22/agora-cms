@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
-import type { ComponentInstance, ComponentTree } from '@nextgen-cms/shared';
+import type { ComponentInstance, ComponentTree } from '@agora-cms/shared';
 import {
   findNode,
   insertNode,

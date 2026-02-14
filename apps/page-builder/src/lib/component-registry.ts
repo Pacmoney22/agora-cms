@@ -98,119 +98,119 @@ import {
   SiteMeta,
   ErrorPage,
   MaintenancePage,
-} from '@nextgen-cms/ui';
+} from '@agora-cms/ui';
 
 // Layout schemas
-import containerSchema from '@nextgen-cms/ui/src/schemas/container.schema.json';
-import sectionSchema from '@nextgen-cms/ui/src/schemas/section.schema.json';
-import gridSchema from '@nextgen-cms/ui/src/schemas/grid.schema.json';
-import dividerSchema from '@nextgen-cms/ui/src/schemas/divider.schema.json';
-import spacerSchema from '@nextgen-cms/ui/src/schemas/spacer.schema.json';
-import tabsSchema from '@nextgen-cms/ui/src/schemas/tabs.schema.json';
-import accordionSchema from '@nextgen-cms/ui/src/schemas/accordion.schema.json';
-import columnsSchema from '@nextgen-cms/ui/src/schemas/columns.schema.json';
+import containerSchema from '@agora-cms/ui/src/schemas/container.schema.json';
+import sectionSchema from '@agora-cms/ui/src/schemas/section.schema.json';
+import gridSchema from '@agora-cms/ui/src/schemas/grid.schema.json';
+import dividerSchema from '@agora-cms/ui/src/schemas/divider.schema.json';
+import spacerSchema from '@agora-cms/ui/src/schemas/spacer.schema.json';
+import tabsSchema from '@agora-cms/ui/src/schemas/tabs.schema.json';
+import accordionSchema from '@agora-cms/ui/src/schemas/accordion.schema.json';
+import columnsSchema from '@agora-cms/ui/src/schemas/columns.schema.json';
 
 // Typography schemas
-import headingSchema from '@nextgen-cms/ui/src/schemas/heading.schema.json';
-import paragraphSchema from '@nextgen-cms/ui/src/schemas/paragraph.schema.json';
-import richTextSchema from '@nextgen-cms/ui/src/schemas/rich-text.schema.json';
-import blockquoteSchema from '@nextgen-cms/ui/src/schemas/blockquote.schema.json';
-import codeBlockSchema from '@nextgen-cms/ui/src/schemas/code-block.schema.json';
-import listSchema from '@nextgen-cms/ui/src/schemas/list.schema.json';
+import headingSchema from '@agora-cms/ui/src/schemas/heading.schema.json';
+import paragraphSchema from '@agora-cms/ui/src/schemas/paragraph.schema.json';
+import richTextSchema from '@agora-cms/ui/src/schemas/rich-text.schema.json';
+import blockquoteSchema from '@agora-cms/ui/src/schemas/blockquote.schema.json';
+import codeBlockSchema from '@agora-cms/ui/src/schemas/code-block.schema.json';
+import listSchema from '@agora-cms/ui/src/schemas/list.schema.json';
 
 // Media schemas
-import imageSchema from '@nextgen-cms/ui/src/schemas/image.schema.json';
-import videoSchema from '@nextgen-cms/ui/src/schemas/video.schema.json';
-import gallerySchema from '@nextgen-cms/ui/src/schemas/gallery.schema.json';
-import carouselSchema from '@nextgen-cms/ui/src/schemas/carousel.schema.json';
-import backgroundVideoSchema from '@nextgen-cms/ui/src/schemas/background-video.schema.json';
-import audioPlayerSchema from '@nextgen-cms/ui/src/schemas/audio-player.schema.json';
+import imageSchema from '@agora-cms/ui/src/schemas/image.schema.json';
+import videoSchema from '@agora-cms/ui/src/schemas/video.schema.json';
+import gallerySchema from '@agora-cms/ui/src/schemas/gallery.schema.json';
+import carouselSchema from '@agora-cms/ui/src/schemas/carousel.schema.json';
+import backgroundVideoSchema from '@agora-cms/ui/src/schemas/background-video.schema.json';
+import audioPlayerSchema from '@agora-cms/ui/src/schemas/audio-player.schema.json';
 
 // Marketing schemas
-import heroBannerSchema from '@nextgen-cms/ui/src/schemas/hero-banner.schema.json';
-import ctaBlockSchema from '@nextgen-cms/ui/src/schemas/cta-block.schema.json';
-import featureGridSchema from '@nextgen-cms/ui/src/schemas/feature-grid.schema.json';
-import testimonialSchema from '@nextgen-cms/ui/src/schemas/testimonial.schema.json';
-import testimonialCarouselSchema from '@nextgen-cms/ui/src/schemas/testimonial-carousel.schema.json';
-import pricingTableSchema from '@nextgen-cms/ui/src/schemas/pricing-table.schema.json';
-import countdownSchema from '@nextgen-cms/ui/src/schemas/countdown.schema.json';
-import announcementBarSchema from '@nextgen-cms/ui/src/schemas/announcement-bar.schema.json';
-import logoCloudSchema from '@nextgen-cms/ui/src/schemas/logo-cloud.schema.json';
-import beforeAfterSchema from '@nextgen-cms/ui/src/schemas/before-after.schema.json';
+import heroBannerSchema from '@agora-cms/ui/src/schemas/hero-banner.schema.json';
+import ctaBlockSchema from '@agora-cms/ui/src/schemas/cta-block.schema.json';
+import featureGridSchema from '@agora-cms/ui/src/schemas/feature-grid.schema.json';
+import testimonialSchema from '@agora-cms/ui/src/schemas/testimonial.schema.json';
+import testimonialCarouselSchema from '@agora-cms/ui/src/schemas/testimonial-carousel.schema.json';
+import pricingTableSchema from '@agora-cms/ui/src/schemas/pricing-table.schema.json';
+import countdownSchema from '@agora-cms/ui/src/schemas/countdown.schema.json';
+import announcementBarSchema from '@agora-cms/ui/src/schemas/announcement-bar.schema.json';
+import logoCloudSchema from '@agora-cms/ui/src/schemas/logo-cloud.schema.json';
+import beforeAfterSchema from '@agora-cms/ui/src/schemas/before-after.schema.json';
 
 // Commerce schemas
-import productCardSchema from '@nextgen-cms/ui/src/schemas/product-card.schema.json';
-import productGridSchema from '@nextgen-cms/ui/src/schemas/product-grid.schema.json';
-import cartWidgetSchema from '@nextgen-cms/ui/src/schemas/cart-widget.schema.json';
-import featuredProductsSchema from '@nextgen-cms/ui/src/schemas/featured-products.schema.json';
-import categoryListSchema from '@nextgen-cms/ui/src/schemas/category-list.schema.json';
-import productConfiguratorSchema from '@nextgen-cms/ui/src/schemas/product-configurator.schema.json';
-import cartPageSchema from '@nextgen-cms/ui/src/schemas/cart-page.schema.json';
-import productQuickViewSchema from '@nextgen-cms/ui/src/schemas/product-quick-view.schema.json';
+import productCardSchema from '@agora-cms/ui/src/schemas/product-card.schema.json';
+import productGridSchema from '@agora-cms/ui/src/schemas/product-grid.schema.json';
+import cartWidgetSchema from '@agora-cms/ui/src/schemas/cart-widget.schema.json';
+import featuredProductsSchema from '@agora-cms/ui/src/schemas/featured-products.schema.json';
+import categoryListSchema from '@agora-cms/ui/src/schemas/category-list.schema.json';
+import productConfiguratorSchema from '@agora-cms/ui/src/schemas/product-configurator.schema.json';
+import cartPageSchema from '@agora-cms/ui/src/schemas/cart-page.schema.json';
+import productQuickViewSchema from '@agora-cms/ui/src/schemas/product-quick-view.schema.json';
 
 // Navigation schemas
-import headerSchema from '@nextgen-cms/ui/src/schemas/header.schema.json';
-import footerSchema from '@nextgen-cms/ui/src/schemas/footer.schema.json';
-import breadcrumbSchema from '@nextgen-cms/ui/src/schemas/breadcrumb.schema.json';
-import sidebarMenuSchema from '@nextgen-cms/ui/src/schemas/sidebar-menu.schema.json';
-import megaMenuSchema from '@nextgen-cms/ui/src/schemas/mega-menu.schema.json';
-import tableOfContentsSchema from '@nextgen-cms/ui/src/schemas/table-of-contents.schema.json';
+import headerSchema from '@agora-cms/ui/src/schemas/header.schema.json';
+import footerSchema from '@agora-cms/ui/src/schemas/footer.schema.json';
+import breadcrumbSchema from '@agora-cms/ui/src/schemas/breadcrumb.schema.json';
+import sidebarMenuSchema from '@agora-cms/ui/src/schemas/sidebar-menu.schema.json';
+import megaMenuSchema from '@agora-cms/ui/src/schemas/mega-menu.schema.json';
+import tableOfContentsSchema from '@agora-cms/ui/src/schemas/table-of-contents.schema.json';
 
 // Form schemas
-import contactFormSchema from '@nextgen-cms/ui/src/schemas/contact-form.schema.json';
-import newsletterSignupSchema from '@nextgen-cms/ui/src/schemas/newsletter-signup.schema.json';
-import searchBarSchema from '@nextgen-cms/ui/src/schemas/search-bar.schema.json';
-import loginRegisterSchema from '@nextgen-cms/ui/src/schemas/login-register.schema.json';
-import formWizardSchema from '@nextgen-cms/ui/src/schemas/form-wizard.schema.json';
+import contactFormSchema from '@agora-cms/ui/src/schemas/contact-form.schema.json';
+import newsletterSignupSchema from '@agora-cms/ui/src/schemas/newsletter-signup.schema.json';
+import searchBarSchema from '@agora-cms/ui/src/schemas/search-bar.schema.json';
+import loginRegisterSchema from '@agora-cms/ui/src/schemas/login-register.schema.json';
+import formWizardSchema from '@agora-cms/ui/src/schemas/form-wizard.schema.json';
 
 // Data Display schemas
-import dataTableSchema from '@nextgen-cms/ui/src/schemas/data-table.schema.json';
-import chartSchema from '@nextgen-cms/ui/src/schemas/chart.schema.json';
-import statsCounterSchema from '@nextgen-cms/ui/src/schemas/stats-counter.schema.json';
-import progressBarSchema from '@nextgen-cms/ui/src/schemas/progress-bar.schema.json';
-import timelineSchema from '@nextgen-cms/ui/src/schemas/timeline.schema.json';
-import comparisonTableSchema from '@nextgen-cms/ui/src/schemas/comparison-table.schema.json';
+import dataTableSchema from '@agora-cms/ui/src/schemas/data-table.schema.json';
+import chartSchema from '@agora-cms/ui/src/schemas/chart.schema.json';
+import statsCounterSchema from '@agora-cms/ui/src/schemas/stats-counter.schema.json';
+import progressBarSchema from '@agora-cms/ui/src/schemas/progress-bar.schema.json';
+import timelineSchema from '@agora-cms/ui/src/schemas/timeline.schema.json';
+import comparisonTableSchema from '@agora-cms/ui/src/schemas/comparison-table.schema.json';
 
 // Social & Embed schemas
-import socialLinksSchema from '@nextgen-cms/ui/src/schemas/social-links.schema.json';
-import shareButtonsSchema from '@nextgen-cms/ui/src/schemas/share-buttons.schema.json';
-import embedSchema from '@nextgen-cms/ui/src/schemas/embed.schema.json';
-import mapSchema from '@nextgen-cms/ui/src/schemas/map.schema.json';
+import socialLinksSchema from '@agora-cms/ui/src/schemas/social-links.schema.json';
+import shareButtonsSchema from '@agora-cms/ui/src/schemas/share-buttons.schema.json';
+import embedSchema from '@agora-cms/ui/src/schemas/embed.schema.json';
+import mapSchema from '@agora-cms/ui/src/schemas/map.schema.json';
 
 // Utility schemas
-import buttonSchema from '@nextgen-cms/ui/src/schemas/button.schema.json';
-import iconSchema from '@nextgen-cms/ui/src/schemas/icon.schema.json';
-import alertSchema from '@nextgen-cms/ui/src/schemas/alert.schema.json';
-import cookieConsentSchema from '@nextgen-cms/ui/src/schemas/cookie-consent.schema.json';
-import backToTopSchema from '@nextgen-cms/ui/src/schemas/back-to-top.schema.json';
-import modalSchema from '@nextgen-cms/ui/src/schemas/modal.schema.json';
+import buttonSchema from '@agora-cms/ui/src/schemas/button.schema.json';
+import iconSchema from '@agora-cms/ui/src/schemas/icon.schema.json';
+import alertSchema from '@agora-cms/ui/src/schemas/alert.schema.json';
+import cookieConsentSchema from '@agora-cms/ui/src/schemas/cookie-consent.schema.json';
+import backToTopSchema from '@agora-cms/ui/src/schemas/back-to-top.schema.json';
+import modalSchema from '@agora-cms/ui/src/schemas/modal.schema.json';
 
 // Blog & Content schemas
-import blogPostCardSchema from '@nextgen-cms/ui/src/schemas/blog-post-card.schema.json';
-import blogGridSchema from '@nextgen-cms/ui/src/schemas/blog-grid.schema.json';
-import authorBioSchema from '@nextgen-cms/ui/src/schemas/author-bio.schema.json';
-import relatedPostsSchema from '@nextgen-cms/ui/src/schemas/related-posts.schema.json';
-import postNavigationSchema from '@nextgen-cms/ui/src/schemas/post-navigation.schema.json';
-import commentsSchema from '@nextgen-cms/ui/src/schemas/comments.schema.json';
+import blogPostCardSchema from '@agora-cms/ui/src/schemas/blog-post-card.schema.json';
+import blogGridSchema from '@agora-cms/ui/src/schemas/blog-grid.schema.json';
+import authorBioSchema from '@agora-cms/ui/src/schemas/author-bio.schema.json';
+import relatedPostsSchema from '@agora-cms/ui/src/schemas/related-posts.schema.json';
+import postNavigationSchema from '@agora-cms/ui/src/schemas/post-navigation.schema.json';
+import commentsSchema from '@agora-cms/ui/src/schemas/comments.schema.json';
 
 // Trust & Social Proof schemas
-import trustBadgesSchema from '@nextgen-cms/ui/src/schemas/trust-badges.schema.json';
-import reviewAggregateSchema from '@nextgen-cms/ui/src/schemas/review-aggregate.schema.json';
-import reviewListSchema from '@nextgen-cms/ui/src/schemas/review-list.schema.json';
-import caseStudiesGridSchema from '@nextgen-cms/ui/src/schemas/case-studies-grid.schema.json';
-import awardsSchema from '@nextgen-cms/ui/src/schemas/awards.schema.json';
+import trustBadgesSchema from '@agora-cms/ui/src/schemas/trust-badges.schema.json';
+import reviewAggregateSchema from '@agora-cms/ui/src/schemas/review-aggregate.schema.json';
+import reviewListSchema from '@agora-cms/ui/src/schemas/review-list.schema.json';
+import caseStudiesGridSchema from '@agora-cms/ui/src/schemas/case-studies-grid.schema.json';
+import awardsSchema from '@agora-cms/ui/src/schemas/awards.schema.json';
 
 // Interactive schemas
-import toastSchema from '@nextgen-cms/ui/src/schemas/toast.schema.json';
-import animatedTabsSchema from '@nextgen-cms/ui/src/schemas/animated-tabs.schema.json';
-import calculatorSchema from '@nextgen-cms/ui/src/schemas/calculator.schema.json';
-import searchableFaqSchema from '@nextgen-cms/ui/src/schemas/faq-searchable.schema.json';
-import lightboxSchema from '@nextgen-cms/ui/src/schemas/lightbox.schema.json';
+import toastSchema from '@agora-cms/ui/src/schemas/toast.schema.json';
+import animatedTabsSchema from '@agora-cms/ui/src/schemas/animated-tabs.schema.json';
+import calculatorSchema from '@agora-cms/ui/src/schemas/calculator.schema.json';
+import searchableFaqSchema from '@agora-cms/ui/src/schemas/faq-searchable.schema.json';
+import lightboxSchema from '@agora-cms/ui/src/schemas/lightbox.schema.json';
 
 // Global schemas
-import siteMetaSchema from '@nextgen-cms/ui/src/schemas/site-meta.schema.json';
-import errorPageSchema from '@nextgen-cms/ui/src/schemas/error-page.schema.json';
-import maintenancePageSchema from '@nextgen-cms/ui/src/schemas/maintenance-page.schema.json';
+import siteMetaSchema from '@agora-cms/ui/src/schemas/site-meta.schema.json';
+import errorPageSchema from '@agora-cms/ui/src/schemas/error-page.schema.json';
+import maintenancePageSchema from '@agora-cms/ui/src/schemas/maintenance-page.schema.json';
 
 export interface ComponentSchema {
   id: string;

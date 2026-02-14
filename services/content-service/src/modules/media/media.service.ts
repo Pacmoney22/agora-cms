@@ -50,7 +50,7 @@ export class MediaService {
     @Inject('PRISMA') private readonly prisma: PrismaClient,
     private readonly configService: ConfigService,
   ) {
-    this.bucketName = this.configService.get<string>('S3_BUCKET_MEDIA', 'nextgen-media');
+    this.bucketName = this.configService.get<string>('S3_BUCKET_MEDIA', 'agora-media');
 
     const endpoint = this.configService.get<string>('S3_ENDPOINT');
     this.s3Client = new S3Client({

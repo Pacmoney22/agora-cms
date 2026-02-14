@@ -1,3 +1,3 @@
-const baseConfig = require('@nextgen-cms/eslint-config');
+const baseConfig = require('@agora-cms/eslint-config');
 
 module.exports = [...baseConfig];

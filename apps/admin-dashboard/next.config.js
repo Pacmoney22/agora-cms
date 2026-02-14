@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ['@nextgen-cms/shared'],
+  transpilePackages: ['@agora-cms/shared'],
 };
 
 module.exports = nextConfig;

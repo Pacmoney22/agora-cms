@@ -1,4 +1,4 @@
-import type { ProductDto, CartDto, AddToCartDto } from '@nextgen-cms/shared';
+import type { ProductDto, CartDto, AddToCartDto } from '@agora-cms/shared';
 
 const COMMERCE_API_BASE_URL =
   process.env.NEXT_PUBLIC_COMMERCE_API_URL ?? 'http://localhost:3002';

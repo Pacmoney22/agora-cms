@@ -15,7 +15,7 @@ import {
   type OrderDto,
   type OrderStatus,
   type PaginatedResponse,
-} from '@nextgen-cms/shared';
+} from '@agora-cms/shared';
 import { ProductService } from '../products/product.service';
 
 @Injectable()

@@ -17,7 +17,7 @@ import {
   Min,
 } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import type { OrderStatus } from '@nextgen-cms/shared';
+import type { OrderStatus } from '@agora-cms/shared';
 import { OrderService } from './order.service';
 
 class ListOrdersQueryDto {

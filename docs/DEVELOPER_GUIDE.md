@@ -85,7 +85,7 @@ Browser / Client
         v                                              v
 +------------------+                            +------------------+
 |   PostgreSQL     | <---- Shared Database ----> |   PostgreSQL     |
-|   (Agora_cms)  |                            |   (same DB)      |
+|   (agora_cms)  |                            |   (same DB)      |
 +------------------+                            +------------------+
         |
         v
@@ -192,7 +192,7 @@ Browser / Client
 ## 3. Detailed Project Structure
 
 ```
-Agora-cms/
+agora-cms/
 |-- .github/
 |   +-- workflows/
 |       +-- ci.yml                    # GitHub Actions CI pipeline
@@ -441,7 +441,7 @@ Agora-cms/
 
 ```bash
 git clone <repository-url>
-cd Agora-cms
+cd agora-cms
 pnpm install
 ```
 
@@ -474,7 +474,7 @@ This starts:
 | MinIO | 9000 (API), 9001 (Console) | `mc ready local` |
 | Kong Gateway | 8000 (proxy), 8001 (admin) | Depends on postgres, redis |
 
-MinIO auto-initializes with two buckets: `Agora-media` (public download) and `Agora-labels` (private).
+MinIO auto-initializes with two buckets: `agora-media` (public download) and `agora-labels` (private).
 
 **Optional debug tools** (start separately):
 
@@ -489,7 +489,7 @@ docker compose -f docker/docker-compose.yml --profile debug up -d
 
 ```bash
 # Generate the Prisma client
-pnpm --filter @Agora-cms/database db:generate
+pnpm --filter @agora-cms/database db:generate
 
 # Run database migrations (creates all tables)
 pnpm db:migrate
@@ -509,9 +509,9 @@ This starts all 5 backend services and 3 frontend apps simultaneously via Turbor
 
 ```bash
 # Start only a specific service
-pnpm --filter @Agora-cms/content-service dev
-pnpm --filter @Agora-cms/commerce-service dev
-pnpm --filter @Agora-cms/page-builder dev
+pnpm --filter @agora-cms/content-service dev
+pnpm --filter @agora-cms/commerce-service dev
+pnpm --filter @agora-cms/page-builder dev
 ```
 
 ### Step 6: Verify
@@ -536,11 +536,11 @@ The seed script creates one user per role. All accounts use the password `Passwo
 
 | Email | Role |
 |---|---|
-| viewer@Agora-cms.dev | viewer |
-| editor@Agora-cms.dev | editor |
-| manager@Agora-cms.dev | store_manager |
-| admin@Agora-cms.dev | admin |
-| super@Agora-cms.dev | super_admin |
+| viewer@agora-cms.dev | viewer |
+| editor@agora-cms.dev | editor |
+| manager@agora-cms.dev | store_manager |
+| admin@agora-cms.dev | admin |
+| super@agora-cms.dev | super_admin |
 
 ---
 
@@ -548,7 +548,7 @@ The seed script creates one user per role. All accounts use the password `Passwo
 
 ### 5.1 Content Service (port 3001)
 
-**Package:** `@Agora-cms/content-service`
+**Package:** `@agora-cms/content-service`
 **Bootstrap:** `services/content-service/src/main.ts`
 **Swagger:** http://localhost:3001/docs
 
@@ -584,7 +584,7 @@ The content service is the core CMS engine. It manages pages, media assets, temp
 
 ### 5.2 Commerce Service (port 3002)
 
-**Package:** `@Agora-cms/commerce-service`
+**Package:** `@agora-cms/commerce-service`
 **Bootstrap:** `services/commerce-service/src/main.ts`
 **Swagger:** http://localhost:3002/docs
 
@@ -648,7 +648,7 @@ Expired reservations are automatically released.
 
 ### 5.3 Integration Service (port 3003)
 
-**Package:** `@Agora-cms/integration-service`
+**Package:** `@agora-cms/integration-service`
 **Bootstrap:** `services/integration-service/src/main.ts`
 **Swagger:** http://localhost:3003/api/docs
 
@@ -671,7 +671,7 @@ The integration service connects Agora CMS to external platforms. It implements 
 
 #### Adapter Interfaces
 
-All integrations implement typed interfaces from `@Agora-cms/shared`:
+All integrations implement typed interfaces from `@agora-cms/shared`:
 
 - **IPaymentGateway**: `createPaymentIntent()`, `confirmPayment()`, `createRefund()`, `createCustomer()`, `handleWebhook()`
 - **IAnalyticsProvider**: `trackEvent()`, `trackServerEvent()`, `getDashboardData()`
@@ -679,7 +679,7 @@ All integrations implement typed interfaces from `@Agora-cms/shared`:
 
 ### 5.4 Shipping Gateway (port 3004)
 
-**Package:** `@Agora-cms/shipping-gateway`
+**Package:** `@agora-cms/shipping-gateway`
 **Bootstrap:** `services/shipping-gateway/src/main.ts`
 **Swagger:** http://localhost:3004/api/docs
 
@@ -696,7 +696,7 @@ The shipping gateway aggregates rates from multiple carriers, generates shipping
 
 #### Carrier Adapters
 
-Carriers implement the `ICarrierAdapter` interface from `@Agora-cms/shared`:
+Carriers implement the `ICarrierAdapter` interface from `@agora-cms/shared`:
 
 ```typescript
 interface ICarrierAdapter {
@@ -721,7 +721,7 @@ Shipping rates are cached in Redis to avoid repeated carrier API calls for the s
 
 ### 5.5 Course Service (port 3005)
 
-**Package:** `@Agora-cms/course-service`
+**Package:** `@agora-cms/course-service`
 **Bootstrap:** `services/course-service/src/main.ts`
 **Swagger:** http://localhost:3005/api
 
@@ -774,7 +774,7 @@ All three frontend applications use Next.js 14 with the App Router, React 18, an
 
 ### 6.1 Page Builder (port 3100)
 
-**Package:** `@Agora-cms/page-builder`
+**Package:** `@agora-cms/page-builder`
 
 The page builder is a single-page application (SPA) providing a visual drag-and-drop interface for constructing pages from the 85-component library.
 
@@ -822,7 +822,7 @@ getComponentsByCategory(): Record<string, RegisteredComponent[]>
 
 ### 6.2 Storefront (port 3200)
 
-**Package:** `@Agora-cms/storefront`
+**Package:** `@agora-cms/storefront`
 
 The storefront is the customer-facing website. It renders CMS pages dynamically, displays the product catalog, provides a shopping cart and checkout flow, and hosts the learning portal.
 
@@ -875,7 +875,7 @@ registerComponent('my-custom-widget', ({ props, children }) => (
 
 ### 6.3 Admin Dashboard (port 3300)
 
-**Package:** `@Agora-cms/admin-dashboard`
+**Package:** `@agora-cms/admin-dashboard`
 
 The admin dashboard provides comprehensive management for all CMS, commerce, and LMS functionality.
 
@@ -1136,7 +1136,7 @@ Each component schema JSON defines:
 All components can use shared layout/visibility/animation properties via the `useSharedProps` hook:
 
 ```typescript
-import { useSharedProps, type SharedProps } from '@Agora-cms/ui';
+import { useSharedProps, type SharedProps } from '@agora-cms/ui';
 
 function MyComponent(props: MyProps & SharedProps) {
   const { className, style, attrs } = useSharedProps(props);
@@ -1533,7 +1533,7 @@ Roles are hierarchical. A higher role inherits all permissions of lower roles:
 customer (0) < viewer (1) < editor (2) < store_manager (3) < admin (4) < super_admin (5)
 ```
 
-The `hasMinimumRole(userRole, requiredRole)` function from `@Agora-cms/shared` checks if a user's role meets the minimum required level.
+The `hasMinimumRole(userRole, requiredRole)` function from `@agora-cms/shared` checks if a user's role meets the minimum required level.
 
 ### Account Security
 
@@ -1631,8 +1631,8 @@ Agora CMS uses MinIO (S3-compatible) for all file storage. In production, this c
 
 | Bucket | Purpose | Access |
 |---|---|---|
-| `Agora-media` | Media uploads (images, videos, documents) | Public download |
-| `Agora-labels` | Shipping labels (PDFs) | Private |
+| `agora-media` | Media uploads (images, videos, documents) | Public download |
+| `agora-labels` | Shipping labels (PDFs) | Private |
 
 #### Media Upload Flow
 
@@ -1656,8 +1656,8 @@ Agora CMS uses MinIO (S3-compatible) for all file storage. In production, this c
 S3_ENDPOINT=http://localhost:9000
 S3_ACCESS_KEY=minioadmin
 S3_SECRET_KEY=minioadmin
-S3_BUCKET_MEDIA=Agora-media
-S3_BUCKET_LABELS=Agora-labels
+S3_BUCKET_MEDIA=agora-media
+S3_BUCKET_LABELS=agora-labels
 S3_REGION=us-east-1
 ```
 
@@ -1680,13 +1680,13 @@ Run with Jest across all services and packages:
 pnpm test
 
 # Run tests for a specific service
-pnpm --filter @Agora-cms/commerce-service test
+pnpm --filter @agora-cms/commerce-service test
 
 # Run with coverage
 pnpm test:cov
 
 # Watch mode
-pnpm --filter @Agora-cms/content-service test:watch
+pnpm --filter @agora-cms/content-service test:watch
 ```
 
 **Configuration:** Each service has Jest configured either in `package.json` or `jest.config.ts`:
@@ -1839,7 +1839,7 @@ The CI pipeline (`.github/workflows/ci.yml`) runs on pushes to `main` and pull r
    v
 3. integration-tests (depends on unit-tests)
    |-- Services:
-   |   |-- PostgreSQL 16 (Agora_test DB)
+   |   |-- PostgreSQL 16 (agora_test DB)
    |   +-- Redis 7
    |-- Setup steps
    |-- Generate Prisma Client
@@ -1867,7 +1867,7 @@ Prisma manages database migrations from the schema at `packages/database/prisma/
 
 ```bash
 # Edit schema.prisma, then create a migration
-pnpm --filter @Agora-cms/database db:migrate
+pnpm --filter @agora-cms/database db:migrate
 
 # This will:
 # 1. Detect schema changes
@@ -1882,17 +1882,17 @@ pnpm --filter @Agora-cms/database db:migrate
 pnpm db:migrate
 
 # Production (applies existing migrations only)
-pnpm --filter @Agora-cms/database db:migrate:deploy
+pnpm --filter @agora-cms/database db:migrate:deploy
 ```
 
 ### Other Database Commands
 
 ```bash
 # Push schema directly (no migration files, dev only)
-pnpm --filter @Agora-cms/database db:push
+pnpm --filter @agora-cms/database db:push
 
 # Regenerate Prisma client after schema changes
-pnpm --filter @Agora-cms/database db:generate
+pnpm --filter @agora-cms/database db:generate
 
 # Open Prisma Studio (visual database browser)
 pnpm db:studio
@@ -2036,8 +2036,8 @@ export { MyWidget } from './components/custom/MyWidget';
 Add to `apps/page-builder/src/lib/component-registry.ts`:
 
 ```typescript
-import { MyWidget } from '@Agora-cms/ui';
-import myWidgetSchema from '@Agora-cms/ui/src/schemas/my-widget.schema.json';
+import { MyWidget } from '@agora-cms/ui';
+import myWidgetSchema from '@agora-cms/ui/src/schemas/my-widget.schema.json';
 
 // In the registration section:
 register(myWidgetSchema as unknown as ComponentSchema, MyWidget);
@@ -2048,7 +2048,7 @@ register(myWidgetSchema as unknown as ComponentSchema, MyWidget);
 Add to `apps/storefront/src/components/renderers/component-renderer.tsx`:
 
 ```typescript
-import { MyWidget } from '@Agora-cms/ui';
+import { MyWidget } from '@agora-cms/ui';
 
 // In the componentRegistry object:
 'my-widget': ({ props }) => <MyWidget {...props as any} />,
@@ -2225,7 +2225,7 @@ Add type definitions to `packages/shared/src/types/` and export from `packages/s
 
 | Variable | Default | Description |
 |---|---|---|
-| `DATABASE_URL` | `postgresql://Agora:Agora_dev@localhost:5432/Agora_cms` | PostgreSQL connection string |
+| `DATABASE_URL` | `postgresql://agora:agora_dev@localhost:5432/agora_cms` | PostgreSQL connection string |
 
 #### Redis
 
@@ -2252,8 +2252,8 @@ Add type definitions to `packages/shared/src/types/` and export from `packages/s
 | `S3_ENDPOINT` | `http://localhost:9000` | S3-compatible endpoint |
 | `S3_ACCESS_KEY` | `minioadmin` | Access key |
 | `S3_SECRET_KEY` | `minioadmin` | Secret key |
-| `S3_BUCKET_MEDIA` | `Agora-media` | Media upload bucket |
-| `S3_BUCKET_LABELS` | `Agora-labels` | Shipping label bucket |
+| `S3_BUCKET_MEDIA` | `agora-media` | Media upload bucket |
+| `S3_BUCKET_LABELS` | `agora-labels` | Shipping label bucket |
 | `S3_REGION` | `us-east-1` | S3 region |
 
 #### Kong
@@ -2363,16 +2363,16 @@ Add type definitions to `packages/shared/src/types/` and export from `packages/s
 **Problem:** MinIO buckets not created
 **Solution:** The `minio-init` container runs once after MinIO is healthy. If it failed, manually create buckets:
 ```bash
-docker exec Agora-minio mc alias set local http://localhost:9000 minioadmin minioadmin
-docker exec Agora-minio mc mb --ignore-existing local/Agora-media
-docker exec Agora-minio mc mb --ignore-existing local/Agora-labels
-docker exec Agora-minio mc anonymous set download local/Agora-media
+docker exec agora-minio mc alias set local http://localhost:9000 minioadmin minioadmin
+docker exec agora-minio mc mb --ignore-existing local/agora-media
+docker exec agora-minio mc mb --ignore-existing local/agora-labels
+docker exec agora-minio mc anonymous set download local/agora-media
 ```
 
 ### Database
 
 **Problem:** Prisma Client not generated
-**Solution:** Run `pnpm --filter @Agora-cms/database db:generate` before starting services.
+**Solution:** Run `pnpm --filter @agora-cms/database db:generate` before starting services.
 
 **Problem:** Migration fails
 **Solution:** Check `DATABASE_URL` is correct and PostgreSQL is running. For a fresh start:
@@ -2384,7 +2384,7 @@ pnpm db:seed
 ```
 
 **Problem:** "Prisma schema validation failed"
-**Solution:** After editing `schema.prisma`, run `pnpm --filter @Agora-cms/database db:generate` to validate.
+**Solution:** After editing `schema.prisma`, run `pnpm --filter @agora-cms/database db:generate` to validate.
 
 ### Services
 
@@ -2399,11 +2399,11 @@ pnpm db:seed
 
 ### Frontend
 
-**Problem:** `@Agora-cms/ui` components not found
-**Solution:** Ensure `transpilePackages` includes `@Agora-cms/ui` in `next.config.js` (already configured for storefront and page-builder).
+**Problem:** `@agora-cms/ui` components not found
+**Solution:** Ensure `transpilePackages` includes `@agora-cms/ui` in `next.config.js` (already configured for storefront and page-builder).
 
 **Problem:** TypeScript errors after schema changes
-**Solution:** Rebuild shared packages: `pnpm --filter @Agora-cms/shared build && pnpm --filter @Agora-cms/database db:generate`
+**Solution:** Rebuild shared packages: `pnpm --filter @agora-cms/shared build && pnpm --filter @agora-cms/database db:generate`
 
 ### Kafka
 
@@ -2458,16 +2458,16 @@ test: add fulfillment service unit tests
 ### Code Quality
 
 - **Formatting**: Prettier (`pnpm format` / `pnpm format:check`)
-- **Linting**: ESLint with `@Agora-cms/eslint-config`
+- **Linting**: ESLint with `@agora-cms/eslint-config`
 - **Type Safety**: Strict TypeScript (`noUncheckedIndexedAccess`, `isolatedModules`)
 - **Validation**: DTOs validated with `class-validator` (whitelist + forbidNonWhitelisted)
 
 ### Adding a New Service
 
 1. Create service directory in `services/`
-2. Use `@Agora-cms/tsconfig/nestjs.json` as TypeScript base
-3. Use `@Agora-cms/eslint-config` for linting
-4. Add `workspace:*` dependencies on `@Agora-cms/database` and `@Agora-cms/shared`
+2. Use `@agora-cms/tsconfig/nestjs.json` as TypeScript base
+3. Use `@agora-cms/eslint-config` for linting
+4. Add `workspace:*` dependencies on `@agora-cms/database` and `@agora-cms/shared`
 5. Register routes in `docker/kong/kong.yml`
 6. Add port to `.env.example`
 7. Update this developer guide
@@ -2476,7 +2476,7 @@ test: add fulfillment service unit tests
 
 1. Create app directory in `apps/`
 2. Use Next.js 14 with App Router
-3. Use `@Agora-cms/tsconfig/nextjs.json` as TypeScript base
+3. Use `@agora-cms/tsconfig/nextjs.json` as TypeScript base
 4. Add `transpilePackages` for workspace dependencies in `next.config.js`
 5. Add origin to CORS configuration (Kong + service-level)
 6. Add port to `.env.example`

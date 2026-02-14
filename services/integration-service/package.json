@@ -1,8 +1,8 @@
 {
-  "name": "@nextgen-cms/integration-service",
+  "name": "@agora-cms/integration-service",
   "version": "0.0.0",
   "private": true,
-  "description": "NextGen CMS Integration Service - Payment, Analytics & CRM integrations",
+  "description": "Agora CMS Integration Service - Payment, Analytics & CRM integrations",
   "scripts": {
     "dev": "nest start --watch --port 3003",
     "build": "nest build",
@@ -20,8 +20,8 @@
     "@nestjs/core": "^10.4.0",
     "@nestjs/platform-express": "^10.4.0",
     "@nestjs/swagger": "^7.4.0",
-    "@nextgen-cms/database": "workspace:*",
-    "@nextgen-cms/shared": "workspace:*",
+    "@agora-cms/database": "workspace:*",
+    "@agora-cms/shared": "workspace:*",
     "ioredis": "^5.4.0",
     "kafkajs": "^2.2.0",
     "reflect-metadata": "^0.2.0",
@@ -31,7 +31,7 @@
   "devDependencies": {
     "@nestjs/cli": "^10.4.0",
     "@nestjs/testing": "^10.4.0",
-    "@nextgen-cms/tsconfig": "workspace:*",
+    "@agora-cms/tsconfig": "workspace:*",
     "@types/express": "^5.0.6",
     "@types/jest": "^29.5.0",
     "@types/supertest": "^6.0.0",

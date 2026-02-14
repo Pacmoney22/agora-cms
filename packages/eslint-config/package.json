@@ -1,5 +1,5 @@
 {
-  "name": "@nextgen-cms/eslint-config",
+  "name": "@agora-cms/eslint-config",
   "version": "0.0.0",
   "private": true,
   "main": "index.js",

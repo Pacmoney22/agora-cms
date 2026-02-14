@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client';
 
 const SETTING_DEFAULTS: Record<string, unknown> = {
   general: {
-    siteName: 'NextGen CMS',
+    siteName: 'Agora CMS',
     siteUrl: 'http://localhost:3200',
     siteLogo: '',
     favicon: '',

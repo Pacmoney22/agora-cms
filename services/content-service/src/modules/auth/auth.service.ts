@@ -12,7 +12,7 @@ import * as bcrypt from 'bcrypt';
 import { randomUUID } from 'node:crypto';
 import Redis from 'ioredis';
 import { PrismaClient, type UserRole as PrismaUserRole } from '@prisma/client';
-import type { UserRole, JwtPayload, AuthTokens } from '@nextgen-cms/shared';
+import type { UserRole, JwtPayload, AuthTokens } from '@agora-cms/shared';
 
 const BCRYPT_ROUNDS = 12;
 const MAX_FAILED_LOGINS = 5;

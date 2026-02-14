@@ -41,7 +41,7 @@ export class CertificateGeneratorService {
 
     // Upload to S3
     const s3Key = `certificates/${data.enrollmentId}.pdf`;
-    const bucket = this.config.get<string>('S3_BUCKET') || 'nextgen-cms';
+    const bucket = this.config.get<string>('S3_BUCKET') || 'agora-cms';
 
     try {
       await this.s3Client.send(

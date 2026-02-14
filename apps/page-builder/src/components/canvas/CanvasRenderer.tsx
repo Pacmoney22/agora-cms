@@ -16,7 +16,7 @@ import { useBuilderStore } from '@/stores/builder-store';
 import { DropZone } from './DropZone';
 import { ComponentWrapper } from './ComponentWrapper';
 import { getComponent } from '@/lib/component-registry';
-import type { ComponentInstance } from '@nextgen-cms/shared';
+import type { ComponentInstance } from '@agora-cms/shared';
 
 export const CanvasRenderer: React.FC = () => {
   const { componentTree, selectedInstanceId, selectComponent, insertComponent, moveComponent } =

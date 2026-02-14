@@ -1,5 +1,5 @@
 {
-  "name": "@nextgen-cms/database",
+  "name": "@agora-cms/database",
   "version": "0.0.0",
   "private": true,
   "main": "./src/index.ts",
@@ -19,7 +19,7 @@
     "@prisma/client": "^6.3.0"
   },
   "devDependencies": {
-    "@nextgen-cms/tsconfig": "workspace:*",
+    "@agora-cms/tsconfig": "workspace:*",
     "@types/node": "^25.2.3",
     "prisma": "^6.3.0",
     "tsup": "^8.3.0",

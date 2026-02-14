@@ -80,11 +80,11 @@ The system comes pre-configured with demo accounts for each role. Use these to e
 
 | Role | Email | Password | What You Can Do |
 |------|-------|----------|-----------------|
-| **Viewer** | viewer@Agora-cms.dev | Password123! | View all content and data in read-only mode |
-| **Editor** | editor@Agora-cms.dev | Password123! | Create and edit pages, articles, and media |
-| **Store Manager** | manager@Agora-cms.dev | Password123! | Manage products, orders, coupons, and customers |
-| **Admin** | admin@Agora-cms.dev | Password123! | Full site configuration, settings, and content management |
-| **Super Admin** | superadmin@Agora-cms.dev | Password123! | Everything above plus user management and system administration |
+| **Viewer** | viewer@agora-cms.dev | Password123! | View all content and data in read-only mode |
+| **Editor** | editor@agora-cms.dev | Password123! | Create and edit pages, articles, and media |
+| **Store Manager** | manager@agora-cms.dev | Password123! | Manage products, orders, coupons, and customers |
+| **Admin** | admin@agora-cms.dev | Password123! | Full site configuration, settings, and content management |
+| **Super Admin** | superadmin@agora-cms.dev | Password123! | Everything above plus user management and system administration |
 
 > **Warning:** Change all default passwords immediately when deploying to a production environment. These credentials are for demonstration purposes only.
 
@@ -2089,7 +2089,18 @@ If you cannot resolve an issue using the solutions above:
 
 1. **Check this guide** -- Use your browser's find function (Ctrl+F or Cmd+F) to search for keywords related to your issue.
 2. **Review system logs** -- Go to Settings > System > Logs to view error messages and system events (Admin or Super Admin access required).
+3. **Contact support:**
+   - Email: support@agora-cms.com
+   - When contacting support, please include:
+     - Your email address and role
+     - A description of the issue
+     - Steps to reproduce the problem
+     - Screenshots showing the issue (if applicable)
+     - Your browser name and version
+4. **Community forum:** https://community.agora-cms.com
+5. **Video tutorials:** https://agora-cms.com/tutorials
 
 ---
 
 *Agora CMS End User Guide -- Version 2.0 -- February 2026*
+*For the latest updates, visit https://agora-cms.com/docs*

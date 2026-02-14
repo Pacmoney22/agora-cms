@@ -24,7 +24,7 @@ test.describe('Authentication Flow', () => {
 
   test('should successfully login with valid credentials', async ({ page }) => {
     await page.goto('/');
-    await page.fill('input[type="email"]', 'admin@nextgen-cms.dev');
+    await page.fill('input[type="email"]', 'admin@agora-cms.dev');
     await page.fill('input[type="password"]', 'Password123!');
     await page.click('button[type="submit"]');
 
@@ -36,7 +36,7 @@ test.describe('Authentication Flow', () => {
   test('should persist authentication across page reloads', async ({ page }) => {
     // Login first
     await page.goto('/');
-    await page.fill('input[type="email"]', 'admin@nextgen-cms.dev');
+    await page.fill('input[type="email"]', 'admin@agora-cms.dev');
     await page.fill('input[type="password"]', 'Password123!');
     await page.click('button[type="submit"]');
     await expect(page).toHaveURL(/\/dashboard/);
@@ -51,7 +51,7 @@ test.describe('Authentication Flow', () => {
   test('should logout successfully', async ({ page }) => {
     // Login first
     await page.goto('/');
-    await page.fill('input[type="email"]', 'admin@nextgen-cms.dev');
+    await page.fill('input[type="email"]', 'admin@agora-cms.dev');
     await page.fill('input[type="password"]', 'Password123!');
     await page.click('button[type="submit"]');
     await expect(page).toHaveURL(/\/dashboard/);

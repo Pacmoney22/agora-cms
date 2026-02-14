@@ -1,5 +1,5 @@
 {
-  "extends": "@nextgen-cms/tsconfig/nestjs.json",
+  "extends": "@agora-cms/tsconfig/nestjs.json",
   "compilerOptions": {
     "outDir": "./dist",
     "baseUrl": "./",

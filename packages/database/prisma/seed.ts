@@ -13,50 +13,50 @@ async function main() {
 
   const users = await Promise.all([
     prisma.user.upsert({
-      where: { email: 'viewer@nextgen-cms.dev' },
+      where: { email: 'viewer@agora-cms.dev' },
       update: {},
       create: {
-        email: 'viewer@nextgen-cms.dev',
+        email: 'viewer@agora-cms.dev',
         name: 'Demo Viewer',
         passwordHash,
         role: UserRole.viewer,
       },
     }),
     prisma.user.upsert({
-      where: { email: 'editor@nextgen-cms.dev' },
+      where: { email: 'editor@agora-cms.dev' },
       update: {},
       create: {
-        email: 'editor@nextgen-cms.dev',
+        email: 'editor@agora-cms.dev',
         name: 'Demo Editor',
         passwordHash,
         role: UserRole.editor,
       },
     }),
     prisma.user.upsert({
-      where: { email: 'manager@nextgen-cms.dev' },
+      where: { email: 'manager@agora-cms.dev' },
       update: {},
       create: {
-        email: 'manager@nextgen-cms.dev',
+        email: 'manager@agora-cms.dev',
         name: 'Demo Store Manager',
         passwordHash,
         role: UserRole.store_manager,
       },
     }),
     prisma.user.upsert({
-      where: { email: 'admin@nextgen-cms.dev' },
+      where: { email: 'admin@agora-cms.dev' },
       update: {},
       create: {
-        email: 'admin@nextgen-cms.dev',
+        email: 'admin@agora-cms.dev',
         name: 'Demo Admin',
         passwordHash,
         role: UserRole.admin,
       },
     }),
     prisma.user.upsert({
-      where: { email: 'superadmin@nextgen-cms.dev' },
+      where: { email: 'superadmin@agora-cms.dev' },
       update: {},
       create: {
-        email: 'superadmin@nextgen-cms.dev',
+        email: 'superadmin@agora-cms.dev',
         name: 'Demo Super Admin',
         passwordHash,
         role: UserRole.super_admin,
@@ -112,7 +112,7 @@ async function main() {
       publishedAt: new Date(),
       createdBy: adminUser.id,
       seo: {
-        metaTitle: 'NextGen CMS | Home',
+        metaTitle: 'Agora CMS | Home',
         metaDescription: 'Welcome to our modern CMS-powered website.',
         ogImage: null,
         canonicalUrl: null,
@@ -128,7 +128,7 @@ async function main() {
               instanceId: 'hero-1',
               componentId: 'hero-banner',
               props: {
-                headline: 'Welcome to NextGen CMS',
+                headline: 'Welcome to Agora CMS',
                 subheadline: 'Build beautiful websites with our drag-and-drop editor',
                 backgroundColor: '#1e293b',
                 layout: 'centered',
@@ -188,7 +188,7 @@ async function main() {
       publishedAt: new Date(),
       createdBy: adminUser.id,
       seo: {
-        metaTitle: 'About Us | NextGen CMS',
+        metaTitle: 'About Us | Agora CMS',
         metaDescription: 'Learn about our mission and team.',
         ogImage: null,
         canonicalUrl: null,
@@ -441,7 +441,7 @@ async function main() {
 
   console.log('\nSeed complete!');
   console.log('Login credentials (all users): Password123!');
-  console.log('Users: viewer@, editor@, manager@, admin@, superadmin@ @nextgen-cms.dev');
+  console.log('Users: viewer@, editor@, manager@, admin@, superadmin@ @agora-cms.dev');
 }
 
 main()

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { formatPrice } from '@nextgen-cms/shared';
+import { formatPrice } from '@agora-cms/shared';
 import { useCart } from '@/lib/cart-context';
 
 export default function CartPage() {

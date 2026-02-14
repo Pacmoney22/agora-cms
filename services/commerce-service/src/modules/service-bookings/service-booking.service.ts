@@ -6,7 +6,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import type { PaginatedResponse } from '@nextgen-cms/shared';
+import type { PaginatedResponse } from '@agora-cms/shared';
 import { ProductService } from '../products/product.service';
 
 export interface BookingDto {

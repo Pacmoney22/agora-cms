@@ -7,7 +7,7 @@ import {
   SetMetadata,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { hasMinimumRole, type UserRole } from '@nextgen-cms/shared';
+import { hasMinimumRole, type UserRole } from '@agora-cms/shared';
 
 export const ROLES_KEY = 'roles';
 

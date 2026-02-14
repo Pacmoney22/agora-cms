@@ -21,7 +21,7 @@ import { Toolbar } from '@/components/toolbar/Toolbar';
 import { ComponentWrapper } from '@/components/canvas/ComponentWrapper';
 import { DropZone } from '@/components/canvas/DropZone';
 import { getComponent } from '@/lib/component-registry';
-import type { ComponentInstance } from '@nextgen-cms/shared';
+import type { ComponentInstance } from '@agora-cms/shared';
 
 const RESPONSIVE_WIDTHS: Record<ResponsiveMode, string> = {
   desktop: '100%',

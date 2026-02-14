@@ -1,5 +1,5 @@
 {
-  "name": "@nextgen-cms/storefront",
+  "name": "@agora-cms/storefront",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,8 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@nextgen-cms/shared": "workspace:*",
-    "@nextgen-cms/ui": "workspace:*",
+    "@agora-cms/shared": "workspace:*",
+    "@agora-cms/ui": "workspace:*",
     "autoprefixer": "^10.4.20",
     "clsx": "^2.1.1",
     "next": "^15.5.10",
@@ -20,8 +20,8 @@
     "tailwindcss": "^3.4.13"
   },
   "devDependencies": {
-    "@nextgen-cms/eslint-config": "workspace:*",
-    "@nextgen-cms/tsconfig": "workspace:*",
+    "@agora-cms/eslint-config": "workspace:*",
+    "@agora-cms/tsconfig": "workspace:*",
     "@types/node": "^20.14.10",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",

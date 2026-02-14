@@ -208,7 +208,7 @@ test.describe('Checkout Flow', () => {
   test('should save shipping address for logged-in user', async ({ page }) => {
     // Login first
     await page.goto('http://localhost:3300');
-    await page.fill('input[type="email"]', 'admin@nextgen-cms.dev');
+    await page.fill('input[type="email"]', 'admin@agora-cms.dev');
     await page.fill('input[type="password"]', 'Password123!');
     await page.click('button[type="submit"]');
 

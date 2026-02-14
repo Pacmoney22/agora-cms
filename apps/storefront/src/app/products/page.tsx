@@ -3,8 +3,8 @@
 import { Suspense, useCallback, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import type { ProductDto, ProductType } from '@nextgen-cms/shared';
-import { formatPrice } from '@nextgen-cms/shared';
+import type { ProductDto, ProductType } from '@agora-cms/shared';
+import { formatPrice } from '@agora-cms/shared';
 import {
   listProducts,
   listCategories,

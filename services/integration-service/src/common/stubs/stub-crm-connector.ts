@@ -7,7 +7,7 @@ import type {
   CRMOpportunityData,
   CRMSyncResult,
   CRMFieldMapping,
-} from '@nextgen-cms/shared';
+} from '@agora-cms/shared';
 
 /**
  * Stub implementation of ICRMConnector for local development.

@@ -16,7 +16,7 @@ async function bootstrap() {
   );
 
   const config = new DocumentBuilder()
-    .setTitle('NextGen CMS Shipping Gateway')
+    .setTitle('Agora CMS Shipping Gateway')
     .setDescription('Shipping rate aggregation, label generation & package tracking APIs')
     .setVersion('1.0')
     .addTag('rates', 'Shipping rate quotes and address validation')

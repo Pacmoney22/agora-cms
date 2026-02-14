@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import type { ProductDto } from '@nextgen-cms/shared';
-import { formatPrice } from '@nextgen-cms/shared';
+import type { ProductDto } from '@agora-cms/shared';
+import { formatPrice } from '@agora-cms/shared';
 import { listProducts, listCategories, type CategoryDto } from '@/lib/api';
 
 export default function HomePage() {
@@ -32,7 +32,7 @@ export default function HomePage() {
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-300">
             Discover our curated collection of physical goods, digital products,
-            and professional services -- all managed through NextGen CMS.
+            and professional services -- all managed through Agora CMS.
           </p>
           <Link
             href="/products"

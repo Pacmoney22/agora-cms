@@ -25,7 +25,7 @@ importers:
 
   apps/admin-dashboard:
     dependencies:
-      '@nextgen-cms/shared':
+      '@agora-cms/shared':
         specifier: workspace:*
         version: link:../../packages/shared
       '@tanstack/react-query':
@@ -59,10 +59,10 @@ importers:
         specifier: ^3.4.13
         version: 3.4.19(tsx@4.21.0)
     devDependencies:
-      '@nextgen-cms/eslint-config':
+      '@agora-cms/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
-      '@nextgen-cms/tsconfig':
+      '@agora-cms/tsconfig':
         specifier: workspace:*
         version: link:../../packages/tsconfig
       '@types/node':
@@ -83,6 +83,12 @@ importers:
 
   apps/page-builder:
     dependencies:
+      '@agora-cms/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
+      '@agora-cms/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       '@dnd-kit/core':
         specifier: ^6.1.0
         version: 6.3.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -92,12 +98,6 @@ importers:
       '@dnd-kit/utilities':
         specifier: ^3.2.2
         version: 3.2.2(react@19.2.4)
-      '@nextgen-cms/shared':
-        specifier: workspace:*
-        version: link:../../packages/shared
-      '@nextgen-cms/ui':
-        specifier: workspace:*
-        version: link:../../packages/ui
       autoprefixer:
         specifier: ^10.4.20
         version: 10.4.24(postcss@8.5.6)
@@ -126,10 +126,10 @@ importers:
         specifier: ^4.5.5
         version: 4.5.7(@types/react@19.2.14)(immer@10.2.0)(react@19.2.4)
     devDependencies:
-      '@nextgen-cms/eslint-config':
+      '@agora-cms/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
-      '@nextgen-cms/tsconfig':
+      '@agora-cms/tsconfig':
         specifier: workspace:*
         version: link:../../packages/tsconfig
       '@types/node':
@@ -150,10 +150,10 @@ importers:
 
   apps/storefront:
     dependencies:
-      '@nextgen-cms/shared':
+      '@agora-cms/shared':
         specifier: workspace:*
         version: link:../../packages/shared
-      '@nextgen-cms/ui':
+      '@agora-cms/ui':
         specifier: workspace:*
         version: link:../../packages/ui
       autoprefixer:
@@ -178,10 +178,10 @@ importers:
         specifier: ^3.4.13
         version: 3.4.19(tsx@4.21.0)
     devDependencies:
-      '@nextgen-cms/eslint-config':
+      '@agora-cms/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
-      '@nextgen-cms/tsconfig':
+      '@agora-cms/tsconfig':
         specifier: workspace:*
         version: link:../../packages/tsconfig
       '@types/node':
@@ -206,7 +206,7 @@ importers:
         specifier: ^6.3.0
         version: 6.19.2(prisma@6.19.2(typescript@5.9.3))(typescript@5.9.3)
     devDependencies:
-      '@nextgen-cms/tsconfig':
+      '@agora-cms/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
       '@types/node':
@@ -249,7 +249,7 @@ importers:
         specifier: ^3.24.0
         version: 3.25.76
     devDependencies:
-      '@nextgen-cms/tsconfig':
+      '@agora-cms/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
       '@types/node':
@@ -294,7 +294,7 @@ importers:
         specifier: ^9.13.0
         version: 9.16.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
     devDependencies:
-      '@nextgen-cms/tsconfig':
+      '@agora-cms/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
       '@types/prismjs':
@@ -321,6 +321,12 @@ importers:
 
   services/commerce-service:
     dependencies:
+      '@agora-cms/database':
+        specifier: workspace:*
+        version: link:../../packages/database
+      '@agora-cms/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
       '@elastic/elasticsearch':
         specifier: ^8.12.0
         version: 8.19.1
@@ -342,12 +348,6 @@ importers:
       '@nestjs/swagger':
         specifier: ^7.2.0
         version: 7.4.2(@nestjs/common@10.4.22(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@10.4.22)(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)
-      '@nextgen-cms/database':
-        specifier: workspace:*
-        version: link:../../packages/database
-      '@nextgen-cms/shared':
-        specifier: workspace:*
-        version: link:../../packages/shared
       '@prisma/client':
         specifier: ^6.19.2
         version: 6.19.2(prisma@6.19.2(typescript@5.9.3))(typescript@5.9.3)
@@ -376,15 +376,15 @@ importers:
         specifier: ^9.0.0
         version: 9.0.1
     devDependencies:
+      '@agora-cms/tsconfig':
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
       '@nestjs/cli':
         specifier: ^10.3.0
         version: 10.4.9
       '@nestjs/testing':
         specifier: ^10.3.0
         version: 10.4.22(@nestjs/common@10.4.22(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@10.4.22)(@nestjs/platform-express@10.4.22)
-      '@nextgen-cms/tsconfig':
-        specifier: workspace:*
-        version: link:../../packages/tsconfig
       '@types/jest':
         specifier: ^29.5.12
         version: 29.5.14
@@ -409,6 +409,12 @@ importers:
 
   services/content-service:
     dependencies:
+      '@agora-cms/database':
+        specifier: workspace:*
+        version: link:../../packages/database
+      '@agora-cms/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
       '@aws-sdk/client-s3':
         specifier: ^3.490.0
         version: 3.986.0
@@ -439,12 +445,6 @@ importers:
       '@nestjs/swagger':
         specifier: ^7.2.0
         version: 7.4.2(@nestjs/common@10.4.22(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@10.4.22)(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)
-      '@nextgen-cms/database':
-        specifier: workspace:*
-        version: link:../../packages/database
-      '@nextgen-cms/shared':
-        specifier: workspace:*
-        version: link:../../packages/shared
       '@prisma/client':
         specifier: ^6.19.2
         version: 6.19.2(prisma@6.19.2(typescript@5.9.3))(typescript@5.9.3)
@@ -485,15 +485,15 @@ importers:
         specifier: ^9.0.0
         version: 9.0.1
     devDependencies:
+      '@agora-cms/tsconfig':
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
       '@nestjs/cli':
         specifier: ^10.3.0
         version: 10.4.9
       '@nestjs/testing':
         specifier: ^10.3.0
         version: 10.4.22(@nestjs/common@10.4.22(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@10.4.22)(@nestjs/platform-express@10.4.22)
-      '@nextgen-cms/tsconfig':
-        specifier: workspace:*
-        version: link:../../packages/tsconfig
       '@types/bcrypt':
         specifier: ^6.0.0
         version: 6.0.0
@@ -530,6 +530,12 @@ importers:
 
   services/course-service:
     dependencies:
+      '@agora-cms/database':
+        specifier: workspace:*
+        version: link:../../packages/database
+      '@agora-cms/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
       '@aws-sdk/client-s3':
         specifier: ^3.490.0
         version: 3.986.0
@@ -548,12 +554,6 @@ importers:
       '@nestjs/swagger':
         specifier: ^7.2.0
         version: 7.4.2(@nestjs/common@10.4.22(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@10.4.22)(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)
-      '@nextgen-cms/database':
-        specifier: workspace:*
-        version: link:../../packages/database
-      '@nextgen-cms/shared':
-        specifier: workspace:*
-        version: link:../../packages/shared
       '@prisma/client':
         specifier: ^6.19.2
         version: 6.19.2(prisma@6.19.2(typescript@5.9.3))(typescript@5.9.3)
@@ -579,15 +579,15 @@ importers:
         specifier: ^9.0.0
         version: 9.0.1
     devDependencies:
+      '@agora-cms/tsconfig':
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
       '@nestjs/cli':
         specifier: ^10.3.0
         version: 10.4.9
       '@nestjs/testing':
         specifier: ^10.3.0
         version: 10.4.22(@nestjs/common@10.4.22(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@10.4.22)(@nestjs/platform-express@10.4.22)
-      '@nextgen-cms/tsconfig':
-        specifier: workspace:*
-        version: link:../../packages/tsconfig
       '@types/jest':
         specifier: ^29.5.12
         version: 29.5.14
@@ -615,6 +615,12 @@ importers:
 
   services/integration-service:
     dependencies:
+      '@agora-cms/database':
+        specifier: workspace:*
+        version: link:../../packages/database
+      '@agora-cms/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
       '@nestjs/common':
         specifier: ^10.4.0
         version: 10.4.22(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2)
@@ -630,12 +636,6 @@ importers:
       '@nestjs/swagger':
         specifier: ^7.4.0
         version: 7.4.2(@nestjs/common@10.4.22(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@10.4.22)(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)
-      '@nextgen-cms/database':
-        specifier: workspace:*
-        version: link:../../packages/database
-      '@nextgen-cms/shared':
-        specifier: workspace:*
-        version: link:../../packages/shared
       ioredis:
         specifier: ^5.4.0
         version: 5.9.2
@@ -652,15 +652,15 @@ importers:
         specifier: ^11.0.0
         version: 11.1.0
     devDependencies:
+      '@agora-cms/tsconfig':
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
       '@nestjs/cli':
         specifier: ^10.4.0
         version: 10.4.9
       '@nestjs/testing':
         specifier: ^10.4.0
         version: 10.4.22(@nestjs/common@10.4.22(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@10.4.22)(@nestjs/platform-express@10.4.22)
-      '@nextgen-cms/tsconfig':
-        specifier: workspace:*
-        version: link:../../packages/tsconfig
       '@types/express':
         specifier: ^5.0.6
         version: 5.0.6
@@ -688,6 +688,12 @@ importers:
 
   services/shipping-gateway:
     dependencies:
+      '@agora-cms/database':
+        specifier: workspace:*
+        version: link:../../packages/database
+      '@agora-cms/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
       '@nestjs/common':
         specifier: ^10.4.0
         version: 10.4.22(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2)
@@ -706,12 +712,6 @@ importers:
       '@nestjs/swagger':
         specifier: ^7.4.0
         version: 7.4.2(@nestjs/common@10.4.22(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@10.4.22)(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)
-      '@nextgen-cms/database':
-        specifier: workspace:*
-        version: link:../../packages/database
-      '@nextgen-cms/shared':
-        specifier: workspace:*
-        version: link:../../packages/shared
       ioredis:
         specifier: ^5.4.0
         version: 5.9.2
@@ -725,15 +725,15 @@ importers:
         specifier: ^11.0.0
         version: 11.1.0
     devDependencies:
+      '@agora-cms/tsconfig':
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
       '@nestjs/cli':
         specifier: ^10.4.0
         version: 10.4.9
       '@nestjs/testing':
         specifier: ^10.4.0
         version: 10.4.22(@nestjs/common@10.4.22(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@10.4.22)(@nestjs/platform-express@10.4.22)
-      '@nextgen-cms/tsconfig':
-        specifier: workspace:*
-        version: link:../../packages/tsconfig
       '@types/jest':
         specifier: ^29.5.0
         version: 29.5.14

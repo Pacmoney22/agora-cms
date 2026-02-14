@@ -1,6 +1,6 @@
 'use client';
 
-import type { ComponentInstance } from '@nextgen-cms/shared';
+import type { ComponentInstance } from '@agora-cms/shared';
 import React from 'react';
 import {
   // Layout
@@ -101,7 +101,7 @@ import {
   SiteMeta,
   ErrorPage,
   MaintenancePage,
-} from '@nextgen-cms/ui';
+} from '@agora-cms/ui';
 
 /**
  * Registry mapping componentId strings to React components.

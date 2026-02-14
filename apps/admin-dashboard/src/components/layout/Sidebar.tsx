@@ -99,7 +99,7 @@ export function Sidebar() {
     <aside className="flex w-56 shrink-0 flex-col border-r border-gray-200 bg-gray-900">
       <div className="flex h-14 items-center px-5">
         <Link href="/" className="text-sm font-bold text-white tracking-wide">
-          NextGen CMS
+          Agora CMS
         </Link>
       </div>
       <nav className="flex-1 overflow-y-auto px-3 py-2">

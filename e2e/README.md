@@ -1,6 +1,6 @@
 # E2E Tests
 
-End-to-end tests for NextGen CMS using Playwright.
+End-to-end tests for Agora CMS using Playwright.
 
 ## Installation
 

@@ -10,7 +10,7 @@ import type {
   TrackingEvent,
   AddressValidationRequest,
   AddressValidationResult,
-} from '@nextgen-cms/shared';
+} from '@agora-cms/shared';
 
 /**
  * Stub carrier adapter for local development.

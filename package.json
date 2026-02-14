@@ -1,8 +1,8 @@
 {
-  "name": "nextgen-cms",
+  "name": "agora-cms",
   "version": "1.0.0",
   "private": true,
-  "description": "NextGen CMS - Drag-and-Drop Commerce & Content Platform",
+  "description": "Agora CMS - Drag-and-Drop Commerce & Content Platform",
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",
@@ -16,9 +16,9 @@
     "test:e2e:debug": "playwright test --debug",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
-    "db:migrate": "pnpm --filter @nextgen-cms/database db:migrate",
-    "db:seed": "pnpm --filter @nextgen-cms/database db:seed",
-    "db:studio": "pnpm --filter @nextgen-cms/database db:studio",
+    "db:migrate": "pnpm --filter @agora-cms/database db:migrate",
+    "db:seed": "pnpm --filter @agora-cms/database db:seed",
+    "db:studio": "pnpm --filter @agora-cms/database db:studio",
     "clean": "turbo clean && rm -rf node_modules"
   },
   "devDependencies": {

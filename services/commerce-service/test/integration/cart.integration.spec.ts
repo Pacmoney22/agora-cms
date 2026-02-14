@@ -22,7 +22,7 @@ describe('Cart API (Integration)', () => {
     const loginResponse = await request(app.getHttpServer())
       .post('/api/v1/auth/login')
       .send({
-        email: 'admin@nextgen-cms.dev',
+        email: 'admin@agora-cms.dev',
         password: 'Password123!',
       });
 

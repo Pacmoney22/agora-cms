@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { prisma } from '@nextgen-cms/database';
+import { prisma } from '@agora-cms/database';
 import { CouponController } from './coupon.controller';
 import { CouponService } from './coupon.service';
 

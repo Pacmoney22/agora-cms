@@ -9,7 +9,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import type { CartDto, CartItem } from '@nextgen-cms/shared';
+import type { CartDto, CartItem } from '@agora-cms/shared';
 import {
   getCart,
   addCartItem,
@@ -40,7 +40,7 @@ const CartContext = createContext<CartContextValue | null>(null);
 // localStorage helpers
 // ---------------------------------------------------------------------------
 
-const CART_ID_KEY = 'nextgen_cart_id';
+const CART_ID_KEY = 'agora_cart_id';
 
 function getStoredCartId(): string {
   if (typeof window === 'undefined') return '';

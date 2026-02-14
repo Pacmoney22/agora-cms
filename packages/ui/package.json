@@ -1,5 +1,5 @@
 {
-  "name": "@nextgen-cms/ui",
+  "name": "@agora-cms/ui",
   "version": "0.0.0",
   "private": true,
   "main": "./src/index.ts",
@@ -23,7 +23,7 @@
     "react-chartjs-2": "^5.2.0"
   },
   "devDependencies": {
-    "@nextgen-cms/tsconfig": "workspace:*",
+    "@agora-cms/tsconfig": "workspace:*",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "react": "^19.0.0",

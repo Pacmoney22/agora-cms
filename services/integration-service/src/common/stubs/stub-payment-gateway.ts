@@ -10,7 +10,7 @@ import type {
   CreateCustomerParams,
   PaymentCustomer,
   WebhookEvent,
-} from '@nextgen-cms/shared';
+} from '@agora-cms/shared';
 
 /**
  * Stub implementation of IPaymentGateway for local development.

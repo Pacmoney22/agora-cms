@@ -5,7 +5,7 @@ import type {
   ServerAnalyticsEvent,
   DateRange,
   AnalyticsDashboardData,
-} from '@nextgen-cms/shared';
+} from '@agora-cms/shared';
 
 /**
  * Stub implementation of IAnalyticsProvider for local development.

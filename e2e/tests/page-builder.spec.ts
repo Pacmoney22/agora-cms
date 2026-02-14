@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 // Helper to login before each test
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
-  await page.fill('input[type="email"]', 'admin@nextgen-cms.dev');
+  await page.fill('input[type="email"]', 'admin@agora-cms.dev');
   await page.fill('input[type="password"]', 'Password123!');
   await page.click('button[type="submit"]');
   await expect(page).toHaveURL(/\/dashboard/);

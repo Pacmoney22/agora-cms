@@ -1,5 +1,5 @@
 {
-  "extends": "@nextgen-cms/tsconfig/library.json",
+  "extends": "@agora-cms/tsconfig/library.json",
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./src"

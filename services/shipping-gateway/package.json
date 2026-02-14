@@ -1,8 +1,8 @@
 {
-  "name": "@nextgen-cms/shipping-gateway",
+  "name": "@agora-cms/shipping-gateway",
   "version": "0.0.0",
   "private": true,
-  "description": "NextGen CMS Shipping Gateway - Rate aggregation, label generation & tracking",
+  "description": "Agora CMS Shipping Gateway - Rate aggregation, label generation & tracking",
   "scripts": {
     "dev": "nest start --watch --port 3004",
     "build": "nest build",
@@ -21,8 +21,8 @@
     "@nestjs/platform-express": "^10.4.0",
     "@nestjs/schedule": "^4.1.0",
     "@nestjs/swagger": "^7.4.0",
-    "@nextgen-cms/shared": "workspace:*",
-    "@nextgen-cms/database": "workspace:*",
+    "@agora-cms/shared": "workspace:*",
+    "@agora-cms/database": "workspace:*",
     "ioredis": "^5.4.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.0",
@@ -31,7 +31,7 @@
   "devDependencies": {
     "@nestjs/cli": "^10.4.0",
     "@nestjs/testing": "^10.4.0",
-    "@nextgen-cms/tsconfig": "workspace:*",
+    "@agora-cms/tsconfig": "workspace:*",
     "@types/jest": "^29.5.0",
     "@types/supertest": "^6.0.0",
     "@types/uuid": "^10.0.0",

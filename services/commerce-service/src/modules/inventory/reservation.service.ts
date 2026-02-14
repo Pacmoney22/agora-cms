@@ -11,7 +11,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Redis from 'ioredis';
 import { Kafka, Producer } from 'kafkajs';
 import { Cron } from '@nestjs/schedule';
-import { EVENTS, type ProductVariant } from '@nextgen-cms/shared';
+import { EVENTS, type ProductVariant } from '@agora-cms/shared';
 import { ProductService } from '../products/product.service';
 
 export interface ReservationItem {

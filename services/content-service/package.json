@@ -1,8 +1,8 @@
 {
-  "name": "@nextgen-cms/content-service",
+  "name": "@agora-cms/content-service",
   "version": "0.1.0",
   "private": true,
-  "description": "NextGen CMS Content Service - NestJS API for content management",
+  "description": "Agora CMS Content Service - NestJS API for content management",
   "scripts": {
     "dev": "nest start --watch",
     "build": "nest build",
@@ -25,8 +25,8 @@
     "@nestjs/platform-express": "^10.3.0",
     "@nestjs/schedule": "^4.0.0",
     "@nestjs/swagger": "^7.2.0",
-    "@nextgen-cms/database": "workspace:*",
-    "@nextgen-cms/shared": "workspace:*",
+    "@agora-cms/database": "workspace:*",
+    "@agora-cms/shared": "workspace:*",
     "@prisma/client": "^6.19.2",
     "bcrypt": "^6.0.0",
     "class-transformer": "^0.5.1",
@@ -44,7 +44,7 @@
   "devDependencies": {
     "@nestjs/cli": "^10.3.0",
     "@nestjs/testing": "^10.3.0",
-    "@nextgen-cms/tsconfig": "workspace:*",
+    "@agora-cms/tsconfig": "workspace:*",
     "@types/bcrypt": "^6.0.0",
     "@types/jest": "^29.5.12",
     "@types/multer": "^1.4.11",

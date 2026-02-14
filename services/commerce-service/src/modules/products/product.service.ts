@@ -18,7 +18,7 @@ import {
   type ProductType,
   type PaginatedResponse,
   type ProductVariant,
-} from '@nextgen-cms/shared';
+} from '@agora-cms/shared';
 import {
   CreateProductDto,
   UpdateProductDto,

@@ -8,7 +8,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
-import type { TrackingResult } from '@nextgen-cms/shared';
+import type { TrackingResult } from '@agora-cms/shared';
 import { TrackingService } from './tracking.service';
 
 @ApiTags('tracking')

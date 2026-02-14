@@ -13,7 +13,7 @@ import type {
   ICarrierAdapter,
   CreateShipmentParams,
   ShipmentResult,
-} from '@nextgen-cms/shared';
+} from '@agora-cms/shared';
 import { CARRIER_ADAPTERS } from '../rates/rate-aggregator.service';
 
 interface BatchLabelRequest {

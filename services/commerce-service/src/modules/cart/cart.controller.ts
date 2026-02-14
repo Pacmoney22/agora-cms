@@ -21,7 +21,7 @@ import {
 import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { CartService } from './cart.service';
-import type { CartItemConfiguration } from '@nextgen-cms/shared';
+import type { CartItemConfiguration } from '@agora-cms/shared';
 
 // DTO classes declared inline for co-location
 class AddItemDto {

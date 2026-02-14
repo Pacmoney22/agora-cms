@@ -14,7 +14,7 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import type { ProductType } from '@nextgen-cms/shared';
+import type { ProductType } from '@agora-cms/shared';
 
 // --- Nested DTOs ---
 

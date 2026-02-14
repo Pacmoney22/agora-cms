@@ -4,7 +4,7 @@ import type {
   ShippingRateRequest,
   ShippingRateResponse,
   ShippingRate,
-} from '@nextgen-cms/shared';
+} from '@agora-cms/shared';
 import Redis from 'ioredis';
 
 export const CARRIER_ADAPTERS = 'CARRIER_ADAPTERS';

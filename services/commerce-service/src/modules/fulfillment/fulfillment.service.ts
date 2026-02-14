@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import type { OrderDto, PaginatedResponse } from '@nextgen-cms/shared';
+import type { OrderDto, PaginatedResponse } from '@agora-cms/shared';
 import { OrderService } from '../orders/order.service';
 
 @Injectable()

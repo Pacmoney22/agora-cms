@@ -1,5 +1,5 @@
 {
-  "extends": "@nextgen-cms/tsconfig/nextjs.json",
+  "extends": "@agora-cms/tsconfig/nextjs.json",
   "compilerOptions": {
     "paths": {
       "@/*": ["./src/*"]

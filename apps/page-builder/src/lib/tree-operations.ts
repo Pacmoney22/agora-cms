@@ -1,4 +1,4 @@
-import type { ComponentInstance, ComponentTree } from '@nextgen-cms/shared';
+import type { ComponentInstance, ComponentTree } from '@agora-cms/shared';
 
 /**
  * Find a node in the component tree by instanceId.

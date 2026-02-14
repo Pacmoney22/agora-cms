@@ -33,7 +33,7 @@ async function bootstrap() {
 
   // Swagger documentation
   const swaggerConfig = new DocumentBuilder()
-    .setTitle('NextGen CMS Course Service')
+    .setTitle('Agora CMS Course Service')
     .setDescription('API for managing courses, lessons, enrollments, progress, quizzes, and certificates')
     .setVersion('1.0')
     .addBearerAuth()
