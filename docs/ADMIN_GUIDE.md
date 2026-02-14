@@ -1,8 +1,8 @@
-# NextGen CMS - Administration & Installation Guide
+# Agora CMS - Administration & Installation Guide
 
 > **Version 2.0** | February 2026
 >
-> Comprehensive guide for installing, configuring, deploying, and operating NextGen CMS across local development, VPS, AWS, Azure, and Cloudflare environments.
+> Comprehensive guide for installing, configuring, deploying, and operating Agora CMS across local development, VPS, AWS, Azure, and Cloudflare environments.
 
 ---
 
@@ -79,10 +79,10 @@
 
 ### Service Topology
 
-NextGen CMS is a microservices-based platform built as a Turborepo monorepo using pnpm workspaces. It combines content management, e-commerce, event management, and a learning management system (LMS).
+Agora CMS is a microservices-based platform built as a Turborepo monorepo using pnpm workspaces. It combines content management, e-commerce, event management, and a learning management system (LMS).
 
 ```
-nextgen-cms/
+Agora-cms/
 ├── apps/
 │   ├── admin-dashboard/     # Next.js 14 - Admin UI (port 3300)
 │   ├── page-builder/        # Next.js 14 - Visual Page Builder (port 3100)
@@ -186,8 +186,8 @@ nextgen-cms/
 **Step 1: Clone the repository**
 
 ```bash
-git clone https://github.com/your-org/nextgen-cms.git
-cd nextgen-cms
+git clone https://github.com/your-org/Agora-cms.git
+cd Agora-cms
 ```
 
 **Step 2: Install dependencies**
@@ -221,20 +221,20 @@ Expected output -- all services should show `healthy`:
 
 | Container | Port(s) | Status |
 |-----------|---------|--------|
-| nextgen-postgres | 5432 | healthy |
-| nextgen-redis | 6379 | healthy |
-| nextgen-elasticsearch | 9200 | healthy |
-| nextgen-kafka | 9092 | healthy |
-| nextgen-minio | 9000, 9001 | healthy |
-| nextgen-kong | 8000, 8001 | running |
+| Agora-postgres | 5432 | healthy |
+| Agora-redis | 6379 | healthy |
+| Agora-elasticsearch | 9200 | healthy |
+| Agora-kafka | 9092 | healthy |
+| Agora-minio | 9000, 9001 | healthy |
+| Agora-kong | 8000, 8001 | running |
 
-The `minio-init` container runs once to create the `nextgen-media` and `nextgen-labels` buckets, then exits.
+The `minio-init` container runs once to create the `Agora-media` and `Agora-labels` buckets, then exits.
 
 **Step 5: Generate Prisma client and run migrations**
 
 ```bash
 cd ..
-pnpm --filter @nextgen-cms/database exec prisma generate
+pnpm --filter @Agora-cms/database exec prisma generate
 pnpm db:migrate
 ```
 
@@ -274,11 +274,11 @@ Turborepo launches all 5 backend services and 3 frontend apps simultaneously wit
 
 | Email | Role |
 |-------|------|
-| superadmin@nextgen-cms.dev | super_admin |
-| admin@nextgen-cms.dev | admin |
-| manager@nextgen-cms.dev | store_manager |
-| editor@nextgen-cms.dev | editor |
-| viewer@nextgen-cms.dev | viewer |
+| superadmin@Agora-cms.dev | super_admin |
+| admin@Agora-cms.dev | admin |
+| manager@Agora-cms.dev | store_manager |
+| editor@Agora-cms.dev | editor |
+| viewer@Agora-cms.dev | viewer |
 
 **Debug Tools:**
 
@@ -327,8 +327,8 @@ COPY --from=deps /app/packages/database/node_modules ./packages/database/node_mo
 COPY --from=deps /app/packages/shared/node_modules ./packages/shared/node_modules
 COPY --from=deps /app/services/content-service/node_modules ./services/content-service/node_modules
 COPY . .
-RUN pnpm --filter @nextgen-cms/database exec prisma generate
-RUN pnpm --filter @nextgen-cms/shared build
+RUN pnpm --filter @Agora-cms/database exec prisma generate
+RUN pnpm --filter @Agora-cms/shared build
 RUN pnpm --filter content-service build
 
 # Stage 3: Production image
@@ -349,16 +349,16 @@ Build and tag images:
 
 ```bash
 # Backend services
-docker build -f services/content-service/Dockerfile -t nextgen-cms/content-service:latest .
-docker build -f services/commerce-service/Dockerfile -t nextgen-cms/commerce-service:latest .
-docker build -f services/integration-service/Dockerfile -t nextgen-cms/integration-service:latest .
-docker build -f services/shipping-gateway/Dockerfile -t nextgen-cms/shipping-gateway:latest .
-docker build -f services/course-service/Dockerfile -t nextgen-cms/course-service:latest .
+docker build -f services/content-service/Dockerfile -t Agora-cms/content-service:latest .
+docker build -f services/commerce-service/Dockerfile -t Agora-cms/commerce-service:latest .
+docker build -f services/integration-service/Dockerfile -t Agora-cms/integration-service:latest .
+docker build -f services/shipping-gateway/Dockerfile -t Agora-cms/shipping-gateway:latest .
+docker build -f services/course-service/Dockerfile -t Agora-cms/course-service:latest .
 
 # Frontend apps
-docker build -f apps/page-builder/Dockerfile -t nextgen-cms/page-builder:latest .
-docker build -f apps/storefront/Dockerfile -t nextgen-cms/storefront:latest .
-docker build -f apps/admin-dashboard/Dockerfile -t nextgen-cms/admin-dashboard:latest .
+docker build -f apps/page-builder/Dockerfile -t Agora-cms/page-builder:latest .
+docker build -f apps/storefront/Dockerfile -t Agora-cms/storefront:latest .
+docker build -f apps/admin-dashboard/Dockerfile -t Agora-cms/admin-dashboard:latest .
 ```
 
 ### 3.3 Bare Metal Deployment (PM2 + Nginx)
@@ -390,16 +390,16 @@ sudo usermod -aG docker $USER
 
 ```bash
 cd /opt
-sudo mkdir nextgen-cms && sudo chown $USER:$USER nextgen-cms
-git clone https://github.com/your-org/nextgen-cms.git /opt/nextgen-cms
-cd /opt/nextgen-cms
+sudo mkdir Agora-cms && sudo chown $USER:$USER Agora-cms
+git clone https://github.com/your-org/Agora-cms.git /opt/Agora-cms
+cd /opt/Agora-cms
 
 cp .env.example .env
 # Edit .env with production values (see Section 4)
 
 cd docker && docker compose up -d && cd ..
 pnpm install --frozen-lockfile
-pnpm --filter @nextgen-cms/database exec prisma generate
+pnpm --filter @Agora-cms/database exec prisma generate
 pnpm db:migrate
 pnpm db:seed
 pnpm build
@@ -410,113 +410,113 @@ pnpm build
 ```bash
 npm install -g pm2
 
-cat > /opt/nextgen-cms/ecosystem.config.js << 'PMEOF'
+cat > /opt/Agora-cms/ecosystem.config.js << 'PMEOF'
 module.exports = {
   apps: [
     {
       name: 'content-service',
-      cwd: '/opt/nextgen-cms/services/content-service',
+      cwd: '/opt/Agora-cms/services/content-service',
       script: 'dist/main.js',
       instances: 2,
       exec_mode: 'cluster',
       env: { NODE_ENV: 'production', PORT: 3001 },
       max_memory_restart: '512M',
-      error_file: '/var/log/nextgen/content-service-error.log',
-      out_file: '/var/log/nextgen/content-service-out.log',
+      error_file: '/var/log/Agora/content-service-error.log',
+      out_file: '/var/log/Agora/content-service-out.log',
       merge_logs: true,
     },
     {
       name: 'commerce-service',
-      cwd: '/opt/nextgen-cms/services/commerce-service',
+      cwd: '/opt/Agora-cms/services/commerce-service',
       script: 'dist/main.js',
       instances: 2,
       exec_mode: 'cluster',
       env: { NODE_ENV: 'production', PORT: 3002 },
       max_memory_restart: '512M',
-      error_file: '/var/log/nextgen/commerce-service-error.log',
-      out_file: '/var/log/nextgen/commerce-service-out.log',
+      error_file: '/var/log/Agora/commerce-service-error.log',
+      out_file: '/var/log/Agora/commerce-service-out.log',
       merge_logs: true,
     },
     {
       name: 'integration-service',
-      cwd: '/opt/nextgen-cms/services/integration-service',
+      cwd: '/opt/Agora-cms/services/integration-service',
       script: 'dist/main.js',
       instances: 1,
       exec_mode: 'fork',
       env: { NODE_ENV: 'production', PORT: 3003 },
       max_memory_restart: '512M',
-      error_file: '/var/log/nextgen/integration-service-error.log',
-      out_file: '/var/log/nextgen/integration-service-out.log',
+      error_file: '/var/log/Agora/integration-service-error.log',
+      out_file: '/var/log/Agora/integration-service-out.log',
       merge_logs: true,
     },
     {
       name: 'shipping-gateway',
-      cwd: '/opt/nextgen-cms/services/shipping-gateway',
+      cwd: '/opt/Agora-cms/services/shipping-gateway',
       script: 'dist/main.js',
       instances: 1,
       exec_mode: 'fork',
       env: { NODE_ENV: 'production', PORT: 3004 },
       max_memory_restart: '256M',
-      error_file: '/var/log/nextgen/shipping-gateway-error.log',
-      out_file: '/var/log/nextgen/shipping-gateway-out.log',
+      error_file: '/var/log/Agora/shipping-gateway-error.log',
+      out_file: '/var/log/Agora/shipping-gateway-out.log',
       merge_logs: true,
     },
     {
       name: 'course-service',
-      cwd: '/opt/nextgen-cms/services/course-service',
+      cwd: '/opt/Agora-cms/services/course-service',
       script: 'dist/main.js',
       instances: 1,
       exec_mode: 'fork',
       env: { NODE_ENV: 'production', PORT: 3005 },
       max_memory_restart: '512M',
-      error_file: '/var/log/nextgen/course-service-error.log',
-      out_file: '/var/log/nextgen/course-service-out.log',
+      error_file: '/var/log/Agora/course-service-error.log',
+      out_file: '/var/log/Agora/course-service-out.log',
       merge_logs: true,
     },
     {
       name: 'page-builder',
-      cwd: '/opt/nextgen-cms/apps/page-builder',
+      cwd: '/opt/Agora-cms/apps/page-builder',
       script: 'node_modules/.bin/next',
       args: 'start -p 3100',
       instances: 1,
       exec_mode: 'fork',
       env: { NODE_ENV: 'production', PORT: 3100 },
       max_memory_restart: '512M',
-      error_file: '/var/log/nextgen/page-builder-error.log',
-      out_file: '/var/log/nextgen/page-builder-out.log',
+      error_file: '/var/log/Agora/page-builder-error.log',
+      out_file: '/var/log/Agora/page-builder-out.log',
       merge_logs: true,
     },
     {
       name: 'storefront',
-      cwd: '/opt/nextgen-cms/apps/storefront',
+      cwd: '/opt/Agora-cms/apps/storefront',
       script: 'node_modules/.bin/next',
       args: 'start -p 3200',
       instances: 2,
       exec_mode: 'cluster',
       env: { NODE_ENV: 'production', PORT: 3200 },
       max_memory_restart: '512M',
-      error_file: '/var/log/nextgen/storefront-error.log',
-      out_file: '/var/log/nextgen/storefront-out.log',
+      error_file: '/var/log/Agora/storefront-error.log',
+      out_file: '/var/log/Agora/storefront-out.log',
       merge_logs: true,
     },
     {
       name: 'admin-dashboard',
-      cwd: '/opt/nextgen-cms/apps/admin-dashboard',
+      cwd: '/opt/Agora-cms/apps/admin-dashboard',
       script: 'node_modules/.bin/next',
       args: 'start -p 3300',
       instances: 1,
       exec_mode: 'fork',
       env: { NODE_ENV: 'production', PORT: 3300 },
       max_memory_restart: '512M',
-      error_file: '/var/log/nextgen/admin-dashboard-error.log',
-      out_file: '/var/log/nextgen/admin-dashboard-out.log',
+      error_file: '/var/log/Agora/admin-dashboard-error.log',
+      out_file: '/var/log/Agora/admin-dashboard-out.log',
       merge_logs: true,
     },
   ],
 };
 PMEOF
 
-sudo mkdir -p /var/log/nextgen && sudo chown $USER:$USER /var/log/nextgen
+sudo mkdir -p /var/log/Agora && sudo chown $USER:$USER /var/log/Agora
 pm2 start ecosystem.config.js
 pm2 save
 pm2 startup systemd
@@ -548,7 +548,7 @@ pm2 startup systemd
 ```bash
 # Create VPC with public and private subnets
 aws ec2 create-vpc --cidr-block 10.0.0.0/16 \
-  --tag-specifications 'ResourceType=vpc,Tags=[{Key=Name,Value=nextgen-cms-vpc}]'
+  --tag-specifications 'ResourceType=vpc,Tags=[{Key=Name,Value=Agora-cms-vpc}]'
 
 # Create public subnets (2 AZs)
 aws ec2 create-subnet --vpc-id vpc-xxx --cidr-block 10.0.1.0/24 --availability-zone us-east-1a
@@ -560,7 +560,7 @@ aws ec2 create-subnet --vpc-id vpc-xxx --cidr-block 10.0.4.0/24 --availability-z
 
 # Create and attach Internet Gateway
 aws ec2 create-internet-gateway \
-  --tag-specifications 'ResourceType=internet-gateway,Tags=[{Key=Name,Value=nextgen-cms-igw}]'
+  --tag-specifications 'ResourceType=internet-gateway,Tags=[{Key=Name,Value=Agora-cms-igw}]'
 aws ec2 attach-internet-gateway --vpc-id vpc-xxx --internet-gateway-id igw-xxx
 
 # Create NAT Gateway for private subnets
@@ -572,18 +572,18 @@ aws ec2 create-nat-gateway --subnet-id subnet-public-xxx --allocation-id eipallo
 
 ```bash
 aws rds create-db-subnet-group \
-  --db-subnet-group-name nextgen-cms-db-subnet \
-  --db-subnet-group-description "NextGen CMS DB" \
+  --db-subnet-group-name Agora-cms-db-subnet \
+  --db-subnet-group-description "Agora CMS DB" \
   --subnet-ids subnet-priv-a subnet-priv-b
 
 aws rds create-db-instance \
-  --db-instance-identifier nextgen-cms-db \
+  --db-instance-identifier Agora-cms-db \
   --db-instance-class db.t3.medium \
   --engine postgres --engine-version 16.1 \
-  --master-username nextgen \
+  --master-username Agora \
   --master-user-password '<secure-password>' \
   --allocated-storage 100 --storage-type gp3 \
-  --db-subnet-group-name nextgen-cms-db-subnet \
+  --db-subnet-group-name Agora-cms-db-subnet \
   --vpc-security-group-ids sg-db \
   --backup-retention-period 7 \
   --preferred-backup-window "03:00-04:00" \
@@ -595,13 +595,13 @@ aws rds create-db-instance \
 
 ```bash
 aws elasticache create-replication-group \
-  --replication-group-id nextgen-cms-redis \
-  --replication-group-description "NextGen CMS Redis" \
+  --replication-group-id Agora-cms-redis \
+  --replication-group-description "Agora CMS Redis" \
   --engine redis \
   --cache-node-type cache.t3.medium \
   --num-cache-clusters 2 \
   --automatic-failover-enabled \
-  --cache-subnet-group-name nextgen-cms-redis-subnet \
+  --cache-subnet-group-name Agora-cms-redis-subnet \
   --security-group-ids sg-redis \
   --at-rest-encryption-enabled \
   --transit-encryption-enabled
@@ -611,7 +611,7 @@ aws elasticache create-replication-group \
 
 ```bash
 aws opensearch create-domain \
-  --domain-name nextgen-cms-search \
+  --domain-name Agora-cms-search \
   --engine-version "OpenSearch_2.11" \
   --cluster-config InstanceType=t3.medium.search,InstanceCount=2 \
   --ebs-options EBSEnabled=true,VolumeType=gp3,VolumeSize=100 \
@@ -624,21 +624,21 @@ aws opensearch create-domain \
 #### Step 5: S3 Buckets
 
 ```bash
-aws s3 mb s3://nextgen-cms-media-prod --region us-east-1
-aws s3 mb s3://nextgen-cms-labels-prod --region us-east-1
+aws s3 mb s3://Agora-cms-media-prod --region us-east-1
+aws s3 mb s3://Agora-cms-labels-prod --region us-east-1
 
 aws s3api put-bucket-versioning \
-  --bucket nextgen-cms-media-prod \
+  --bucket Agora-cms-media-prod \
   --versioning-configuration Status=Enabled
 
 aws s3api put-bucket-encryption \
-  --bucket nextgen-cms-media-prod \
+  --bucket Agora-cms-media-prod \
   --server-side-encryption-configuration '{
     "Rules": [{"ApplyServerSideEncryptionByDefault": {"SSEAlgorithm": "AES256"}}]
   }'
 
 aws s3api put-bucket-cors \
-  --bucket nextgen-cms-media-prod \
+  --bucket Agora-cms-media-prod \
   --cors-configuration file://cors.json
 ```
 
@@ -650,20 +650,20 @@ aws ecr get-login-password --region us-east-1 | \
 
 # Create repositories for each service
 for svc in content-service commerce-service integration-service shipping-gateway course-service page-builder storefront admin-dashboard; do
-  aws ecr create-repository --repository-name nextgen-cms/$svc
+  aws ecr create-repository --repository-name Agora-cms/$svc
 done
 
 # Build, tag, and push each image (example for content-service)
-docker build -f services/content-service/Dockerfile -t nextgen-cms/content-service:latest .
-docker tag nextgen-cms/content-service:latest ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/nextgen-cms/content-service:latest
-docker push ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/nextgen-cms/content-service:latest
+docker build -f services/content-service/Dockerfile -t Agora-cms/content-service:latest .
+docker tag Agora-cms/content-service:latest ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/Agora-cms/content-service:latest
+docker push ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/Agora-cms/content-service:latest
 # Repeat for all services...
 ```
 
 #### Step 7: ECS Fargate -- Task Definitions and Services
 
 ```bash
-aws ecs create-cluster --cluster-name nextgen-cms-cluster
+aws ecs create-cluster --cluster-name Agora-cms-cluster
 ```
 
 Example task definition (`task-definitions/content-service.json`):
@@ -678,16 +678,16 @@ Example task definition (`task-definitions/content-service.json`):
   "executionRoleArn": "arn:aws:iam::ACCOUNT_ID:role/ecsTaskExecutionRole",
   "containerDefinitions": [{
     "name": "content-service",
-    "image": "ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/nextgen-cms/content-service:latest",
+    "image": "ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/Agora-cms/content-service:latest",
     "portMappings": [{"containerPort": 3001, "protocol": "tcp"}],
     "environment": [
       {"name": "NODE_ENV", "value": "production"},
       {"name": "PORT", "value": "3001"}
     ],
     "secrets": [
-      {"name": "DATABASE_URL", "valueFrom": "arn:aws:secretsmanager:us-east-1:ACCOUNT_ID:secret:nextgen-cms/database-url"},
-      {"name": "REDIS_URL", "valueFrom": "arn:aws:secretsmanager:us-east-1:ACCOUNT_ID:secret:nextgen-cms/redis-url"},
-      {"name": "JWT_SECRET", "valueFrom": "arn:aws:secretsmanager:us-east-1:ACCOUNT_ID:secret:nextgen-cms/jwt-secret"}
+      {"name": "DATABASE_URL", "valueFrom": "arn:aws:secretsmanager:us-east-1:ACCOUNT_ID:secret:Agora-cms/database-url"},
+      {"name": "REDIS_URL", "valueFrom": "arn:aws:secretsmanager:us-east-1:ACCOUNT_ID:secret:Agora-cms/redis-url"},
+      {"name": "JWT_SECRET", "valueFrom": "arn:aws:secretsmanager:us-east-1:ACCOUNT_ID:secret:Agora-cms/jwt-secret"}
     ],
     "logConfiguration": {
       "logDriver": "awslogs",
@@ -711,7 +711,7 @@ Register and create services:
 aws ecs register-task-definition --cli-input-json file://task-definitions/content-service.json
 
 aws ecs create-service \
-  --cluster nextgen-cms-cluster \
+  --cluster Agora-cms-cluster \
   --service-name content-service \
   --task-definition content-service:1 \
   --desired-count 2 \
@@ -735,7 +735,7 @@ aws ecs create-service \
 
 ```bash
 aws elbv2 create-load-balancer \
-  --name nextgen-cms-alb \
+  --name Agora-cms-alb \
   --subnets subnet-pub-a subnet-pub-b \
   --security-groups sg-alb \
   --scheme internet-facing --type application
@@ -768,14 +768,14 @@ aws route53 create-hosted-zone --name yourdomain.com --caller-reference $(date +
 aws route53 change-resource-record-sets --hosted-zone-id Z123 --change-batch '{
   "Changes": [{"Action": "CREATE", "ResourceRecordSet": {
     "Name": "yourdomain.com", "Type": "A",
-    "AliasTarget": {"HostedZoneId": "Z123", "DNSName": "nextgen-cms-alb-xxx.elb.amazonaws.com", "EvaluateTargetHealth": true}
+    "AliasTarget": {"HostedZoneId": "Z123", "DNSName": "Agora-cms-alb-xxx.elb.amazonaws.com", "EvaluateTargetHealth": true}
   }}]
 }'
 
 # Secrets
-aws secretsmanager create-secret --name nextgen-cms/database-url \
-  --secret-string "postgresql://nextgen:pass@nextgen-cms-db.xxx.rds.amazonaws.com:5432/nextgen_cms"
-aws secretsmanager create-secret --name nextgen-cms/jwt-secret \
+aws secretsmanager create-secret --name Agora-cms/database-url \
+  --secret-string "postgresql://Agora:pass@Agora-cms-db.xxx.rds.amazonaws.com:5432/Agora_cms"
+aws secretsmanager create-secret --name Agora-cms/jwt-secret \
   --secret-string "$(openssl rand -base64 64)"
 
 # CloudWatch log groups
@@ -791,13 +791,13 @@ done
 aws application-autoscaling register-scalable-target \
   --service-namespace ecs \
   --scalable-dimension ecs:service:DesiredCount \
-  --resource-id service/nextgen-cms-cluster/content-service \
+  --resource-id service/Agora-cms-cluster/content-service \
   --min-capacity 2 --max-capacity 10
 
 aws application-autoscaling put-scaling-policy \
   --service-namespace ecs \
   --scalable-dimension ecs:service:DesiredCount \
-  --resource-id service/nextgen-cms-cluster/content-service \
+  --resource-id service/Agora-cms-cluster/content-service \
   --policy-name cpu-scaling \
   --policy-type TargetTrackingScaling \
   --target-tracking-scaling-policy-configuration '{
@@ -838,7 +838,7 @@ module "rds" {
 
 module "ecs" {
   source             = "./modules/ecs"
-  cluster_name       = "nextgen-cms-cluster"
+  cluster_name       = "Agora-cms-cluster"
   vpc_id             = module.vpc.vpc_id
   private_subnet_ids = module.vpc.private_subnet_ids
   public_subnet_ids  = module.vpc.public_subnet_ids
@@ -870,13 +870,13 @@ module "ecs" {
 #### Step 1: Resource Group and PostgreSQL
 
 ```bash
-az group create --name nextgen-cms-rg --location eastus
+az group create --name Agora-cms-rg --location eastus
 
 az postgres flexible-server create \
-  --resource-group nextgen-cms-rg \
-  --name nextgen-cms-db \
+  --resource-group Agora-cms-rg \
+  --name Agora-cms-db \
   --location eastus \
-  --admin-user nextgenadmin \
+  --admin-user Agoraadmin \
   --admin-password '<SecurePassword123!>' \
   --sku-name Standard_D2s_v3 \
   --tier GeneralPurpose \
@@ -886,17 +886,17 @@ az postgres flexible-server create \
   --high-availability ZoneRedundant
 
 az postgres flexible-server db create \
-  --resource-group nextgen-cms-rg \
-  --server-name nextgen-cms-db \
-  --database-name nextgen_cms
+  --resource-group Agora-cms-rg \
+  --server-name Agora-cms-db \
+  --database-name Agora_cms
 ```
 
 #### Step 2: Redis Cache
 
 ```bash
 az redis create \
-  --resource-group nextgen-cms-rg \
-  --name nextgen-cms-redis \
+  --resource-group Agora-cms-rg \
+  --name Agora-cms-redis \
   --location eastus \
   --sku Premium --vm-size P1 \
   --replicas-per-master 1 \
@@ -908,19 +908,19 @@ az redis create \
 
 ```bash
 az eventhubs namespace create \
-  --resource-group nextgen-cms-rg \
-  --name nextgen-cms-events \
+  --resource-group Agora-cms-rg \
+  --name Agora-cms-events \
   --location eastus \
   --sku Standard --enable-kafka true
 
 az eventhubs eventhub create \
-  --resource-group nextgen-cms-rg \
-  --namespace-name nextgen-cms-events \
+  --resource-group Agora-cms-rg \
+  --namespace-name Agora-cms-events \
   --name content-events --partition-count 4
 
 az eventhubs eventhub create \
-  --resource-group nextgen-cms-rg \
-  --namespace-name nextgen-cms-events \
+  --resource-group Agora-cms-rg \
+  --namespace-name Agora-cms-events \
   --name commerce-events --partition-count 4
 ```
 
@@ -928,40 +928,40 @@ az eventhubs eventhub create \
 
 ```bash
 az storage account create \
-  --resource-group nextgen-cms-rg \
-  --name nextgencmsstorage \
+  --resource-group Agora-cms-rg \
+  --name Agoracmsstorage \
   --location eastus \
   --sku Standard_GRS --kind StorageV2 \
   --https-only true --min-tls-version TLS1_2
 
-az storage container create --account-name nextgencmsstorage --name media --public-access blob
-az storage container create --account-name nextgencmsstorage --name labels --public-access blob
+az storage container create --account-name Agoracmsstorage --name media --public-access blob
+az storage container create --account-name Agoracmsstorage --name labels --public-access blob
 ```
 
 #### Step 5: Container Registry and Key Vault
 
 ```bash
 az acr create \
-  --resource-group nextgen-cms-rg \
-  --name nextgencmsacr \
+  --resource-group Agora-cms-rg \
+  --name Agoracmsacr \
   --sku Standard --admin-enabled true
 
-az acr login --name nextgencmsacr
+az acr login --name Agoracmsacr
 
 # Build and push images
-az acr build --registry nextgencmsacr \
-  --image nextgen-cms/content-service:latest \
+az acr build --registry Agoracmsacr \
+  --image Agora-cms/content-service:latest \
   --file services/content-service/Dockerfile .
 # Repeat for all services...
 
 az keyvault create \
-  --resource-group nextgen-cms-rg \
-  --name nextgen-cms-kv \
+  --resource-group Agora-cms-rg \
+  --name Agora-cms-kv \
   --location eastus
 
-az keyvault secret set --vault-name nextgen-cms-kv --name database-url \
-  --value "postgresql://nextgenadmin:pass@nextgen-cms-db.postgres.database.azure.com:5432/nextgen_cms"
-az keyvault secret set --vault-name nextgen-cms-kv --name jwt-secret \
+az keyvault secret set --vault-name Agora-cms-kv --name database-url \
+  --value "postgresql://Agoraadmin:pass@Agora-cms-db.postgres.database.azure.com:5432/Agora_cms"
+az keyvault secret set --vault-name Agora-cms-kv --name jwt-secret \
   --value "$(openssl rand -base64 64)"
 ```
 
@@ -969,20 +969,20 @@ az keyvault secret set --vault-name nextgen-cms-kv --name jwt-secret \
 
 ```bash
 az monitor log-analytics workspace create \
-  --resource-group nextgen-cms-rg \
-  --workspace-name nextgen-cms-logs
+  --resource-group Agora-cms-rg \
+  --workspace-name Agora-cms-logs
 
 LOG_ID=$(az monitor log-analytics workspace show \
-  --resource-group nextgen-cms-rg \
-  --workspace-name nextgen-cms-logs --query customerId -o tsv)
+  --resource-group Agora-cms-rg \
+  --workspace-name Agora-cms-logs --query customerId -o tsv)
 
 LOG_KEY=$(az monitor log-analytics workspace get-shared-keys \
-  --resource-group nextgen-cms-rg \
-  --workspace-name nextgen-cms-logs --query primarySharedKey -o tsv)
+  --resource-group Agora-cms-rg \
+  --workspace-name Agora-cms-logs --query primarySharedKey -o tsv)
 
 az containerapp env create \
-  --resource-group nextgen-cms-rg \
-  --name nextgen-cms-env \
+  --resource-group Agora-cms-rg \
+  --name Agora-cms-env \
   --location eastus \
   --logs-workspace-id $LOG_ID \
   --logs-workspace-key $LOG_KEY
@@ -992,41 +992,41 @@ az containerapp env create \
 
 ```bash
 az containerapp create \
-  --resource-group nextgen-cms-rg \
+  --resource-group Agora-cms-rg \
   --name content-service \
-  --environment nextgen-cms-env \
-  --image nextgencmsacr.azurecr.io/nextgen-cms/content-service:latest \
-  --registry-server nextgencmsacr.azurecr.io \
-  --registry-username nextgencmsacr \
-  --registry-password $(az acr credential show --name nextgencmsacr --query "passwords[0].value" -o tsv) \
+  --environment Agora-cms-env \
+  --image Agoracmsacr.azurecr.io/Agora-cms/content-service:latest \
+  --registry-server Agoracmsacr.azurecr.io \
+  --registry-username Agoracmsacr \
+  --registry-password $(az acr credential show --name Agoracmsacr --query "passwords[0].value" -o tsv) \
   --target-port 3001 --ingress external \
   --min-replicas 2 --max-replicas 10 \
   --cpu 0.5 --memory 1.0Gi \
   --env-vars NODE_ENV=production PORT=3001 \
   --secrets \
-    database-url=keyvaultref:https://nextgen-cms-kv.vault.azure.net/secrets/database-url \
-    jwt-secret=keyvaultref:https://nextgen-cms-kv.vault.azure.net/secrets/jwt-secret
+    database-url=keyvaultref:https://Agora-cms-kv.vault.azure.net/secrets/database-url \
+    jwt-secret=keyvaultref:https://Agora-cms-kv.vault.azure.net/secrets/jwt-secret
 # Repeat for all services...
 ```
 
 #### Step 8: DNS and CDN
 
 ```bash
-az network dns zone create --resource-group nextgen-cms-rg --name yourdomain.com
+az network dns zone create --resource-group Agora-cms-rg --name yourdomain.com
 
 az network dns record-set a add-record \
-  --resource-group nextgen-cms-rg \
+  --resource-group Agora-cms-rg \
   --zone-name yourdomain.com \
   --record-set-name @ \
-  --ipv4-address $(az network public-ip show --resource-group nextgen-cms-rg --name nextgen-cms-pip --query ipAddress -o tsv)
+  --ipv4-address $(az network public-ip show --resource-group Agora-cms-rg --name Agora-cms-pip --query ipAddress -o tsv)
 
-az cdn profile create --resource-group nextgen-cms-rg --name nextgen-cms-cdn --sku Standard_Microsoft
+az cdn profile create --resource-group Agora-cms-rg --name Agora-cms-cdn --sku Standard_Microsoft
 
 az cdn endpoint create \
-  --resource-group nextgen-cms-rg \
-  --profile-name nextgen-cms-cdn \
-  --name nextgen-cms \
-  --origin nextgen-cms-env.eastus.azurecontainerapps.io \
+  --resource-group Agora-cms-rg \
+  --profile-name Agora-cms-cdn \
+  --name Agora-cms \
+  --origin Agora-cms-env.eastus.azurecontainerapps.io \
   --enable-compression true
 ```
 
@@ -1039,20 +1039,20 @@ module database 'modules/postgres.bicep' = {
   name: 'database'
   params: {
     location: location
-    serverName: 'nextgen-cms-db'
-    administratorLogin: 'nextgenadmin'
+    serverName: 'Agora-cms-db'
+    administratorLogin: 'Agoraadmin'
     administratorPassword: '<secure-password>'
   }
 }
 
 module redis 'modules/redis.bicep' = {
   name: 'redis'
-  params: { location: location, redisCacheName: 'nextgen-cms-redis', sku: 'Premium', capacity: 1 }
+  params: { location: location, redisCacheName: 'Agora-cms-redis', sku: 'Premium', capacity: 1 }
 }
 
 module containerAppsEnv 'modules/container-apps-env.bicep' = {
   name: 'containerAppsEnv'
-  params: { location: location, environmentName: 'nextgen-cms-env' }
+  params: { location: location, environmentName: 'Agora-cms-env' }
 }
 
 module contentService 'modules/container-app.bicep' = {
@@ -1061,7 +1061,7 @@ module contentService 'modules/container-app.bicep' = {
     location: location
     containerAppName: 'content-service'
     environmentId: containerAppsEnv.outputs.environmentId
-    containerImage: 'nextgencmsacr.azurecr.io/nextgen-cms/content-service:latest'
+    containerImage: 'Agoracmsacr.azurecr.io/Agora-cms/content-service:latest'
     targetPort: 3001
     minReplicas: 2
     maxReplicas: 10
@@ -1147,15 +1147,15 @@ Deploy:
 ```bash
 npm install -g wrangler
 wrangler login
-wrangler init nextgen-cms-router
+wrangler init Agora-cms-router
 wrangler publish
 ```
 
 #### Step 5: Cloudflare R2 (S3-Compatible Storage)
 
 ```bash
-wrangler r2 bucket create nextgen-media
-wrangler r2 bucket create nextgen-labels
+wrangler r2 bucket create Agora-media
+wrangler r2 bucket create Agora-labels
 ```
 
 Update `.env`:
@@ -1164,8 +1164,8 @@ Update `.env`:
 S3_ENDPOINT=https://ACCOUNT_ID.r2.cloudflarestorage.com
 S3_ACCESS_KEY=<R2_ACCESS_KEY>
 S3_SECRET_KEY=<R2_SECRET_KEY>
-S3_BUCKET_MEDIA=nextgen-media
-S3_BUCKET_LABELS=nextgen-labels
+S3_BUCKET_MEDIA=Agora-media
+S3_BUCKET_LABELS=Agora-labels
 ```
 
 #### Step 6: WAF and DDoS Protection
@@ -1198,7 +1198,7 @@ All environment variables are defined in `.env.example` at the repository root. 
 
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
-| `DATABASE_URL` | Yes | `postgresql://nextgen:nextgen_dev@localhost:5432/nextgen_cms` | PostgreSQL connection string |
+| `DATABASE_URL` | Yes | `postgresql://Agora:Agora_dev@localhost:5432/Agora_cms` | PostgreSQL connection string |
 
 ### Redis
 
@@ -1225,8 +1225,8 @@ All environment variables are defined in `.env.example` at the repository root. 
 | `S3_ENDPOINT` | Yes | `http://localhost:9000` | S3-compatible endpoint. Omit for AWS S3. |
 | `S3_ACCESS_KEY` | Yes | `minioadmin` | S3 access key ID |
 | `S3_SECRET_KEY` | Yes | `minioadmin` | S3 secret access key |
-| `S3_BUCKET_MEDIA` | Yes | `nextgen-media` | Media files bucket |
-| `S3_BUCKET_LABELS` | Yes | `nextgen-labels` | Shipping labels bucket |
+| `S3_BUCKET_MEDIA` | Yes | `Agora-media` | Media files bucket |
+| `S3_BUCKET_LABELS` | Yes | `Agora-labels` | Shipping labels bucket |
 | `S3_REGION` | Yes | `us-east-1` | S3 region |
 
 ### Authentication
@@ -1466,19 +1466,19 @@ EnrollmentStatus: active, completed, suspended
 
 ```bash
 # Generate Prisma client (after schema changes)
-pnpm --filter @nextgen-cms/database exec prisma generate
+pnpm --filter @Agora-cms/database exec prisma generate
 
 # Create and apply a new migration (development only)
-pnpm --filter @nextgen-cms/database exec prisma migrate dev --name describe_your_change
+pnpm --filter @Agora-cms/database exec prisma migrate dev --name describe_your_change
 
 # Apply pending migrations (production -- never creates new migrations)
-pnpm --filter @nextgen-cms/database exec prisma migrate deploy
+pnpm --filter @Agora-cms/database exec prisma migrate deploy
 
 # Check migration status
-pnpm --filter @nextgen-cms/database exec prisma migrate status
+pnpm --filter @Agora-cms/database exec prisma migrate status
 
 # Reset database (WARNING: destroys all data)
-pnpm --filter @nextgen-cms/database exec prisma migrate reset
+pnpm --filter @Agora-cms/database exec prisma migrate reset
 
 # Seed database
 pnpm db:seed
@@ -1487,7 +1487,7 @@ pnpm db:seed
 pnpm db:studio
 
 # Push schema directly (no migration file -- development only)
-pnpm --filter @nextgen-cms/database exec prisma db push
+pnpm --filter @Agora-cms/database exec prisma db push
 ```
 
 ### Connection Pooling
@@ -1495,7 +1495,7 @@ pnpm --filter @nextgen-cms/database exec prisma db push
 Prisma uses a built-in connection pool. Configure via the `DATABASE_URL` query parameters:
 
 ```
-postgresql://user:pass@host:5432/nextgen_cms?connection_limit=20&pool_timeout=10
+postgresql://user:pass@host:5432/Agora_cms?connection_limit=20&pool_timeout=10
 ```
 
 For production with many service instances, use PgBouncer or Prisma Accelerate.
@@ -1504,7 +1504,7 @@ For production with many service instances, use PgBouncer or Prisma Accelerate.
 
 ```sql
 -- Check database size
-SELECT pg_size_pretty(pg_database_size('nextgen_cms'));
+SELECT pg_size_pretty(pg_database_size('Agora_cms'));
 
 -- Check table sizes
 SELECT relname AS table_name,
@@ -1536,7 +1536,7 @@ FROM pg_stat_user_indexes ORDER BY idx_scan DESC;
 
 ### Role Hierarchy
 
-NextGen CMS uses a hierarchical role system defined in `packages/shared/src/constants/roles.ts`. Higher roles inherit all permissions of lower roles.
+Agora CMS uses a hierarchical role system defined in `packages/shared/src/constants/roles.ts`. Higher roles inherit all permissions of lower roles.
 
 ```
 customer (0)  <  viewer (1)  <  editor (2)  <  store_manager (3)  <  admin (4)  <  super_admin (5)
@@ -1798,8 +1798,8 @@ The `minio-init` container in `docker/docker-compose.yml` automatically creates 
 
 | Bucket | Purpose | Public Access |
 |--------|---------|---------------|
-| `nextgen-media` | Media files (images, documents, videos) | Download (anonymous read) |
-| `nextgen-labels` | Shipping labels | Private |
+| `Agora-media` | Media files (images, documents, videos) | Download (anonymous read) |
+| `Agora-labels` | Shipping labels | Private |
 
 ### MinIO Console
 
@@ -1938,7 +1938,7 @@ The cache backend is configurable via **Settings > System**:
 
 ```bash
 # Connect to Redis CLI
-docker exec -it nextgen-redis redis-cli
+docker exec -it Agora-redis redis-cli
 
 # Check memory usage
 INFO memory
@@ -1999,7 +1999,7 @@ environment:
   KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:29093
   KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
   KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-  CLUSTER_ID: "nextgen-cms-local-cluster"
+  CLUSTER_ID: "Agora-cms-local-cluster"
 ```
 
 ### Feature Backend Toggle
@@ -2036,22 +2036,22 @@ All event types are defined in `packages/shared/src/events/event-types.ts`:
 
 ```bash
 # List all topics
-docker exec nextgen-kafka kafka-topics --bootstrap-server localhost:9092 --list
+docker exec Agora-kafka kafka-topics --bootstrap-server localhost:9092 --list
 
 # Create a topic
-docker exec nextgen-kafka kafka-topics --bootstrap-server localhost:9092 \
+docker exec Agora-kafka kafka-topics --bootstrap-server localhost:9092 \
   --create --topic ORDER_CREATED --partitions 3 --replication-factor 1
 
 # Describe a topic
-docker exec nextgen-kafka kafka-topics --bootstrap-server localhost:9092 \
+docker exec Agora-kafka kafka-topics --bootstrap-server localhost:9092 \
   --describe --topic ORDER_CREATED
 
 # Check consumer group lag
-docker exec nextgen-kafka kafka-consumer-groups --bootstrap-server localhost:9092 \
-  --describe --group nextgen-cms-group
+docker exec Agora-kafka kafka-consumer-groups --bootstrap-server localhost:9092 \
+  --describe --group Agora-cms-group
 
 # Increase partitions
-docker exec nextgen-kafka kafka-topics --bootstrap-server localhost:9092 \
+docker exec Agora-kafka kafka-topics --bootstrap-server localhost:9092 \
   --alter --topic ORDER_CREATED --partitions 12
 ```
 
@@ -2243,7 +2243,7 @@ const app = await NestFactory.create(AppModule, {
 });
 ```
 
-PM2 logs are written to `/var/log/nextgen/`:
+PM2 logs are written to `/var/log/Agora/`:
 
 ```bash
 # View logs for a specific service
@@ -2310,40 +2310,40 @@ Administrative actions are recorded in the `audit_logs` table:
 set -euo pipefail
 
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-BACKUP_DIR="/opt/nextgen-cms/backups/database"
-S3_BUCKET="s3://nextgen-cms-backups/database"
+BACKUP_DIR="/opt/Agora-cms/backups/database"
+S3_BUCKET="s3://Agora-cms-backups/database"
 RETENTION_DAYS=30
 
 mkdir -p "$BACKUP_DIR"
 
 # For Docker-based PostgreSQL
-docker exec nextgen-postgres pg_dump -U nextgen nextgen_cms \
+docker exec Agora-postgres pg_dump -U Agora Agora_cms \
   --format=custom --compress=9 \
-  > "${BACKUP_DIR}/nextgen_cms_${TIMESTAMP}.dump"
+  > "${BACKUP_DIR}/Agora_cms_${TIMESTAMP}.dump"
 
 # For direct PostgreSQL
-# PGPASSWORD="${DB_PASSWORD}" pg_dump -h "${DB_HOST}" -U "${DB_USER}" -d nextgen_cms \
-#   --format=custom --compress=9 -f "${BACKUP_DIR}/nextgen_cms_${TIMESTAMP}.dump"
+# PGPASSWORD="${DB_PASSWORD}" pg_dump -h "${DB_HOST}" -U "${DB_USER}" -d Agora_cms \
+#   --format=custom --compress=9 -f "${BACKUP_DIR}/Agora_cms_${TIMESTAMP}.dump"
 
 # Optional: Upload to S3
-# aws s3 cp "${BACKUP_DIR}/nextgen_cms_${TIMESTAMP}.dump" \
-#   "${S3_BUCKET}/nextgen_cms_${TIMESTAMP}.dump" --storage-class STANDARD_IA
+# aws s3 cp "${BACKUP_DIR}/Agora_cms_${TIMESTAMP}.dump" \
+#   "${S3_BUCKET}/Agora_cms_${TIMESTAMP}.dump" --storage-class STANDARD_IA
 
 # Clean local backups older than retention period
 find "$BACKUP_DIR" -name "*.dump" -mtime +${RETENTION_DAYS} -delete
 
-echo "[$(date)] Backup completed: nextgen_cms_${TIMESTAMP}.dump"
+echo "[$(date)] Backup completed: Agora_cms_${TIMESTAMP}.dump"
 ```
 
 **Restore from backup:**
 
 ```bash
 # Custom format restore
-docker exec -i nextgen-postgres pg_restore -U nextgen -d nextgen_cms \
-  < /opt/nextgen-cms/backups/database/nextgen_cms_TIMESTAMP.dump
+docker exec -i Agora-postgres pg_restore -U Agora -d Agora_cms \
+  < /opt/Agora-cms/backups/database/Agora_cms_TIMESTAMP.dump
 
 # SQL format restore
-gunzip -c backup.sql.gz | docker exec -i nextgen-postgres psql -U nextgen nextgen_cms
+gunzip -c backup.sql.gz | docker exec -i Agora-postgres psql -U Agora Agora_cms
 ```
 
 ### Media Backups
@@ -2353,11 +2353,11 @@ Enable S3 bucket versioning to protect against accidental deletion:
 ```bash
 # AWS S3
 aws s3api put-bucket-versioning \
-  --bucket nextgen-cms-media-prod \
+  --bucket Agora-cms-media-prod \
   --versioning-configuration Status=Enabled
 
 # MinIO
-mc versioning enable local/nextgen-media
+mc versioning enable local/Agora-media
 ```
 
 For cross-region redundancy, enable S3 Cross-Region Replication.
@@ -2378,17 +2378,17 @@ appendfsync everysec
 
 ```bash
 # Register snapshot repository
-curl -X PUT "http://localhost:9200/_snapshot/nextgen_backup" \
+curl -X PUT "http://localhost:9200/_snapshot/Agora_backup" \
   -H 'Content-Type: application/json' -d '{
     "type": "fs",
     "settings": { "location": "/backups/elasticsearch" }
   }'
 
 # Create snapshot
-curl -X PUT "http://localhost:9200/_snapshot/nextgen_backup/snapshot_$(date +%Y%m%d)?wait_for_completion=true"
+curl -X PUT "http://localhost:9200/_snapshot/Agora_backup/snapshot_$(date +%Y%m%d)?wait_for_completion=true"
 
 # Restore snapshot
-curl -X POST "http://localhost:9200/_snapshot/nextgen_backup/snapshot_20260213/_restore"
+curl -X POST "http://localhost:9200/_snapshot/Agora_backup/snapshot_20260213/_restore"
 ```
 
 ### Configuration Backups
@@ -2415,16 +2415,16 @@ Back up these critical configuration files:
 
 ```cron
 # Database backup daily at 2 AM
-0 2 * * * /opt/nextgen-cms/scripts/backup-db.sh >> /var/log/nextgen/backup.log 2>&1
+0 2 * * * /opt/Agora-cms/scripts/backup-db.sh >> /var/log/Agora/backup.log 2>&1
 
 # SSL certificate renewal
 0 3 * * * /usr/bin/certbot renew --quiet --post-hook "systemctl reload nginx"
 
 # Clean old logs weekly
-0 4 * * 0 find /var/log/nextgen -name "*.log" -mtime +30 -delete
+0 4 * * 0 find /var/log/Agora -name "*.log" -mtime +30 -delete
 
 # Docker image prune monthly
-0 5 1 * * docker system prune -af --volumes >> /var/log/nextgen/docker-prune.log 2>&1
+0 5 1 * * docker system prune -af --volumes >> /var/log/Agora/docker-prune.log 2>&1
 ```
 
 ---
@@ -2459,7 +2459,7 @@ Or adjust `instances` in `ecosystem.config.js`:
 
 ```bash
 # ECS
-aws ecs update-service --cluster nextgen-cms --service content-service --desired-count 4
+aws ecs update-service --cluster Agora-cms --service content-service --desired-count 4
 
 # Docker Compose
 docker compose up -d --scale content-service=4
@@ -2470,14 +2470,14 @@ docker compose up -d --scale content-service=4
 ```bash
 # AWS RDS
 aws rds create-db-instance-read-replica \
-  --db-instance-identifier nextgen-cms-db-read-1 \
-  --source-db-instance-identifier nextgen-cms-db
+  --db-instance-identifier Agora-cms-db-read-1 \
+  --source-db-instance-identifier Agora-cms-db
 
 # Azure
 az postgres flexible-server replica create \
-  --resource-group nextgen-cms-prod \
-  --name nextgen-cms-db-read-1 \
-  --source-server nextgen-cms-db
+  --resource-group Agora-cms-prod \
+  --name Agora-cms-db-read-1 \
+  --source-server Agora-cms-db
 ```
 
 Configure Prisma with separate read/write connections:
@@ -2493,7 +2493,7 @@ For high-throughput environments:
 
 ```bash
 aws elasticache create-replication-group \
-  --replication-group-id nextgen-redis-cluster \
+  --replication-group-id Agora-redis-cluster \
   --num-node-groups 3 \
   --replicas-per-node-group 1
 ```
@@ -2503,7 +2503,7 @@ aws elasticache create-replication-group \
 Increase partitions for high-throughput topics:
 
 ```bash
-docker exec nextgen-kafka kafka-topics --bootstrap-server localhost:9092 \
+docker exec Agora-kafka kafka-topics --bootstrap-server localhost:9092 \
   --alter --topic ORDER_CREATED --partitions 12
 ```
 
@@ -2714,7 +2714,7 @@ server {
 Enable and test:
 
 ```bash
-sudo ln -sf /etc/nginx/sites-available/nextgen-cms /etc/nginx/sites-enabled/
+sudo ln -sf /etc/nginx/sites-available/Agora-cms /etc/nginx/sites-enabled/
 sudo rm -f /etc/nginx/sites-enabled/default
 sudo nginx -t
 sudo systemctl reload nginx
@@ -2735,7 +2735,7 @@ sudo systemctl reload nginx
 Append `?sslmode=require` to `DATABASE_URL` for encrypted database connections:
 
 ```
-DATABASE_URL=postgresql://user:pass@host:5432/nextgen_cms?sslmode=require
+DATABASE_URL=postgresql://user:pass@host:5432/Agora_cms?sslmode=require
 ```
 
 ### Firewall
@@ -2763,7 +2763,7 @@ sudo ufw enable
 | Rotate S3/MinIO keys | Quarterly | Generate new keys, update configuration |
 | Prune Docker images | Monthly | `docker system prune -af` |
 | Database VACUUM | Weekly | `VACUUM (VERBOSE, ANALYZE);` |
-| Database REINDEX | Monthly | `REINDEX DATABASE nextgen_cms;` |
+| Database REINDEX | Monthly | `REINDEX DATABASE Agora_cms;` |
 | Elasticsearch optimization | Monthly | `POST /_forcemerge?max_num_segments=1` |
 | SSL certificate renewal | Auto (Let's Encrypt) | Verify `certbot renew --dry-run` |
 | Review audit logs | Weekly | Check `audit_logs` table |
@@ -2775,7 +2775,7 @@ sudo ufw enable
 **1. Preparation:**
 
 ```bash
-cd /opt/nextgen-cms
+cd /opt/Agora-cms
 git fetch origin
 git log --oneline HEAD..origin/main    # Review changes
 ./scripts/backup-db.sh                 # Create database backup
@@ -2787,8 +2787,8 @@ git log --oneline HEAD..origin/main    # Review changes
 git checkout main
 git pull origin main
 pnpm install --frozen-lockfile
-pnpm --filter @nextgen-cms/database exec prisma generate
-pnpm --filter @nextgen-cms/database exec prisma migrate deploy
+pnpm --filter @Agora-cms/database exec prisma generate
+pnpm --filter @Agora-cms/database exec prisma migrate deploy
 pnpm build
 ```
 
@@ -2813,7 +2813,7 @@ pm2 logs --lines 50
 ```bash
 git checkout <previous-commit-hash>
 pnpm install --frozen-lockfile
-pnpm --filter @nextgen-cms/database exec prisma generate
+pnpm --filter @Agora-cms/database exec prisma generate
 pnpm build
 pm2 reload ecosystem.config.js
 ```
@@ -2835,8 +2835,8 @@ DELETE FROM _prisma_migrations WHERE migration_name = '20260213000000_migration_
 **Docker/ECS rollback:**
 
 ```bash
-aws ecs update-service --cluster nextgen-cms --service content-service \
-  --task-definition nextgen-content-service:PREVIOUS_REVISION
+aws ecs update-service --cluster Agora-cms --service content-service \
+  --task-definition Agora-content-service:PREVIOUS_REVISION
 ```
 
 ### Rotating Secrets
@@ -2871,17 +2871,17 @@ taskkill /PID <PID> /F
 If you see `Unknown field` or `The table does not exist` errors:
 
 ```bash
-pnpm --filter @nextgen-cms/database exec prisma generate
+pnpm --filter @Agora-cms/database exec prisma generate
 ```
 
 If schema changes have been made but not migrated:
 
 ```bash
 # Development
-pnpm --filter @nextgen-cms/database exec prisma migrate dev
+pnpm --filter @Agora-cms/database exec prisma migrate dev
 
 # Production
-pnpm --filter @nextgen-cms/database exec prisma migrate deploy
+pnpm --filter @Agora-cms/database exec prisma migrate deploy
 ```
 
 **Docker containers unhealthy:**
@@ -2910,11 +2910,11 @@ Common Docker issues:
 
 ```bash
 # Verify Kafka is running and list topics
-docker exec nextgen-kafka kafka-topics --bootstrap-server localhost:9092 --list
+docker exec Agora-kafka kafka-topics --bootstrap-server localhost:9092 --list
 
 # Check consumer group lag
-docker exec nextgen-kafka kafka-consumer-groups --bootstrap-server localhost:9092 \
-  --describe --group nextgen-cms-group
+docker exec Agora-kafka kafka-consumer-groups --bootstrap-server localhost:9092 \
+  --describe --group Agora-cms-group
 ```
 
 **Elasticsearch issues:**
@@ -2985,16 +2985,16 @@ docker stats
 docker compose logs --tail=50 -f
 
 # Database connectivity
-docker exec nextgen-postgres pg_isready -U nextgen
+docker exec Agora-postgres pg_isready -U Agora
 
 # Redis connectivity
-docker exec nextgen-redis redis-cli ping
+docker exec Agora-redis redis-cli ping
 
 # Elasticsearch health
 curl http://localhost:9200/_cluster/health
 
 # Kafka topics
-docker exec nextgen-kafka kafka-topics --bootstrap-server localhost:9092 --list
+docker exec Agora-kafka kafka-topics --bootstrap-server localhost:9092 --list
 
 # MinIO health
 curl http://localhost:9000/minio/health/live
@@ -3046,5 +3046,5 @@ Public settings (no authentication required) are available at `GET /api/v1/setti
 
 ---
 
-*NextGen CMS Administration Guide v2.0 -- February 2026*
+*Agora CMS Administration Guide v2.0 -- February 2026*
 *For questions or support, contact your system administrator.*
