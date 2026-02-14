@@ -1,0 +1,68 @@
+{
+  "id": "background-video",
+  "name": "Background Video",
+  "category": "Media",
+  "icon": "background-video",
+  "acceptsChildren": true,
+  "properties": {
+    "videoUrl": {
+      "type": "url",
+      "default": "",
+      "label": "Video URL",
+      "required": true,
+      "description": "URL to a self-hosted video file (MP4 recommended)"
+    },
+    "fallbackImage": {
+      "type": "image",
+      "default": "",
+      "label": "Fallback Image",
+      "required": true,
+      "constraints": { "formats": ["jpg", "jpeg", "png", "webp"] },
+      "description": "Shown on mobile devices and when reduced motion is preferred"
+    },
+    "overlay": {
+      "type": "object",
+      "label": "Overlay",
+      "properties": {
+        "color": {
+          "type": "color",
+          "default": "#000000",
+          "label": "Overlay Color"
+        },
+        "opacity": {
+          "type": "number",
+          "default": 0.4,
+          "min": 0,
+          "max": 1,
+          "step": 0.05,
+          "label": "Overlay Opacity"
+        }
+      }
+    },
+    "minHeight": {
+      "type": "enum",
+      "values": ["small", "medium", "large", "viewport"],
+      "default": "medium",
+      "label": "Minimum Height",
+      "description": "small=300px, medium=500px, large=700px, viewport=100vh"
+    },
+    "contentAlignment": {
+      "type": "enum",
+      "values": ["top-left", "top-center", "center", "bottom-left", "bottom-center"],
+      "default": "center",
+      "label": "Content Alignment"
+    },
+    "playbackSpeed": {
+      "type": "number",
+      "default": 1.0,
+      "min": 0.25,
+      "max": 2.0,
+      "step": 0.25,
+      "label": "Playback Speed"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"],
+    "stackBehavior": "fallback-image-on-mobile"
+  }
+}

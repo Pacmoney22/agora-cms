@@ -1,0 +1,110 @@
+{
+  "id": "pricing-table",
+  "name": "Pricing Table",
+  "category": "Marketing",
+  "icon": "credit-card",
+  "acceptsChildren": false,
+  "properties": {
+    "plans": {
+      "type": "array",
+      "label": "Plans",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "label": "Plan Name",
+            "default": "Basic"
+          },
+          "description": {
+            "type": "string",
+            "label": "Description",
+            "default": null
+          },
+          "monthlyPrice": {
+            "type": "number",
+            "label": "Monthly Price",
+            "default": 0,
+            "min": 0
+          },
+          "annualPrice": {
+            "type": "number",
+            "label": "Annual Price",
+            "default": null,
+            "min": 0
+          },
+          "features": {
+            "type": "array",
+            "label": "Features",
+            "items": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string",
+                  "label": "Feature Text",
+                  "default": "Feature"
+                },
+                "included": {
+                  "type": "boolean",
+                  "label": "Included",
+                  "default": true
+                },
+                "tooltip": {
+                  "type": "string",
+                  "label": "Tooltip Text",
+                  "default": null
+                }
+              }
+            }
+          },
+          "ctaLabel": {
+            "type": "string",
+            "label": "CTA Label",
+            "default": "Get Started"
+          },
+          "ctaUrl": {
+            "type": "url",
+            "label": "CTA URL",
+            "default": "#"
+          },
+          "highlighted": {
+            "type": "boolean",
+            "label": "Highlighted",
+            "default": false
+          },
+          "badge": {
+            "type": "string",
+            "label": "Badge Text",
+            "default": null
+          }
+        }
+      },
+      "default": []
+    },
+    "billingToggle": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Billing Toggle"
+    },
+    "currency": {
+      "type": "string",
+      "default": "USD",
+      "label": "Currency Code"
+    },
+    "comparisonMode": {
+      "type": "enum",
+      "values": ["cards", "table"],
+      "default": "cards",
+      "label": "Comparison Mode"
+    },
+    "highlightLabel": {
+      "type": "string",
+      "default": "Most Popular",
+      "label": "Highlight Label"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"],
+    "stackBehavior": "vertical-on-mobile"
+  }
+}

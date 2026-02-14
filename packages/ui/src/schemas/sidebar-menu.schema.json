@@ -1,0 +1,76 @@
+{
+  "id": "sidebar-menu",
+  "name": "Sidebar Menu",
+  "category": "Navigation",
+  "icon": "sidebar-menu",
+  "acceptsChildren": false,
+  "properties": {
+    "menuSource": {
+      "type": "string",
+      "default": null,
+      "label": "Menu Source ID",
+      "description": "ID of the menu data source to populate items"
+    },
+    "items": {
+      "type": "array",
+      "label": "Menu Items",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": { "type": "string", "label": "Label" },
+          "url": { "type": "url", "label": "URL" },
+          "icon": { "type": "string", "default": null, "label": "Icon" },
+          "children": {
+            "type": "array",
+            "label": "Sub-items",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": { "type": "string", "label": "Label" },
+                "url": { "type": "url", "label": "URL" },
+                "icon": { "type": "string", "default": null, "label": "Icon" },
+                "children": {
+                  "type": "array",
+                  "label": "Sub-items",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "label": { "type": "string", "label": "Label" },
+                      "url": { "type": "url", "label": "URL" },
+                      "icon": { "type": "string", "default": null, "label": "Icon" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "showIcons": {
+      "type": "boolean",
+      "default": false,
+      "label": "Show Icons"
+    },
+    "collapsibleSections": {
+      "type": "boolean",
+      "default": true,
+      "label": "Collapsible Sections"
+    },
+    "defaultExpanded": {
+      "type": "enum",
+      "values": ["all", "active-branch", "none"],
+      "default": "all",
+      "label": "Default Expanded State"
+    },
+    "sticky": {
+      "type": "boolean",
+      "default": false,
+      "label": "Sticky Position"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"],
+    "stackBehavior": "collapsible-on-mobile"
+  }
+}

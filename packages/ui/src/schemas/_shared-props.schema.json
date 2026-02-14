@@ -1,0 +1,127 @@
+{
+  "id": "_shared-props",
+  "name": "Shared Properties",
+  "description": "Inherited by all components. Applied via Advanced settings panel.",
+  "properties": {
+    "marginTop": {
+      "type": "enum",
+      "values": ["none", "xs", "small", "medium", "large", "xl"],
+      "default": "none",
+      "label": "Margin Top"
+    },
+    "marginBottom": {
+      "type": "enum",
+      "values": ["none", "xs", "small", "medium", "large", "xl"],
+      "default": "none",
+      "label": "Margin Bottom"
+    },
+    "paddingTop": {
+      "type": "enum",
+      "values": ["none", "xs", "small", "medium", "large", "xl"],
+      "default": "none",
+      "label": "Padding Top"
+    },
+    "paddingBottom": {
+      "type": "enum",
+      "values": ["none", "xs", "small", "medium", "large", "xl"],
+      "default": "none",
+      "label": "Padding Bottom"
+    },
+    "paddingLeft": {
+      "type": "enum",
+      "values": ["none", "xs", "small", "medium", "large", "xl"],
+      "default": "none",
+      "label": "Padding Left"
+    },
+    "paddingRight": {
+      "type": "enum",
+      "values": ["none", "xs", "small", "medium", "large", "xl"],
+      "default": "none",
+      "label": "Padding Right"
+    },
+    "hideOnDesktop": {
+      "type": "boolean",
+      "default": false,
+      "label": "Hide on Desktop"
+    },
+    "hideOnTablet": {
+      "type": "boolean",
+      "default": false,
+      "label": "Hide on Tablet"
+    },
+    "hideOnMobile": {
+      "type": "boolean",
+      "default": false,
+      "label": "Hide on Mobile"
+    },
+    "visibilityCondition": {
+      "type": "enum",
+      "values": ["always", "logged-in", "logged-out", "has-cart-items"],
+      "default": "always",
+      "label": "Visibility Condition"
+    },
+    "customCssClass": {
+      "type": "string",
+      "default": null,
+      "label": "Custom CSS Class"
+    },
+    "customId": {
+      "type": "string",
+      "default": null,
+      "label": "Custom ID"
+    },
+    "opacity": {
+      "type": "number",
+      "default": 100,
+      "min": 0,
+      "max": 100,
+      "label": "Opacity"
+    },
+    "overflow": {
+      "type": "enum",
+      "values": ["visible", "hidden", "auto"],
+      "default": "visible",
+      "label": "Overflow"
+    },
+    "entranceAnimation": {
+      "type": "enum",
+      "values": ["none", "fade-in", "fade-up", "fade-down", "fade-left", "fade-right", "zoom-in", "slide-up"],
+      "default": "none",
+      "label": "Entrance Animation"
+    },
+    "animationDuration": {
+      "type": "enum",
+      "values": ["fast", "normal", "slow"],
+      "default": "normal",
+      "label": "Animation Duration"
+    },
+    "animationDelay": {
+      "type": "number",
+      "default": 0,
+      "min": 0,
+      "max": 2000,
+      "label": "Animation Delay (ms)"
+    },
+    "animationEasing": {
+      "type": "enum",
+      "values": ["ease", "ease-in", "ease-out", "ease-in-out"],
+      "default": "ease-out",
+      "label": "Animation Easing"
+    },
+    "ariaLabel": {
+      "type": "string",
+      "default": null,
+      "label": "ARIA Label"
+    },
+    "ariaHidden": {
+      "type": "boolean",
+      "default": false,
+      "label": "ARIA Hidden"
+    },
+    "role": {
+      "type": "string",
+      "default": null,
+      "label": "ARIA Role"
+    }
+  }
+}

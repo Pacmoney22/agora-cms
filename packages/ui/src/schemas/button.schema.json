@@ -1,0 +1,61 @@
+{
+  "id": "button",
+  "name": "Button",
+  "category": "Utility",
+  "icon": "mouse-pointer-click",
+  "acceptsChildren": false,
+  "properties": {
+    "label": {
+      "type": "string",
+      "default": "Click me",
+      "label": "Label"
+    },
+    "url": {
+      "type": "url",
+      "default": "#",
+      "label": "URL"
+    },
+    "style": {
+      "type": "enum",
+      "values": ["primary", "secondary", "outline", "ghost", "link", "danger"],
+      "default": "primary",
+      "label": "Style"
+    },
+    "size": {
+      "type": "enum",
+      "values": ["small", "medium", "large"],
+      "default": "medium",
+      "label": "Size"
+    },
+    "icon": {
+      "type": "string",
+      "default": null,
+      "label": "Icon (Lucide name)"
+    },
+    "iconPosition": {
+      "type": "enum",
+      "values": ["left", "right"],
+      "default": "left",
+      "label": "Icon Position"
+    },
+    "fullWidth": {
+      "type": "boolean",
+      "default": false,
+      "label": "Full Width"
+    },
+    "openInNewTab": {
+      "type": "boolean",
+      "default": false,
+      "label": "Open in New Tab"
+    },
+    "alignment": {
+      "type": "enum",
+      "values": ["left", "center", "right"],
+      "default": "left",
+      "label": "Alignment"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

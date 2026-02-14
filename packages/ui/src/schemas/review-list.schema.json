@@ -1,0 +1,67 @@
+{
+  "id": "review-list",
+  "name": "Review List",
+  "category": "Trust",
+  "icon": "list",
+  "acceptsChildren": false,
+  "properties": {
+    "reviews": {
+      "type": "array",
+      "label": "Reviews",
+      "items": {
+        "type": "object",
+        "properties": {
+          "author": { "type": "string", "default": "", "label": "Author", "required": true },
+          "rating": { "type": "number", "default": 5, "label": "Rating", "min": 1, "max": 5 },
+          "title": { "type": "string", "default": null, "label": "Title" },
+          "content": { "type": "string", "default": "", "label": "Content", "required": true },
+          "date": { "type": "string", "default": "", "label": "Date" },
+          "verified": { "type": "boolean", "default": false, "label": "Verified Purchase" },
+          "helpful": { "type": "number", "default": 0, "label": "Helpful Count" },
+          "media": {
+            "type": "array",
+            "label": "Media",
+            "items": {
+              "type": "image",
+              "default": "",
+              "label": "Image"
+            },
+            "default": []
+          }
+        }
+      },
+      "default": []
+    },
+    "maxReviews": {
+      "type": "number",
+      "default": 10,
+      "label": "Reviews Per Page",
+      "min": 1,
+      "max": 50
+    },
+    "sortDefault": {
+      "type": "enum",
+      "values": ["newest", "highest", "lowest", "most-helpful"],
+      "default": "newest",
+      "label": "Default Sort"
+    },
+    "showVerifiedBadge": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Verified Badge"
+    },
+    "showHelpful": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Helpful Button"
+    },
+    "showMedia": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Media"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

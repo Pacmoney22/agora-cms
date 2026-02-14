@@ -1,0 +1,58 @@
+{
+  "id": "testimonial",
+  "name": "Testimonial",
+  "category": "Marketing",
+  "icon": "message-square-quote",
+  "acceptsChildren": false,
+  "properties": {
+    "quote": {
+      "type": "string",
+      "default": "This product has been amazing for our team.",
+      "label": "Quote",
+      "maxLength": 500
+    },
+    "author": {
+      "type": "string",
+      "default": "Jane Doe",
+      "label": "Author Name"
+    },
+    "authorTitle": {
+      "type": "string",
+      "default": null,
+      "label": "Author Title"
+    },
+    "authorImage": {
+      "type": "image",
+      "default": null,
+      "label": "Author Image",
+      "constraints": { "formats": ["jpg", "png", "webp"] }
+    },
+    "companyLogo": {
+      "type": "image",
+      "default": null,
+      "label": "Company Logo",
+      "constraints": { "formats": ["svg", "png", "webp"] }
+    },
+    "rating": {
+      "type": "number",
+      "default": null,
+      "label": "Star Rating",
+      "min": 1,
+      "max": 5
+    },
+    "style": {
+      "type": "enum",
+      "values": ["card", "minimal", "bubble", "large-quote", "video"],
+      "default": "card",
+      "label": "Display Style"
+    },
+    "videoUrl": {
+      "type": "url",
+      "default": null,
+      "label": "Video URL"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

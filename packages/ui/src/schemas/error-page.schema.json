@@ -1,0 +1,54 @@
+{
+  "id": "error-page",
+  "name": "Error Page",
+  "category": "Global",
+  "icon": "alert-triangle",
+  "acceptsChildren": false,
+  "properties": {
+    "headline": {
+      "type": "string",
+      "default": "Page Not Found",
+      "label": "Headline"
+    },
+    "message": {
+      "type": "string",
+      "default": "Sorry, we couldn't find the page you're looking for. It might have been moved or deleted.",
+      "label": "Message",
+      "maxLength": 300
+    },
+    "illustration": {
+      "type": "image",
+      "default": null,
+      "label": "Illustration"
+    },
+    "showSearch": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Search Bar"
+    },
+    "suggestedLinks": {
+      "type": "array",
+      "label": "Suggested Links",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": { "type": "string", "default": "Link", "label": "Label", "required": true },
+          "url": { "type": "url", "default": "/", "label": "URL", "required": true }
+        }
+      },
+      "default": []
+    },
+    "ctaButton": {
+      "type": "object",
+      "label": "CTA Button",
+      "properties": {
+        "label": { "type": "string", "default": "Go Home", "label": "Label" },
+        "url": { "type": "url", "default": "/", "label": "URL" }
+      },
+      "default": { "label": "Go Home", "url": "/" }
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

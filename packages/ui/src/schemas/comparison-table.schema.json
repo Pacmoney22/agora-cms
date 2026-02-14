@@ -1,0 +1,99 @@
+{
+  "id": "comparison-table",
+  "name": "Comparison Table",
+  "category": "Data Display",
+  "icon": "columns-3",
+  "acceptsChildren": false,
+  "properties": {
+    "columns": {
+      "type": "array",
+      "label": "Columns",
+      "items": {
+        "type": "object",
+        "properties": {
+          "heading": {
+            "type": "string",
+            "label": "Heading",
+            "default": "Plan"
+          },
+          "subheading": {
+            "type": "string",
+            "label": "Subheading",
+            "default": null
+          },
+          "image": {
+            "type": "url",
+            "label": "Image URL",
+            "default": null
+          },
+          "highlighted": {
+            "type": "boolean",
+            "default": false,
+            "label": "Highlighted"
+          }
+        }
+      },
+      "default": []
+    },
+    "rows": {
+      "type": "array",
+      "label": "Rows",
+      "items": {
+        "type": "object",
+        "properties": {
+          "feature": {
+            "type": "string",
+            "label": "Feature Name",
+            "default": "Feature"
+          },
+          "values": {
+            "type": "array",
+            "label": "Values",
+            "items": {
+              "type": "string"
+            },
+            "default": []
+          },
+          "tooltip": {
+            "type": "string",
+            "label": "Tooltip",
+            "default": null
+          }
+        }
+      },
+      "default": []
+    },
+    "showHeader": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Header"
+    },
+    "stickyHeader": {
+      "type": "boolean",
+      "default": false,
+      "label": "Sticky Header"
+    },
+    "highlightDifferences": {
+      "type": "boolean",
+      "default": false,
+      "label": "Highlight Differences"
+    },
+    "showCta": {
+      "type": "boolean",
+      "default": false,
+      "label": "Show CTA Buttons"
+    },
+    "ctaLabels": {
+      "type": "array",
+      "label": "CTA Labels",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"],
+    "stackBehavior": "horizontal-scroll-with-sticky-column"
+  }
+}

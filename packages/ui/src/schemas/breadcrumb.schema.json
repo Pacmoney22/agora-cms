@@ -1,0 +1,52 @@
+{
+  "id": "breadcrumb",
+  "name": "Breadcrumb",
+  "category": "Navigation",
+  "icon": "breadcrumb",
+  "acceptsChildren": false,
+  "properties": {
+    "items": {
+      "type": "array",
+      "label": "Breadcrumb Items",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": { "type": "string", "label": "Label" },
+          "url": { "type": "url", "label": "URL" }
+        }
+      }
+    },
+    "source": {
+      "type": "enum",
+      "values": ["auto", "manual"],
+      "default": "manual",
+      "label": "Source",
+      "description": "Auto generates breadcrumbs from page hierarchy; manual uses provided items"
+    },
+    "separator": {
+      "type": "enum",
+      "values": ["chevron", "slash", "arrow", "dot"],
+      "default": "chevron",
+      "label": "Separator Style"
+    },
+    "showHome": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Home Link"
+    },
+    "showCurrent": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Current Page"
+    },
+    "maxItems": {
+      "type": "number",
+      "default": null,
+      "label": "Max Visible Items",
+      "description": "Truncate with ellipsis when items exceed this count. Null for no limit."
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

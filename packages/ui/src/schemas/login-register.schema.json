@@ -1,0 +1,76 @@
+{
+  "id": "login-register",
+  "name": "Login / Register",
+  "category": "Forms",
+  "icon": "login-register",
+  "acceptsChildren": false,
+  "properties": {
+    "defaultView": {
+      "type": "enum",
+      "values": ["login", "register"],
+      "default": "login",
+      "label": "Default View"
+    },
+    "showToggle": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Login/Register Toggle"
+    },
+    "showSocialLogin": {
+      "type": "boolean",
+      "default": false,
+      "label": "Show Social Login"
+    },
+    "socialProviders": {
+      "type": "array",
+      "items": {
+        "type": "enum",
+        "values": ["google", "apple", "facebook", "github"]
+      },
+      "default": ["google", "apple"],
+      "label": "Social Login Providers"
+    },
+    "showForgotPassword": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Forgot Password Link"
+    },
+    "registerFields": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": ["name", "email", "password"],
+      "label": "Registration Fields"
+    },
+    "layout": {
+      "type": "enum",
+      "values": ["card", "split-image", "minimal"],
+      "default": "card",
+      "label": "Layout"
+    },
+    "splitImage": {
+      "type": "image",
+      "default": null,
+      "label": "Split Image (for split-image layout)"
+    },
+    "termsCheckbox": {
+      "type": "object",
+      "default": null,
+      "label": "Terms Checkbox",
+      "properties": {
+        "label": {
+          "type": "string",
+          "default": "I agree to the Terms of Service and Privacy Policy",
+          "label": "Terms Label"
+        },
+        "required": {
+          "type": "boolean",
+          "default": true,
+          "label": "Required"
+        }
+      }
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

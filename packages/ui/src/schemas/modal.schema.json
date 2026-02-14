@@ -1,0 +1,60 @@
+{
+  "id": "modal",
+  "name": "Modal / Popup",
+  "category": "Utility",
+  "icon": "square",
+  "acceptsChildren": true,
+  "properties": {
+    "trigger": {
+      "type": "enum",
+      "values": ["click", "time-delay", "scroll-depth", "exit-intent"],
+      "default": "click",
+      "label": "Trigger"
+    },
+    "timeDelay": {
+      "type": "number",
+      "default": 3000,
+      "label": "Time Delay (ms)"
+    },
+    "scrollDepth": {
+      "type": "number",
+      "default": 50,
+      "label": "Scroll Depth (%)"
+    },
+    "size": {
+      "type": "enum",
+      "values": ["small", "medium", "large", "fullscreen"],
+      "default": "medium",
+      "label": "Size"
+    },
+    "showCloseButton": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Close Button"
+    },
+    "closeOnBackdropClick": {
+      "type": "boolean",
+      "default": true,
+      "label": "Close on Backdrop Click"
+    },
+    "showOncePerSession": {
+      "type": "boolean",
+      "default": false,
+      "label": "Show Once Per Session"
+    },
+    "animation": {
+      "type": "enum",
+      "values": ["fade", "slide-up", "zoom", "none"],
+      "default": "fade",
+      "label": "Animation"
+    },
+    "backdropColor": {
+      "type": "color",
+      "default": "rgba(0, 0, 0, 0.5)",
+      "label": "Backdrop Color"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

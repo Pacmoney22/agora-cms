@@ -1,0 +1,60 @@
+{
+  "id": "code-block",
+  "name": "Code Block",
+  "category": "Typography",
+  "icon": "code-block",
+  "acceptsChildren": false,
+  "properties": {
+    "code": {
+      "type": "string",
+      "default": "// Enter your code here",
+      "label": "Code",
+      "multiline": true
+    },
+    "language": {
+      "type": "string",
+      "default": "javascript",
+      "label": "Language"
+    },
+    "theme": {
+      "type": "enum",
+      "values": ["dark", "light", "auto"],
+      "default": "dark",
+      "label": "Theme"
+    },
+    "showLineNumbers": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Line Numbers"
+    },
+    "highlightLines": {
+      "type": "string",
+      "default": "",
+      "label": "Highlight Lines",
+      "description": "Comma-separated line numbers or ranges (e.g. 1,3-5,8)"
+    },
+    "showCopyButton": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Copy Button"
+    },
+    "caption": {
+      "type": "string",
+      "default": null,
+      "label": "Caption"
+    },
+    "maxHeight": {
+      "type": "number",
+      "default": null,
+      "label": "Max Height (px)"
+    },
+    "wrapLines": {
+      "type": "boolean",
+      "default": false,
+      "label": "Wrap Long Lines"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

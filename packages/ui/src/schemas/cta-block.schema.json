@@ -1,0 +1,46 @@
+{
+  "id": "cta-block",
+  "name": "CTA Block",
+  "category": "Marketing",
+  "icon": "cta-block",
+  "acceptsChildren": false,
+  "properties": {
+    "heading": {
+      "type": "string",
+      "default": "Ready to get started?",
+      "label": "Heading"
+    },
+    "description": {
+      "type": "string",
+      "default": "Join thousands of satisfied customers today.",
+      "label": "Description"
+    },
+    "buttonLabel": {
+      "type": "string",
+      "default": "Get Started",
+      "label": "Button Label"
+    },
+    "buttonUrl": {
+      "type": "url",
+      "default": "#",
+      "label": "Button URL"
+    },
+    "buttonStyle": {
+      "type": "enum",
+      "values": ["primary", "secondary"],
+      "default": "primary",
+      "label": "Button Style"
+    },
+    "alignment": {
+      "type": "enum",
+      "values": ["left", "center"],
+      "default": "center",
+      "label": "Alignment"
+    },
+    "backgroundColor": {
+      "type": "color",
+      "default": "#f8fafc",
+      "label": "Background Color"
+    }
+  }
+}

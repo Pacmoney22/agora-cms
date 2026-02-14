@@ -1,0 +1,98 @@
+{
+  "id": "footer",
+  "name": "Footer",
+  "category": "Navigation",
+  "icon": "footer",
+  "acceptsChildren": false,
+  "properties": {
+    "logo": {
+      "type": "image",
+      "default": null,
+      "label": "Logo Image",
+      "constraints": { "formats": ["png", "svg", "webp"] }
+    },
+    "tagline": {
+      "type": "string",
+      "default": "",
+      "label": "Tagline",
+      "maxLength": 200
+    },
+    "columns": {
+      "type": "array",
+      "label": "Navigation Columns",
+      "items": {
+        "type": "object",
+        "properties": {
+          "heading": { "type": "string", "label": "Column Heading" },
+          "links": {
+            "type": "array",
+            "label": "Links",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": { "type": "string", "label": "Link Label" },
+                "url": { "type": "url", "label": "Link URL" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "showNewsletter": {
+      "type": "boolean",
+      "default": false,
+      "label": "Show Newsletter Signup"
+    },
+    "socialLinks": {
+      "type": "array",
+      "label": "Social Links",
+      "items": {
+        "type": "object",
+        "properties": {
+          "platform": {
+            "type": "enum",
+            "values": ["facebook", "twitter", "instagram", "linkedin", "youtube"],
+            "label": "Platform"
+          },
+          "url": { "type": "url", "label": "Profile URL" }
+        }
+      }
+    },
+    "contactInfo": {
+      "type": "object",
+      "default": null,
+      "label": "Contact Information",
+      "properties": {
+        "email": { "type": "string", "default": "", "label": "Email" },
+        "phone": { "type": "string", "default": "", "label": "Phone" },
+        "address": { "type": "string", "default": "", "label": "Address" }
+      }
+    },
+    "legalLinks": {
+      "type": "array",
+      "label": "Legal Links",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": { "type": "string", "label": "Link Label" },
+          "url": { "type": "url", "label": "Link URL" }
+        }
+      }
+    },
+    "copyrightText": {
+      "type": "string",
+      "default": "\u00a9 {year} Company. All rights reserved.",
+      "label": "Copyright Text",
+      "description": "Use {year} token for auto year replacement"
+    },
+    "showBackToTop": {
+      "type": "boolean",
+      "default": false,
+      "label": "Show Back to Top Button"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"],
+    "stackBehavior": "vertical-on-mobile"
+  }
+}

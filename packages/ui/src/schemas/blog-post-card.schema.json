@@ -1,0 +1,84 @@
+{
+  "id": "blog-post-card",
+  "name": "Blog Post Card",
+  "category": "Blog",
+  "icon": "file-text",
+  "acceptsChildren": false,
+  "properties": {
+    "post": {
+      "type": "object",
+      "label": "Post Data",
+      "default": null,
+      "properties": {
+        "title": { "type": "string", "default": "Blog Post Title", "label": "Title", "required": true },
+        "excerpt": { "type": "string", "default": "", "label": "Excerpt" },
+        "image": { "type": "image", "default": null, "label": "Featured Image" },
+        "author": {
+          "type": "object",
+          "label": "Author",
+          "properties": {
+            "name": { "type": "string", "default": "", "label": "Name" },
+            "avatar": { "type": "image", "default": null, "label": "Avatar" }
+          }
+        },
+        "date": { "type": "string", "default": "", "label": "Date" },
+        "category": { "type": "string", "default": "", "label": "Category" },
+        "readTime": { "type": "string", "default": "", "label": "Read Time" },
+        "slug": { "type": "string", "default": "", "label": "Slug", "required": true }
+      }
+    },
+    "showImage": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Image"
+    },
+    "imageAspectRatio": {
+      "type": "enum",
+      "values": ["16:9", "4:3", "1:1"],
+      "default": "16:9",
+      "label": "Image Aspect Ratio"
+    },
+    "showExcerpt": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Excerpt"
+    },
+    "excerptLength": {
+      "type": "number",
+      "default": 150,
+      "label": "Excerpt Length",
+      "min": 50,
+      "max": 500
+    },
+    "showAuthor": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Author"
+    },
+    "showDate": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Date"
+    },
+    "showCategory": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Category"
+    },
+    "showReadTime": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Read Time"
+    },
+    "cardStyle": {
+      "type": "enum",
+      "values": ["standard", "overlay", "horizontal", "minimal"],
+      "default": "standard",
+      "label": "Card Style"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"],
+    "stackBehavior": "full-width-on-mobile"
+  }
+}

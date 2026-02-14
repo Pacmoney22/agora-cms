@@ -1,0 +1,32 @@
+{
+  "id": "paragraph",
+  "name": "Paragraph",
+  "category": "Typography",
+  "icon": "paragraph",
+  "acceptsChildren": false,
+  "properties": {
+    "text": {
+      "type": "string",
+      "default": "Enter your text here...",
+      "label": "Text",
+      "multiline": true
+    },
+    "alignment": {
+      "type": "enum",
+      "values": ["left", "center", "right", "justify"],
+      "default": "left",
+      "label": "Alignment"
+    },
+    "fontSize": {
+      "type": "enum",
+      "values": ["sm", "base", "lg", "xl"],
+      "default": "base",
+      "label": "Font Size"
+    },
+    "color": {
+      "type": "color",
+      "default": null,
+      "label": "Color"
+    }
+  }
+}

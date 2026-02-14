@@ -1,0 +1,61 @@
+{
+  "id": "hero-banner",
+  "name": "Hero Banner",
+  "category": "Marketing",
+  "icon": "hero-banner",
+  "acceptsChildren": false,
+  "properties": {
+    "headline": {
+      "type": "string",
+      "default": "Your Headline Here",
+      "maxLength": 120,
+      "label": "Headline",
+      "seo": { "tag": "h1", "required": true }
+    },
+    "subheadline": {
+      "type": "string",
+      "default": "Supporting text goes here",
+      "label": "Subheadline"
+    },
+    "backgroundImage": {
+      "type": "image",
+      "default": null,
+      "label": "Background Image",
+      "constraints": { "minWidth": 1920, "formats": ["jpg", "webp"] }
+    },
+    "backgroundColor": {
+      "type": "color",
+      "default": "#1e293b",
+      "label": "Background Color"
+    },
+    "cta": {
+      "type": "object",
+      "label": "Call to Action",
+      "properties": {
+        "label": { "type": "string", "default": "Get Started", "label": "Button Label" },
+        "url": { "type": "url", "default": "#", "label": "Button URL" },
+        "style": {
+          "type": "enum",
+          "values": ["primary", "secondary", "ghost"],
+          "default": "primary",
+          "label": "Button Style"
+        }
+      }
+    },
+    "layout": {
+      "type": "enum",
+      "values": ["left-aligned", "centered", "right-aligned"],
+      "default": "centered",
+      "label": "Layout"
+    },
+    "minHeight": {
+      "type": "string",
+      "default": "500px",
+      "label": "Minimum Height"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"],
+    "stackBehavior": "vertical-on-mobile"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "id": "search-bar",
+  "name": "Search Bar",
+  "category": "Forms",
+  "icon": "search-bar",
+  "acceptsChildren": false,
+  "properties": {
+    "placeholder": {
+      "type": "string",
+      "default": "Search...",
+      "label": "Placeholder Text"
+    },
+    "searchScope": {
+      "type": "enum",
+      "values": ["all", "products", "content", "blog"],
+      "default": "all",
+      "label": "Search Scope"
+    },
+    "showInstantResults": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Instant Results"
+    },
+    "maxSuggestions": {
+      "type": "number",
+      "default": 5,
+      "min": 1,
+      "max": 10,
+      "label": "Max Suggestions"
+    },
+    "showCategories": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Categories in Results"
+    },
+    "showThumbnails": {
+      "type": "boolean",
+      "default": false,
+      "label": "Show Thumbnails in Results"
+    },
+    "style": {
+      "type": "enum",
+      "values": ["standard", "expandable", "fullscreen"],
+      "default": "standard",
+      "label": "Search Style"
+    },
+    "hotkey": {
+      "type": "string",
+      "default": "/",
+      "label": "Keyboard Shortcut"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

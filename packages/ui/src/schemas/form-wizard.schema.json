@@ -1,0 +1,142 @@
+{
+  "id": "form-wizard",
+  "name": "Multi-Step Form Wizard",
+  "category": "Forms",
+  "icon": "form-wizard",
+  "acceptsChildren": false,
+  "properties": {
+    "steps": {
+      "type": "array",
+      "label": "Steps",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "default": "Step Title",
+            "label": "Step Title"
+          },
+          "description": {
+            "type": "string",
+            "default": "",
+            "label": "Step Description"
+          },
+          "fields": {
+            "type": "array",
+            "label": "Fields",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "enum",
+                  "values": ["text", "email", "phone", "textarea", "select", "radio", "checkbox", "file", "date", "number", "url", "hidden"],
+                  "default": "text",
+                  "label": "Field Type"
+                },
+                "label": {
+                  "type": "string",
+                  "default": "Field Label",
+                  "label": "Label"
+                },
+                "placeholder": {
+                  "type": "string",
+                  "default": "",
+                  "label": "Placeholder"
+                },
+                "required": {
+                  "type": "boolean",
+                  "default": false,
+                  "label": "Required"
+                },
+                "width": {
+                  "type": "enum",
+                  "values": ["full", "half"],
+                  "default": "full",
+                  "label": "Width"
+                },
+                "options": {
+                  "type": "array",
+                  "items": { "type": "string" },
+                  "default": [],
+                  "label": "Options (for select/radio/checkbox)"
+                }
+              }
+            }
+          }
+        }
+      },
+      "default": [
+        {
+          "title": "Personal Info",
+          "description": "Tell us about yourself",
+          "fields": [
+            { "type": "text", "label": "First Name", "placeholder": "John", "required": true, "width": "half" },
+            { "type": "text", "label": "Last Name", "placeholder": "Doe", "required": true, "width": "half" },
+            { "type": "email", "label": "Email", "placeholder": "john@example.com", "required": true, "width": "full" }
+          ]
+        },
+        {
+          "title": "Details",
+          "description": "A few more details",
+          "fields": [
+            { "type": "phone", "label": "Phone", "placeholder": "(555) 123-4567", "required": false, "width": "half" },
+            { "type": "text", "label": "Company", "placeholder": "Acme Corp", "required": false, "width": "half" },
+            { "type": "select", "label": "Role", "required": true, "width": "full", "options": ["Developer", "Designer", "Manager", "Other"] }
+          ]
+        },
+        {
+          "title": "Review",
+          "description": "Review and submit",
+          "fields": [
+            { "type": "textarea", "label": "Additional Notes", "placeholder": "Anything else you want us to know?", "required": false, "width": "full" }
+          ]
+        }
+      ]
+    },
+    "progressStyle": {
+      "type": "enum",
+      "values": ["bar", "steps", "dots", "numbered"],
+      "default": "steps",
+      "label": "Progress Style"
+    },
+    "showStepLabels": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Step Labels"
+    },
+    "allowBackNavigation": {
+      "type": "boolean",
+      "default": true,
+      "label": "Allow Back Navigation"
+    },
+    "validatePerStep": {
+      "type": "boolean",
+      "default": true,
+      "label": "Validate Per Step"
+    },
+    "submitLabel": {
+      "type": "string",
+      "default": "Submit",
+      "label": "Submit Button Label"
+    },
+    "successAction": {
+      "type": "enum",
+      "values": ["show-message", "redirect"],
+      "default": "show-message",
+      "label": "Success Action"
+    },
+    "successMessage": {
+      "type": "string",
+      "default": "Your submission has been received. Thank you!",
+      "label": "Success Message"
+    },
+    "saveDraft": {
+      "type": "boolean",
+      "default": false,
+      "label": "Show Save Draft Button"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

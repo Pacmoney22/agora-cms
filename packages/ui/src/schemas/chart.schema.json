@@ -1,0 +1,98 @@
+{
+  "id": "chart",
+  "name": "Chart",
+  "category": "Data Display",
+  "icon": "bar-chart-3",
+  "acceptsChildren": false,
+  "properties": {
+    "chartType": {
+      "type": "enum",
+      "values": ["bar", "line", "pie", "donut", "area", "horizontal-bar", "radar", "scatter"],
+      "default": "bar",
+      "label": "Chart Type"
+    },
+    "data": {
+      "type": "object",
+      "label": "Chart Data",
+      "properties": {
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "label": "Labels",
+          "default": []
+        },
+        "datasets": {
+          "type": "array",
+          "label": "Datasets",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string",
+                "label": "Dataset Label",
+                "default": "Dataset"
+              },
+              "data": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "label": "Values",
+                "default": []
+              },
+              "color": {
+                "type": "color",
+                "label": "Color",
+                "default": null
+              }
+            }
+          },
+          "default": []
+        }
+      },
+      "default": {
+        "labels": [],
+        "datasets": []
+      }
+    },
+    "dataSource": {
+      "type": "enum",
+      "values": ["manual", "csv"],
+      "default": "manual",
+      "label": "Data Source"
+    },
+    "showLegend": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Legend"
+    },
+    "showValues": {
+      "type": "boolean",
+      "default": false,
+      "label": "Show Values on Chart"
+    },
+    "animate": {
+      "type": "boolean",
+      "default": true,
+      "label": "Animate"
+    },
+    "height": {
+      "type": "number",
+      "default": 300,
+      "min": 100,
+      "max": 800,
+      "label": "Chart Height (px)"
+    },
+    "accessibleDescription": {
+      "type": "string",
+      "default": null,
+      "label": "Accessible Description"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"],
+    "stackBehavior": "maintain-aspect-ratio"
+  }
+}

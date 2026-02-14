@@ -1,0 +1,49 @@
+{
+  "id": "blockquote",
+  "name": "Blockquote",
+  "category": "Typography",
+  "icon": "blockquote",
+  "acceptsChildren": false,
+  "properties": {
+    "quote": {
+      "type": "string",
+      "default": "Enter your quote here...",
+      "label": "Quote Text"
+    },
+    "attribution": {
+      "type": "string",
+      "default": null,
+      "label": "Attribution Name"
+    },
+    "attributionTitle": {
+      "type": "string",
+      "default": null,
+      "label": "Attribution Title"
+    },
+    "attributionImage": {
+      "type": "image",
+      "default": null,
+      "label": "Attribution Image",
+      "constraints": { "formats": ["jpg", "png", "webp"] }
+    },
+    "style": {
+      "type": "enum",
+      "values": ["border-left", "large-quote", "card", "centered"],
+      "default": "border-left",
+      "label": "Style"
+    },
+    "accentColor": {
+      "type": "color",
+      "default": null,
+      "label": "Accent Color"
+    },
+    "citationUrl": {
+      "type": "url",
+      "default": null,
+      "label": "Citation URL"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

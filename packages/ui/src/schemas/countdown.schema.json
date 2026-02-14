@@ -1,0 +1,97 @@
+{
+  "id": "countdown",
+  "name": "Countdown Timer",
+  "category": "Marketing",
+  "icon": "timer",
+  "acceptsChildren": false,
+  "properties": {
+    "targetDate": {
+      "type": "string",
+      "default": "",
+      "label": "Target Date (ISO 8601)",
+      "format": "datetime"
+    },
+    "timezone": {
+      "type": "string",
+      "default": "UTC",
+      "label": "Timezone"
+    },
+    "showDays": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Days"
+    },
+    "showHours": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Hours"
+    },
+    "showMinutes": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Minutes"
+    },
+    "showSeconds": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Seconds"
+    },
+    "labels": {
+      "type": "object",
+      "label": "Custom Labels",
+      "properties": {
+        "days": {
+          "type": "string",
+          "default": "Days",
+          "label": "Days Label"
+        },
+        "hours": {
+          "type": "string",
+          "default": "Hours",
+          "label": "Hours Label"
+        },
+        "minutes": {
+          "type": "string",
+          "default": "Minutes",
+          "label": "Minutes Label"
+        },
+        "seconds": {
+          "type": "string",
+          "default": "Seconds",
+          "label": "Seconds Label"
+        }
+      }
+    },
+    "style": {
+      "type": "enum",
+      "values": ["boxed", "minimal", "flip", "circular"],
+      "default": "boxed",
+      "label": "Display Style"
+    },
+    "expiredAction": {
+      "type": "enum",
+      "values": ["hide", "show-message", "redirect"],
+      "default": "show-message",
+      "label": "Expired Action"
+    },
+    "expiredMessage": {
+      "type": "string",
+      "default": "This offer has expired.",
+      "label": "Expired Message"
+    },
+    "expiredRedirectUrl": {
+      "type": "url",
+      "default": null,
+      "label": "Expired Redirect URL"
+    },
+    "size": {
+      "type": "enum",
+      "values": ["small", "medium", "large"],
+      "default": "medium",
+      "label": "Size"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

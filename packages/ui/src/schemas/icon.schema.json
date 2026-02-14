@@ -1,0 +1,49 @@
+{
+  "id": "icon",
+  "name": "Icon",
+  "category": "Utility",
+  "icon": "smile",
+  "acceptsChildren": false,
+  "properties": {
+    "icon": {
+      "type": "string",
+      "default": "Star",
+      "label": "Icon (Lucide name)"
+    },
+    "size": {
+      "type": "enum",
+      "values": ["small", "medium", "large", "xlarge"],
+      "default": "medium",
+      "label": "Size"
+    },
+    "color": {
+      "type": "color",
+      "default": "#374151",
+      "label": "Color"
+    },
+    "backgroundStyle": {
+      "type": "enum",
+      "values": ["none", "circle", "square"],
+      "default": "none",
+      "label": "Background Style"
+    },
+    "link": {
+      "type": "url",
+      "default": null,
+      "label": "Link URL"
+    },
+    "decorative": {
+      "type": "boolean",
+      "default": true,
+      "label": "Decorative (hidden from screen readers)"
+    },
+    "ariaLabel": {
+      "type": "string",
+      "default": null,
+      "label": "Aria Label"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "id": "back-to-top",
+  "name": "Back to Top",
+  "category": "Utility",
+  "icon": "arrow-up",
+  "acceptsChildren": false,
+  "properties": {
+    "showAfterScroll": {
+      "type": "number",
+      "default": 300,
+      "label": "Show After Scroll (px)"
+    },
+    "icon": {
+      "type": "string",
+      "default": "ArrowUp",
+      "label": "Icon (Lucide name)"
+    },
+    "position": {
+      "type": "enum",
+      "values": ["bottom-right", "bottom-left"],
+      "default": "bottom-right",
+      "label": "Position"
+    },
+    "style": {
+      "type": "enum",
+      "values": ["circle", "rounded", "square"],
+      "default": "circle",
+      "label": "Shape Style"
+    },
+    "smoothScroll": {
+      "type": "boolean",
+      "default": true,
+      "label": "Smooth Scroll"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

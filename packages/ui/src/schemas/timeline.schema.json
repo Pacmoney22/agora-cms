@@ -1,0 +1,74 @@
+{
+  "id": "timeline",
+  "name": "Timeline",
+  "category": "Data Display",
+  "icon": "git-branch",
+  "acceptsChildren": false,
+  "properties": {
+    "items": {
+      "type": "array",
+      "label": "Timeline Items",
+      "items": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "label": "Date",
+            "default": null
+          },
+          "title": {
+            "type": "string",
+            "label": "Title",
+            "default": "Event Title"
+          },
+          "description": {
+            "type": "string",
+            "label": "Description",
+            "default": "Event description goes here."
+          },
+          "icon": {
+            "type": "string",
+            "label": "Icon Name",
+            "default": null
+          },
+          "image": {
+            "type": "url",
+            "label": "Image URL",
+            "default": null
+          }
+        }
+      },
+      "default": []
+    },
+    "layout": {
+      "type": "enum",
+      "values": ["vertical", "horizontal", "alternating"],
+      "default": "vertical",
+      "label": "Layout"
+    },
+    "lineColor": {
+      "type": "color",
+      "default": "#e5e7eb",
+      "label": "Line Color"
+    },
+    "nodeColor": {
+      "type": "color",
+      "default": "#3b82f6",
+      "label": "Node Color"
+    },
+    "showDates": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Dates"
+    },
+    "animated": {
+      "type": "boolean",
+      "default": true,
+      "label": "Animate on Scroll"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"],
+    "stackBehavior": "vertical-on-mobile"
+  }
+}

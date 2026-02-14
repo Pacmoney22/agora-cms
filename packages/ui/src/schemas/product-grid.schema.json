@@ -1,0 +1,84 @@
+{
+  "id": "product-grid",
+  "name": "Product Grid",
+  "category": "Commerce",
+  "icon": "grid",
+  "acceptsChildren": false,
+  "properties": {
+    "source": {
+      "type": "enum",
+      "values": ["category", "tag", "manual", "best-sellers", "new-arrivals", "on-sale", "related"],
+      "default": "manual",
+      "label": "Product Source"
+    },
+    "categoryId": {
+      "type": "string",
+      "default": null,
+      "label": "Category ID",
+      "visibleWhen": { "source": "category" }
+    },
+    "productTypes": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": [],
+      "label": "Product Types"
+    },
+    "products": {
+      "type": "array",
+      "label": "Products",
+      "visibleWhen": { "source": "manual" },
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "default": "", "label": "Product Name", "required": true },
+          "price": { "type": "number", "default": 0, "label": "Price", "min": 0 },
+          "salePrice": { "type": "number", "default": null, "label": "Sale Price", "min": 0 },
+          "image": { "type": "image", "default": null, "label": "Image" },
+          "rating": { "type": "number", "default": null, "label": "Rating", "min": 0, "max": 5 },
+          "badge": { "type": "string", "default": null, "label": "Badge" },
+          "slug": { "type": "string", "default": "", "label": "Slug", "required": true },
+          "type": { "type": "string", "default": null, "label": "Type" }
+        }
+      },
+      "default": []
+    },
+    "maxProducts": {
+      "type": "number",
+      "default": 24,
+      "min": 1,
+      "max": 100,
+      "label": "Max Products"
+    },
+    "columns": {
+      "type": "enum",
+      "values": [2, 3, 4, 5],
+      "default": 4,
+      "label": "Columns"
+    },
+    "showFilters": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Filters"
+    },
+    "showSort": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Sort"
+    },
+    "paginationStyle": {
+      "type": "enum",
+      "values": ["load-more", "numbered", "infinite-scroll"],
+      "default": "load-more",
+      "label": "Pagination Style"
+    },
+    "emptyStateMessage": {
+      "type": "string",
+      "default": "No products found matching your criteria.",
+      "label": "Empty State Message"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"],
+    "stackBehavior": "reduce-columns-on-mobile"
+  }
+}

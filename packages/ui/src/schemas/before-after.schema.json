@@ -1,0 +1,58 @@
+{
+  "id": "before-after",
+  "name": "Before/After Comparison",
+  "category": "Marketing",
+  "icon": "columns-2",
+  "acceptsChildren": false,
+  "properties": {
+    "beforeImage": {
+      "type": "image",
+      "default": "",
+      "label": "Before Image",
+      "constraints": { "formats": ["jpg", "png", "webp"] }
+    },
+    "afterImage": {
+      "type": "image",
+      "default": "",
+      "label": "After Image",
+      "constraints": { "formats": ["jpg", "png", "webp"] }
+    },
+    "beforeLabel": {
+      "type": "string",
+      "default": "Before",
+      "label": "Before Label"
+    },
+    "afterLabel": {
+      "type": "string",
+      "default": "After",
+      "label": "After Label"
+    },
+    "orientation": {
+      "type": "enum",
+      "values": ["horizontal", "vertical"],
+      "default": "horizontal",
+      "label": "Orientation"
+    },
+    "initialPosition": {
+      "type": "number",
+      "default": 50,
+      "label": "Initial Slider Position (%)",
+      "min": 0,
+      "max": 100
+    },
+    "showLabels": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Labels"
+    },
+    "aspectRatio": {
+      "type": "enum",
+      "values": ["auto", "16:9", "4:3", "1:1"],
+      "default": "auto",
+      "label": "Aspect Ratio"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

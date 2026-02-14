@@ -1,0 +1,56 @@
+{
+  "id": "tabs",
+  "name": "Tabs",
+  "category": "Layout",
+  "icon": "tabs",
+  "acceptsChildren": true,
+  "properties": {
+    "tabs": {
+      "type": "array",
+      "label": "Tabs",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": { "type": "string", "default": "Tab", "label": "Label" },
+          "icon": { "type": "string", "default": null, "label": "Icon" }
+        }
+      },
+      "default": [
+        { "label": "Tab 1" },
+        { "label": "Tab 2" },
+        { "label": "Tab 3" }
+      ]
+    },
+    "defaultActiveTab": {
+      "type": "number",
+      "default": 0,
+      "label": "Default Active Tab"
+    },
+    "tabStyle": {
+      "type": "enum",
+      "values": ["underline", "boxed", "pill", "vertical"],
+      "default": "underline",
+      "label": "Tab Style"
+    },
+    "tabAlignment": {
+      "type": "enum",
+      "values": ["left", "center", "stretch"],
+      "default": "left",
+      "label": "Tab Alignment"
+    },
+    "accentColor": {
+      "type": "color",
+      "default": null,
+      "label": "Accent Color"
+    },
+    "animateTransition": {
+      "type": "boolean",
+      "default": true,
+      "label": "Animate Transition"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"],
+    "stackBehavior": "horizontal-scroll-on-mobile"
+  }
+}

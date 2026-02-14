@@ -1,0 +1,96 @@
+{
+  "id": "header",
+  "name": "Header / Navbar",
+  "category": "Navigation",
+  "icon": "header",
+  "acceptsChildren": true,
+  "properties": {
+    "logo": {
+      "type": "image",
+      "default": null,
+      "label": "Logo Image",
+      "constraints": { "formats": ["png", "svg", "webp"] }
+    },
+    "logoLink": {
+      "type": "url",
+      "default": "/",
+      "label": "Logo Link"
+    },
+    "navigationMenu": {
+      "type": "string",
+      "default": null,
+      "label": "Navigation Menu ID",
+      "description": "ID of the navigation menu to display"
+    },
+    "showSearch": {
+      "type": "boolean",
+      "default": false,
+      "label": "Show Search"
+    },
+    "showCart": {
+      "type": "boolean",
+      "default": false,
+      "label": "Show Cart"
+    },
+    "showAccount": {
+      "type": "boolean",
+      "default": false,
+      "label": "Show Account"
+    },
+    "ctaButton": {
+      "type": "object",
+      "default": null,
+      "label": "CTA Button",
+      "properties": {
+        "label": { "type": "string", "default": "Get Started", "label": "Button Label" },
+        "url": { "type": "url", "default": "#", "label": "Button URL" },
+        "style": {
+          "type": "enum",
+          "values": ["primary", "secondary", "ghost"],
+          "default": "primary",
+          "label": "Button Style"
+        }
+      }
+    },
+    "sticky": {
+      "type": "boolean",
+      "default": false,
+      "label": "Sticky Header"
+    },
+    "transparentOnHero": {
+      "type": "boolean",
+      "default": false,
+      "label": "Transparent on Hero"
+    },
+    "backgroundColor": {
+      "type": "color",
+      "default": "#ffffff",
+      "label": "Background Color"
+    },
+    "textColor": {
+      "type": "color",
+      "default": "#1f2937",
+      "label": "Text Color"
+    },
+    "mobileMenuStyle": {
+      "type": "enum",
+      "values": ["slide-left", "slide-right", "fullscreen", "dropdown"],
+      "default": "slide-right",
+      "label": "Mobile Menu Style"
+    },
+    "topBar": {
+      "type": "object",
+      "default": null,
+      "label": "Top Bar",
+      "properties": {
+        "message": { "type": "string", "default": "", "label": "Message" },
+        "backgroundColor": { "type": "color", "default": "#1e293b", "label": "Background Color" },
+        "textColor": { "type": "color", "default": "#ffffff", "label": "Text Color" }
+      }
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"],
+    "mobileMenuBreakpoint": "lg"
+  }
+}

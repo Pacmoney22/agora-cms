@@ -1,0 +1,74 @@
+{
+  "id": "mega-menu",
+  "name": "Mega Menu",
+  "category": "Navigation",
+  "icon": "mega-menu",
+  "acceptsChildren": false,
+  "properties": {
+    "columns": {
+      "type": "array",
+      "label": "Menu Columns",
+      "items": {
+        "type": "object",
+        "properties": {
+          "heading": { "type": "string", "label": "Column Heading" },
+          "links": {
+            "type": "array",
+            "label": "Links",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": { "type": "string", "label": "Link Label" },
+                "url": { "type": "url", "label": "Link URL" },
+                "description": { "type": "string", "default": null, "label": "Description" },
+                "icon": { "type": "string", "default": null, "label": "Icon" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "featuredContent": {
+      "type": "object",
+      "default": null,
+      "label": "Featured Content",
+      "properties": {
+        "image": {
+          "type": "image",
+          "label": "Featured Image",
+          "constraints": { "formats": ["jpg", "png", "webp"] }
+        },
+        "heading": { "type": "string", "label": "Heading" },
+        "description": { "type": "string", "default": null, "label": "Description" },
+        "ctaLabel": { "type": "string", "default": "Learn More", "label": "CTA Label" },
+        "ctaUrl": { "type": "url", "default": "#", "label": "CTA URL" }
+      }
+    },
+    "showFeatured": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Featured Panel"
+    },
+    "maxWidth": {
+      "type": "enum",
+      "values": ["container", "full"],
+      "default": "container",
+      "label": "Max Width"
+    },
+    "animation": {
+      "type": "enum",
+      "values": ["fade", "slide-down", "none"],
+      "default": "fade",
+      "label": "Animation Style"
+    },
+    "triggerLabel": {
+      "type": "string",
+      "default": "Menu",
+      "label": "Trigger Button Label"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"],
+    "stackBehavior": "accordion-on-mobile"
+  }
+}

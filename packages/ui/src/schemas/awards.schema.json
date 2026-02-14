@@ -1,0 +1,51 @@
+{
+  "id": "awards",
+  "name": "Awards",
+  "category": "Trust",
+  "icon": "award",
+  "acceptsChildren": false,
+  "properties": {
+    "items": {
+      "type": "array",
+      "label": "Awards",
+      "items": {
+        "type": "object",
+        "properties": {
+          "image": { "type": "image", "default": "", "label": "Award Image", "required": true },
+          "alt": { "type": "string", "default": "Award", "label": "Alt Text", "required": true },
+          "title": { "type": "string", "default": null, "label": "Title" },
+          "year": { "type": "string", "default": null, "label": "Year" },
+          "issuer": { "type": "string", "default": null, "label": "Issuer" },
+          "url": { "type": "url", "default": null, "label": "Link URL" }
+        }
+      },
+      "default": []
+    },
+    "layout": {
+      "type": "enum",
+      "values": ["row", "grid", "carousel"],
+      "default": "row",
+      "label": "Layout"
+    },
+    "maxHeight": {
+      "type": "number",
+      "default": 80,
+      "label": "Max Image Height (px)",
+      "min": 40,
+      "max": 200
+    },
+    "showTitles": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Titles"
+    },
+    "grayscale": {
+      "type": "boolean",
+      "default": false,
+      "label": "Grayscale Images"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

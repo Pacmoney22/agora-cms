@@ -1,0 +1,66 @@
+{
+  "id": "map",
+  "name": "Map",
+  "category": "Social",
+  "icon": "map-pin",
+  "acceptsChildren": false,
+  "properties": {
+    "latitude": {
+      "type": "number",
+      "default": 40.7128,
+      "label": "Latitude",
+      "min": -90,
+      "max": 90
+    },
+    "longitude": {
+      "type": "number",
+      "default": -74.006,
+      "label": "Longitude",
+      "min": -180,
+      "max": 180
+    },
+    "zoom": {
+      "type": "number",
+      "default": 14,
+      "label": "Zoom Level",
+      "min": 1,
+      "max": 18
+    },
+    "height": {
+      "type": "number",
+      "default": 400,
+      "label": "Height (px)",
+      "min": 200,
+      "max": 800
+    },
+    "showMarker": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Marker"
+    },
+    "markerLabel": {
+      "type": "string",
+      "default": null,
+      "label": "Marker Label"
+    },
+    "mapStyle": {
+      "type": "enum",
+      "values": ["standard", "silver", "dark", "retro"],
+      "default": "standard",
+      "label": "Map Style"
+    },
+    "address": {
+      "type": "string",
+      "default": null,
+      "label": "Address Text"
+    },
+    "showDirectionsLink": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Directions Link"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

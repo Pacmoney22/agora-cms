@@ -1,0 +1,56 @@
+{
+  "id": "audio-player",
+  "name": "Audio Player",
+  "category": "Media",
+  "icon": "audio-player",
+  "acceptsChildren": false,
+  "properties": {
+    "src": {
+      "type": "url",
+      "default": "",
+      "label": "Audio Source URL",
+      "required": true
+    },
+    "title": {
+      "type": "string",
+      "default": "Untitled Track",
+      "label": "Title",
+      "required": true
+    },
+    "artist": {
+      "type": "string",
+      "default": null,
+      "label": "Artist"
+    },
+    "coverImage": {
+      "type": "image",
+      "default": null,
+      "label": "Cover Image",
+      "constraints": { "formats": ["jpg", "jpeg", "png", "webp"] }
+    },
+    "showWaveform": {
+      "type": "boolean",
+      "default": false,
+      "label": "Show Waveform"
+    },
+    "showDownload": {
+      "type": "boolean",
+      "default": false,
+      "label": "Show Download Button"
+    },
+    "showPlaybackSpeed": {
+      "type": "boolean",
+      "default": false,
+      "label": "Show Playback Speed"
+    },
+    "style": {
+      "type": "enum",
+      "values": ["standard", "minimal", "card"],
+      "default": "standard",
+      "label": "Player Style"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

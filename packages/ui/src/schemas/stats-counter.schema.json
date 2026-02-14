@@ -1,0 +1,83 @@
+{
+  "id": "stats-counter",
+  "name": "Stats Counter",
+  "category": "Data Display",
+  "icon": "hash",
+  "acceptsChildren": false,
+  "properties": {
+    "stats": {
+      "type": "array",
+      "label": "Statistics",
+      "items": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number",
+            "label": "Value",
+            "default": 0
+          },
+          "prefix": {
+            "type": "string",
+            "label": "Prefix (e.g. $)",
+            "default": null
+          },
+          "suffix": {
+            "type": "string",
+            "label": "Suffix (e.g. +, %)",
+            "default": null
+          },
+          "label": {
+            "type": "string",
+            "label": "Label",
+            "default": "Stat Label"
+          },
+          "icon": {
+            "type": "string",
+            "label": "Icon Name",
+            "default": null
+          }
+        }
+      },
+      "default": []
+    },
+    "columns": {
+      "type": "enum",
+      "values": ["auto", 2, 3, 4],
+      "default": "auto",
+      "label": "Columns"
+    },
+    "animateOnScroll": {
+      "type": "boolean",
+      "default": true,
+      "label": "Animate on Scroll"
+    },
+    "animationDuration": {
+      "type": "number",
+      "default": 2000,
+      "min": 500,
+      "max": 5000,
+      "label": "Animation Duration (ms)"
+    },
+    "separator": {
+      "type": "enum",
+      "values": ["comma", "space", "none"],
+      "default": "comma",
+      "label": "Thousands Separator"
+    },
+    "size": {
+      "type": "enum",
+      "values": ["small", "medium", "large", "xlarge"],
+      "default": "large",
+      "label": "Size"
+    },
+    "showDividers": {
+      "type": "boolean",
+      "default": false,
+      "label": "Show Dividers"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"],
+    "stackBehavior": "reduce-columns-on-mobile"
+  }
+}

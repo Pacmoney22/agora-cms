@@ -1,0 +1,78 @@
+{
+  "id": "testimonial-carousel",
+  "name": "Testimonial Carousel",
+  "category": "Marketing",
+  "icon": "gallery-horizontal",
+  "acceptsChildren": false,
+  "properties": {
+    "testimonials": {
+      "type": "array",
+      "label": "Testimonials",
+      "items": {
+        "type": "object",
+        "properties": {
+          "quote": {
+            "type": "string",
+            "label": "Quote",
+            "default": "Great product!"
+          },
+          "author": {
+            "type": "string",
+            "label": "Author Name",
+            "default": "John Smith"
+          },
+          "authorTitle": {
+            "type": "string",
+            "label": "Author Title",
+            "default": null
+          },
+          "authorImage": {
+            "type": "image",
+            "label": "Author Image",
+            "default": null
+          },
+          "rating": {
+            "type": "number",
+            "label": "Star Rating",
+            "default": null,
+            "min": 1,
+            "max": 5
+          }
+        }
+      },
+      "default": []
+    },
+    "autoplay": {
+      "type": "boolean",
+      "default": false,
+      "label": "Autoplay"
+    },
+    "autoplayInterval": {
+      "type": "number",
+      "default": 5000,
+      "label": "Autoplay Interval (ms)",
+      "min": 1000,
+      "max": 15000
+    },
+    "showDots": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Dots"
+    },
+    "showArrows": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Arrows"
+    },
+    "visibleCount": {
+      "type": "enum",
+      "values": [1, 2, 3],
+      "default": 1,
+      "label": "Visible Slides"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"],
+    "stackBehavior": "reduce-visible-on-mobile"
+  }
+}

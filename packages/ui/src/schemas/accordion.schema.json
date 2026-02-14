@@ -1,0 +1,60 @@
+{
+  "id": "accordion",
+  "name": "Accordion",
+  "category": "Layout",
+  "icon": "accordion",
+  "acceptsChildren": true,
+  "properties": {
+    "items": {
+      "type": "array",
+      "label": "Items",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string", "default": "Accordion Item", "label": "Title" },
+          "isDefaultOpen": { "type": "boolean", "default": false, "label": "Default Open" }
+        }
+      },
+      "default": [
+        { "title": "Section 1", "isDefaultOpen": true },
+        { "title": "Section 2" },
+        { "title": "Section 3" }
+      ]
+    },
+    "allowMultipleOpen": {
+      "type": "boolean",
+      "default": false,
+      "label": "Allow Multiple Open"
+    },
+    "iconStyle": {
+      "type": "enum",
+      "values": ["chevron", "plus-minus", "arrow", "none"],
+      "default": "chevron",
+      "label": "Icon Style"
+    },
+    "iconPosition": {
+      "type": "enum",
+      "values": ["left", "right"],
+      "default": "right",
+      "label": "Icon Position"
+    },
+    "bordered": {
+      "type": "boolean",
+      "default": true,
+      "label": "Bordered"
+    },
+    "accentColor": {
+      "type": "color",
+      "default": null,
+      "label": "Accent Color"
+    },
+    "faqSchema": {
+      "type": "boolean",
+      "default": false,
+      "label": "FAQ Schema (SEO)"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

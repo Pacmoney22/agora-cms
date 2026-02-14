@@ -1,0 +1,96 @@
+{
+  "id": "calculator",
+  "name": "Calculator",
+  "category": "Interactive",
+  "icon": "calculator",
+  "acceptsChildren": false,
+  "properties": {
+    "title": {
+      "type": "string",
+      "default": "Calculator",
+      "label": "Title"
+    },
+    "inputs": {
+      "type": "array",
+      "label": "Inputs",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": { "type": "string", "default": "Input", "label": "Label", "required": true },
+          "type": {
+            "type": "enum",
+            "values": ["slider", "number", "select"],
+            "default": "slider",
+            "label": "Input Type"
+          },
+          "min": { "type": "number", "default": 0, "label": "Min" },
+          "max": { "type": "number", "default": 100, "label": "Max" },
+          "step": { "type": "number", "default": 1, "label": "Step" },
+          "default": { "type": "number", "default": 50, "label": "Default Value" },
+          "unit": { "type": "string", "default": null, "label": "Unit" },
+          "key": { "type": "string", "default": "input1", "label": "Variable Key", "required": true },
+          "options": {
+            "type": "array",
+            "label": "Options (for select)",
+            "items": { "type": "string", "default": "" },
+            "default": []
+          }
+        }
+      },
+      "default": []
+    },
+    "formula": {
+      "type": "string",
+      "default": "0",
+      "label": "Formula"
+    },
+    "outputs": {
+      "type": "array",
+      "label": "Outputs",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": { "type": "string", "default": "Result", "label": "Label", "required": true },
+          "key": { "type": "string", "default": "result", "label": "Variable Key", "required": true },
+          "format": {
+            "type": "enum",
+            "values": ["currency", "number", "percent"],
+            "default": "number",
+            "label": "Format"
+          },
+          "prefix": { "type": "string", "default": null, "label": "Prefix" },
+          "suffix": { "type": "string", "default": null, "label": "Suffix" }
+        }
+      },
+      "default": []
+    },
+    "showChart": {
+      "type": "boolean",
+      "default": false,
+      "label": "Show Chart"
+    },
+    "chartType": {
+      "type": "enum",
+      "values": ["bar", "line", "pie"],
+      "default": "bar",
+      "label": "Chart Type"
+    },
+    "ctaButton": {
+      "type": "object",
+      "label": "CTA Button",
+      "default": null,
+      "properties": {
+        "label": { "type": "string", "default": "Get Started", "label": "Label" },
+        "url": { "type": "url", "default": "#", "label": "URL" }
+      }
+    },
+    "disclaimer": {
+      "type": "string",
+      "default": null,
+      "label": "Disclaimer Text"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

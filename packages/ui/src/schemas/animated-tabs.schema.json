@@ -1,0 +1,60 @@
+{
+  "id": "animated-tabs",
+  "name": "Animated Tabs",
+  "category": "Interactive",
+  "icon": "layout-list",
+  "acceptsChildren": true,
+  "properties": {
+    "tabs": {
+      "type": "array",
+      "label": "Tabs",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": { "type": "string", "default": "Tab", "label": "Label", "required": true },
+          "icon": { "type": "image", "default": null, "label": "Icon" },
+          "image": { "type": "image", "default": null, "label": "Image" },
+          "description": { "type": "string", "default": null, "label": "Description" }
+        }
+      },
+      "default": [
+        { "label": "Tab 1" },
+        { "label": "Tab 2" },
+        { "label": "Tab 3" }
+      ]
+    },
+    "layout": {
+      "type": "enum",
+      "values": ["horizontal", "vertical-left", "vertical-right"],
+      "default": "horizontal",
+      "label": "Layout"
+    },
+    "contentAnimation": {
+      "type": "enum",
+      "values": ["fade-up", "fade", "slide-left", "zoom"],
+      "default": "fade-up",
+      "label": "Content Animation"
+    },
+    "autoRotate": {
+      "type": "boolean",
+      "default": false,
+      "label": "Auto Rotate"
+    },
+    "rotateInterval": {
+      "type": "number",
+      "default": 5000,
+      "label": "Rotate Interval (ms)",
+      "min": 2000,
+      "max": 15000
+    },
+    "mediaPosition": {
+      "type": "enum",
+      "values": ["right", "left", "top", "bottom"],
+      "default": "right",
+      "label": "Media Position"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "id": "faq-searchable",
+  "name": "Searchable FAQ",
+  "category": "Interactive",
+  "icon": "help-circle",
+  "acceptsChildren": false,
+  "properties": {
+    "categories": {
+      "type": "array",
+      "label": "Categories",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": { "type": "string", "default": "Category", "label": "Label", "required": true },
+          "slug": { "type": "string", "default": "category", "label": "Slug", "required": true }
+        }
+      },
+      "default": []
+    },
+    "items": {
+      "type": "array",
+      "label": "FAQ Items",
+      "items": {
+        "type": "object",
+        "properties": {
+          "question": { "type": "string", "default": "Question?", "label": "Question", "required": true },
+          "answer": { "type": "string", "default": "Answer.", "label": "Answer", "required": true },
+          "category": { "type": "string", "default": null, "label": "Category Slug" }
+        }
+      },
+      "default": []
+    },
+    "showSearch": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Search"
+    },
+    "searchPlaceholder": {
+      "type": "string",
+      "default": "Search frequently asked questions...",
+      "label": "Search Placeholder"
+    },
+    "showCategories": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Category Filters"
+    },
+    "emptyMessage": {
+      "type": "string",
+      "default": "No matching questions found.",
+      "label": "Empty State Message"
+    },
+    "faqSchema": {
+      "type": "boolean",
+      "default": true,
+      "label": "FAQ Schema (SEO)"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

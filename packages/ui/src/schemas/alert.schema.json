@@ -1,0 +1,43 @@
+{
+  "id": "alert",
+  "name": "Alert / Notice",
+  "category": "Utility",
+  "icon": "alert-triangle",
+  "acceptsChildren": false,
+  "properties": {
+    "message": {
+      "type": "string",
+      "default": "This is an alert message.",
+      "label": "Message"
+    },
+    "title": {
+      "type": "string",
+      "default": null,
+      "label": "Title"
+    },
+    "variant": {
+      "type": "enum",
+      "values": ["info", "success", "warning", "danger"],
+      "default": "info",
+      "label": "Variant"
+    },
+    "icon": {
+      "type": "string",
+      "default": "auto",
+      "label": "Icon (auto, none, or Lucide name)"
+    },
+    "dismissible": {
+      "type": "boolean",
+      "default": false,
+      "label": "Dismissible"
+    },
+    "bordered": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Border"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

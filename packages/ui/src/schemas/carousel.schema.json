@@ -1,0 +1,89 @@
+{
+  "id": "carousel",
+  "name": "Carousel / Slider",
+  "category": "Media",
+  "icon": "carousel",
+  "acceptsChildren": true,
+  "properties": {
+    "slides": {
+      "type": "array",
+      "label": "Slides",
+      "items": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "richtext",
+            "default": "",
+            "label": "Slide Content"
+          }
+        }
+      },
+      "default": [
+        { "content": "Slide 1" },
+        { "content": "Slide 2" },
+        { "content": "Slide 3" }
+      ]
+    },
+    "autoplay": {
+      "type": "boolean",
+      "default": false,
+      "label": "Autoplay"
+    },
+    "autoplayInterval": {
+      "type": "number",
+      "default": 5000,
+      "min": 1000,
+      "max": 30000,
+      "label": "Autoplay Interval (ms)"
+    },
+    "pauseOnHover": {
+      "type": "boolean",
+      "default": true,
+      "label": "Pause on Hover"
+    },
+    "showArrows": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Arrows"
+    },
+    "showDots": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Dots"
+    },
+    "slidesPerView": {
+      "type": "number",
+      "default": 1,
+      "min": 1,
+      "max": 5,
+      "label": "Slides Per View"
+    },
+    "gap": {
+      "type": "enum",
+      "values": ["none", "small", "medium", "large"],
+      "default": "medium",
+      "label": "Gap"
+    },
+    "loop": {
+      "type": "boolean",
+      "default": false,
+      "label": "Loop"
+    },
+    "transition": {
+      "type": "enum",
+      "values": ["slide", "fade", "zoom"],
+      "default": "slide",
+      "label": "Transition Effect"
+    },
+    "aspectRatio": {
+      "type": "enum",
+      "values": ["auto", "16:9", "4:3", "1:1"],
+      "default": "auto",
+      "label": "Aspect Ratio"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"],
+    "stackBehavior": "reduce-slides-on-mobile"
+  }
+}

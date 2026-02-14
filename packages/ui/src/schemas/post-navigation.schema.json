@@ -1,0 +1,54 @@
+{
+  "id": "post-navigation",
+  "name": "Post Navigation",
+  "category": "Blog",
+  "icon": "arrow-left-right",
+  "acceptsChildren": false,
+  "properties": {
+    "previousPost": {
+      "type": "object",
+      "label": "Previous Post",
+      "default": null,
+      "properties": {
+        "title": { "type": "string", "default": "", "label": "Title", "required": true },
+        "slug": { "type": "string", "default": "", "label": "Slug", "required": true },
+        "image": { "type": "image", "default": null, "label": "Thumbnail" }
+      }
+    },
+    "nextPost": {
+      "type": "object",
+      "label": "Next Post",
+      "default": null,
+      "properties": {
+        "title": { "type": "string", "default": "", "label": "Title", "required": true },
+        "slug": { "type": "string", "default": "", "label": "Slug", "required": true },
+        "image": { "type": "image", "default": null, "label": "Thumbnail" }
+      }
+    },
+    "showThumbnails": {
+      "type": "boolean",
+      "default": false,
+      "label": "Show Thumbnails"
+    },
+    "showLabels": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Labels"
+    },
+    "scope": {
+      "type": "enum",
+      "values": ["all", "same-category"],
+      "default": "all",
+      "label": "Navigation Scope"
+    },
+    "style": {
+      "type": "enum",
+      "values": ["simple", "card", "full-width"],
+      "default": "simple",
+      "label": "Style"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

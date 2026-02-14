@@ -1,0 +1,43 @@
+{
+  "id": "image",
+  "name": "Image",
+  "category": "Media",
+  "icon": "image",
+  "acceptsChildren": false,
+  "properties": {
+    "src": {
+      "type": "image",
+      "default": "",
+      "label": "Image",
+      "constraints": { "formats": ["jpg", "jpeg", "png", "webp", "avif", "gif", "svg"] }
+    },
+    "alt": {
+      "type": "string",
+      "default": "",
+      "label": "Alt Text",
+      "required": true,
+      "seo": { "required": true }
+    },
+    "width": {
+      "type": "number",
+      "default": null,
+      "label": "Width (px)"
+    },
+    "height": {
+      "type": "number",
+      "default": null,
+      "label": "Height (px)"
+    },
+    "objectFit": {
+      "type": "enum",
+      "values": ["cover", "contain", "fill", "none"],
+      "default": "cover",
+      "label": "Object Fit"
+    },
+    "borderRadius": {
+      "type": "string",
+      "default": "0",
+      "label": "Border Radius"
+    }
+  }
+}

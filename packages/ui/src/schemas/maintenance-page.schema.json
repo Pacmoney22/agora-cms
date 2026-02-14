@@ -1,0 +1,65 @@
+{
+  "id": "maintenance-page",
+  "name": "Maintenance Page",
+  "category": "Global",
+  "icon": "wrench",
+  "acceptsChildren": false,
+  "properties": {
+    "headline": {
+      "type": "string",
+      "default": "We'll Be Back Soon",
+      "label": "Headline"
+    },
+    "message": {
+      "type": "string",
+      "default": "We are currently performing scheduled maintenance. We should be back online shortly. Thank you for your patience.",
+      "label": "Message",
+      "maxLength": 500
+    },
+    "showCountdown": {
+      "type": "boolean",
+      "default": false,
+      "label": "Show Countdown"
+    },
+    "countdownTarget": {
+      "type": "string",
+      "default": null,
+      "label": "Countdown Target (ISO date)"
+    },
+    "showNewsletter": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Newsletter Signup"
+    },
+    "socialLinks": {
+      "type": "array",
+      "label": "Social Links",
+      "items": {
+        "type": "object",
+        "properties": {
+          "platform": {
+            "type": "enum",
+            "values": ["facebook", "x", "instagram", "linkedin", "youtube", "github"],
+            "default": "x",
+            "label": "Platform"
+          },
+          "url": {
+            "type": "url",
+            "default": "",
+            "label": "Profile URL",
+            "required": true
+          }
+        }
+      },
+      "default": []
+    },
+    "backgroundColor": {
+      "type": "color",
+      "default": "#1e293b",
+      "label": "Background Color"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

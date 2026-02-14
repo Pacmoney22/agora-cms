@@ -1,0 +1,32 @@
+{
+  "id": "heading",
+  "name": "Heading",
+  "category": "Typography",
+  "icon": "heading",
+  "acceptsChildren": false,
+  "properties": {
+    "level": {
+      "type": "enum",
+      "values": [1, 2, 3, 4, 5, 6],
+      "default": 2,
+      "label": "Level"
+    },
+    "text": {
+      "type": "string",
+      "default": "Heading Text",
+      "label": "Text",
+      "seo": { "tag": "h1", "required": false }
+    },
+    "alignment": {
+      "type": "enum",
+      "values": ["left", "center", "right"],
+      "default": "left",
+      "label": "Alignment"
+    },
+    "color": {
+      "type": "color",
+      "default": null,
+      "label": "Color"
+    }
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "id": "case-studies-grid",
+  "name": "Case Studies Grid",
+  "category": "Trust",
+  "icon": "briefcase",
+  "acceptsChildren": false,
+  "properties": {
+    "studies": {
+      "type": "array",
+      "label": "Case Studies",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string", "default": "Case Study Title", "label": "Title", "required": true },
+          "client": { "type": "string", "default": "Client Name", "label": "Client Name", "required": true },
+          "logo": { "type": "image", "default": null, "label": "Client Logo" },
+          "image": { "type": "image", "default": null, "label": "Cover Image" },
+          "excerpt": { "type": "string", "default": "", "label": "Excerpt", "maxLength": 300 },
+          "url": { "type": "url", "default": "#", "label": "URL", "required": true },
+          "metrics": {
+            "type": "array",
+            "label": "Metrics",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": { "type": "string", "default": "Metric", "label": "Label" },
+                "value": { "type": "string", "default": "0%", "label": "Value" }
+              }
+            },
+            "default": []
+          }
+        }
+      },
+      "default": []
+    },
+    "columns": {
+      "type": "enum",
+      "values": [2, 3],
+      "default": 3,
+      "label": "Columns"
+    },
+    "cardStyle": {
+      "type": "enum",
+      "values": ["standard", "overlay", "minimal"],
+      "default": "standard",
+      "label": "Card Style"
+    },
+    "showMetrics": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Metrics"
+    },
+    "showClientLogo": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Client Logo"
+    },
+    "showExcerpt": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Excerpt"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"],
+    "stackBehavior": "reduce-columns-on-mobile"
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "id": "video",
+  "name": "Video",
+  "category": "Media",
+  "icon": "video",
+  "acceptsChildren": false,
+  "properties": {
+    "source": {
+      "type": "enum",
+      "values": ["youtube", "vimeo", "self-hosted"],
+      "default": "youtube",
+      "label": "Video Source"
+    },
+    "url": {
+      "type": "url",
+      "default": "",
+      "label": "Video URL",
+      "required": true
+    },
+    "posterImage": {
+      "type": "image",
+      "default": null,
+      "label": "Poster Image",
+      "constraints": { "formats": ["jpg", "jpeg", "png", "webp"] }
+    },
+    "autoplay": {
+      "type": "boolean",
+      "default": false,
+      "label": "Autoplay"
+    },
+    "muted": {
+      "type": "boolean",
+      "default": false,
+      "label": "Muted"
+    },
+    "loop": {
+      "type": "boolean",
+      "default": false,
+      "label": "Loop"
+    },
+    "controls": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Controls"
+    },
+    "aspectRatio": {
+      "type": "enum",
+      "values": ["16:9", "4:3", "1:1", "9:16", "21:9"],
+      "default": "16:9",
+      "label": "Aspect Ratio"
+    },
+    "maxWidth": {
+      "type": "enum",
+      "values": ["small", "medium", "large", "full"],
+      "default": "full",
+      "label": "Max Width"
+    },
+    "caption": {
+      "type": "string",
+      "default": null,
+      "label": "Caption"
+    },
+    "privacyMode": {
+      "type": "boolean",
+      "default": false,
+      "label": "Privacy Mode",
+      "description": "Uses youtube-nocookie.com for YouTube embeds"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

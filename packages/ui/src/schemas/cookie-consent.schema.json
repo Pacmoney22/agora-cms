@@ -1,0 +1,53 @@
+{
+  "id": "cookie-consent",
+  "name": "Cookie Consent Banner",
+  "category": "Utility",
+  "icon": "cookie",
+  "acceptsChildren": false,
+  "properties": {
+    "message": {
+      "type": "string",
+      "default": "We use cookies to improve your experience. By continuing to visit this site you agree to our use of cookies.",
+      "label": "Message"
+    },
+    "acceptLabel": {
+      "type": "string",
+      "default": "Accept All",
+      "label": "Accept Button Label"
+    },
+    "rejectLabel": {
+      "type": "string",
+      "default": "Reject All",
+      "label": "Reject Button Label"
+    },
+    "customizeLabel": {
+      "type": "string",
+      "default": "Customize",
+      "label": "Customize Button Label"
+    },
+    "showCategories": {
+      "type": "boolean",
+      "default": false,
+      "label": "Show Category Toggles"
+    },
+    "position": {
+      "type": "enum",
+      "values": ["bottom-bar", "bottom-left", "bottom-right", "center-modal"],
+      "default": "bottom-bar",
+      "label": "Position"
+    },
+    "privacyPolicyUrl": {
+      "type": "url",
+      "default": null,
+      "label": "Privacy Policy URL"
+    },
+    "cookieDuration": {
+      "type": "number",
+      "default": 365,
+      "label": "Cookie Duration (days)"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

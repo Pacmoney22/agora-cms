@@ -1,0 +1,72 @@
+{
+  "id": "cart-page",
+  "name": "Cart Page",
+  "category": "Commerce",
+  "icon": "shopping-cart",
+  "acceptsChildren": false,
+  "properties": {
+    "showProductImages": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Product Images"
+    },
+    "showProductType": {
+      "type": "boolean",
+      "default": false,
+      "label": "Show Product Type"
+    },
+    "showConfigurationSummary": {
+      "type": "boolean",
+      "default": false,
+      "label": "Show Configuration Summary"
+    },
+    "showEstimatedShipping": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Estimated Shipping"
+    },
+    "showCouponField": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Coupon Field"
+    },
+    "crossSellSource": {
+      "type": "enum",
+      "values": ["auto", "manual", "none"],
+      "default": "none",
+      "label": "Cross-sell Source"
+    },
+    "groupByType": {
+      "type": "boolean",
+      "default": false,
+      "label": "Group Items by Type"
+    },
+    "emptyCartCta": {
+      "type": "object",
+      "label": "Empty Cart CTA",
+      "properties": {
+        "label": { "type": "string", "default": "Continue Shopping", "label": "Button Label" },
+        "url": { "type": "url", "default": "/", "label": "Button URL" }
+      }
+    },
+    "items": {
+      "type": "array",
+      "label": "Cart Items",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "default": "", "label": "Product Name", "required": true },
+          "price": { "type": "number", "default": 0, "label": "Price", "min": 0 },
+          "quantity": { "type": "number", "default": 1, "label": "Quantity", "min": 1 },
+          "image": { "type": "image", "default": null, "label": "Image" },
+          "type": { "type": "string", "default": null, "label": "Product Type" }
+        }
+      },
+      "default": []
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"],
+    "stackBehavior": "vertical-on-mobile"
+  }
+}

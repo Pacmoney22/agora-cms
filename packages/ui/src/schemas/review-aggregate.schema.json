@@ -1,0 +1,57 @@
+{
+  "id": "review-aggregate",
+  "name": "Review Aggregate",
+  "category": "Trust",
+  "icon": "star",
+  "acceptsChildren": false,
+  "properties": {
+    "averageRating": {
+      "type": "number",
+      "default": 4.5,
+      "label": "Average Rating",
+      "min": 0,
+      "max": 5
+    },
+    "totalReviews": {
+      "type": "number",
+      "default": 0,
+      "label": "Total Reviews",
+      "min": 0
+    },
+    "distribution": {
+      "type": "object",
+      "label": "Rating Distribution",
+      "properties": {
+        "5": { "type": "number", "default": 0, "label": "5 Stars" },
+        "4": { "type": "number", "default": 0, "label": "4 Stars" },
+        "3": { "type": "number", "default": 0, "label": "3 Stars" },
+        "2": { "type": "number", "default": 0, "label": "2 Stars" },
+        "1": { "type": "number", "default": 0, "label": "1 Star" }
+      },
+      "default": { "5": 0, "4": 0, "3": 0, "2": 0, "1": 0 }
+    },
+    "showAverage": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Average"
+    },
+    "showDistribution": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Distribution"
+    },
+    "showTotalCount": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Total Count"
+    },
+    "showWriteReview": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Write Review Button"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

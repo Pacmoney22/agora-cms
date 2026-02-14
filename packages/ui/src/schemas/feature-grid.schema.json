@@ -1,0 +1,83 @@
+{
+  "id": "feature-grid",
+  "name": "Feature Grid",
+  "category": "Marketing",
+  "icon": "grid-3x3",
+  "acceptsChildren": false,
+  "properties": {
+    "features": {
+      "type": "array",
+      "label": "Features",
+      "items": {
+        "type": "object",
+        "properties": {
+          "icon": {
+            "type": "string",
+            "label": "Icon Name",
+            "default": "star"
+          },
+          "title": {
+            "type": "string",
+            "label": "Title",
+            "default": "Feature Title"
+          },
+          "description": {
+            "type": "string",
+            "label": "Description",
+            "default": "Feature description goes here."
+          },
+          "link": {
+            "type": "url",
+            "label": "Link URL",
+            "default": null
+          }
+        }
+      },
+      "default": []
+    },
+    "columns": {
+      "type": "enum",
+      "values": [2, 3, 4],
+      "default": 3,
+      "label": "Columns"
+    },
+    "iconStyle": {
+      "type": "enum",
+      "values": ["plain", "circle-bg", "square-bg", "outline"],
+      "default": "plain",
+      "label": "Icon Style"
+    },
+    "iconSize": {
+      "type": "enum",
+      "values": ["small", "medium", "large"],
+      "default": "medium",
+      "label": "Icon Size"
+    },
+    "iconColor": {
+      "type": "color",
+      "default": "#3b82f6",
+      "label": "Icon Color"
+    },
+    "alignment": {
+      "type": "enum",
+      "values": ["left", "center"],
+      "default": "center",
+      "label": "Alignment"
+    },
+    "showDividers": {
+      "type": "boolean",
+      "default": false,
+      "label": "Show Dividers"
+    },
+    "titleLevel": {
+      "type": "enum",
+      "values": ["h3", "h4", "h5"],
+      "default": "h3",
+      "label": "Title Heading Level"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"],
+    "stackBehavior": "reduce-columns-on-mobile"
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "id": "trust-badges",
+  "name": "Trust Badges",
+  "category": "Trust",
+  "icon": "shield-check",
+  "acceptsChildren": false,
+  "properties": {
+    "badges": {
+      "type": "array",
+      "label": "Badges",
+      "items": {
+        "type": "object",
+        "properties": {
+          "icon": { "type": "string", "default": null, "label": "Icon Name" },
+          "image": { "type": "image", "default": null, "label": "Badge Image" },
+          "label": { "type": "string", "default": "Trust Badge", "label": "Label", "required": true },
+          "tooltip": { "type": "string", "default": null, "label": "Tooltip Text" }
+        }
+      },
+      "default": []
+    },
+    "layout": {
+      "type": "enum",
+      "values": ["horizontal", "vertical", "grid"],
+      "default": "horizontal",
+      "label": "Layout"
+    },
+    "size": {
+      "type": "enum",
+      "values": ["small", "medium", "large"],
+      "default": "medium",
+      "label": "Size"
+    },
+    "showLabels": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Labels"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

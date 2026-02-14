@@ -1,0 +1,61 @@
+{
+  "id": "category-list",
+  "name": "Category List",
+  "category": "Commerce",
+  "icon": "list",
+  "acceptsChildren": false,
+  "properties": {
+    "categories": {
+      "type": "array",
+      "label": "Categories",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "default": "", "label": "Category Name", "required": true },
+          "image": {
+            "type": "image",
+            "default": null,
+            "label": "Category Image",
+            "constraints": { "formats": ["jpg", "jpeg", "png", "webp"] }
+          },
+          "productCount": { "type": "number", "default": null, "label": "Product Count", "min": 0 },
+          "url": { "type": "url", "default": "#", "label": "Category URL", "required": true }
+        }
+      },
+      "default": []
+    },
+    "layout": {
+      "type": "enum",
+      "values": ["grid", "list", "carousel", "masonry"],
+      "default": "grid",
+      "label": "Layout"
+    },
+    "columns": {
+      "type": "number",
+      "default": 4,
+      "min": 2,
+      "max": 6,
+      "label": "Columns"
+    },
+    "showImage": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Image"
+    },
+    "showProductCount": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Product Count"
+    },
+    "cardStyle": {
+      "type": "enum",
+      "values": ["overlay", "below", "minimal"],
+      "default": "overlay",
+      "label": "Card Style"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"],
+    "stackBehavior": "reduce-columns-on-mobile"
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "id": "blog-grid",
+  "name": "Blog Grid",
+  "category": "Blog",
+  "icon": "layout-grid",
+  "acceptsChildren": false,
+  "properties": {
+    "posts": {
+      "type": "array",
+      "label": "Posts",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string", "default": "", "label": "Title", "required": true },
+          "excerpt": { "type": "string", "default": "", "label": "Excerpt" },
+          "image": { "type": "image", "default": null, "label": "Image" },
+          "author": {
+            "type": "object",
+            "label": "Author",
+            "properties": {
+              "name": { "type": "string", "default": "", "label": "Name" },
+              "avatar": { "type": "image", "default": null, "label": "Avatar" }
+            }
+          },
+          "date": { "type": "string", "default": "", "label": "Date" },
+          "category": { "type": "string", "default": "", "label": "Category" },
+          "readTime": { "type": "string", "default": "", "label": "Read Time" },
+          "slug": { "type": "string", "default": "", "label": "Slug", "required": true }
+        }
+      },
+      "default": []
+    },
+    "source": {
+      "type": "enum",
+      "values": ["recent", "category", "tag", "manual", "featured"],
+      "default": "recent",
+      "label": "Post Source"
+    },
+    "maxPosts": {
+      "type": "number",
+      "default": 6,
+      "label": "Posts Per Page",
+      "min": 1,
+      "max": 24
+    },
+    "columns": {
+      "type": "enum",
+      "values": [1, 2, 3, 4],
+      "default": 3,
+      "label": "Columns"
+    },
+    "layout": {
+      "type": "enum",
+      "values": ["grid", "list", "masonry"],
+      "default": "grid",
+      "label": "Layout"
+    },
+    "showFilters": {
+      "type": "boolean",
+      "default": false,
+      "label": "Show Category Filters"
+    },
+    "paginationStyle": {
+      "type": "enum",
+      "values": ["load-more", "numbered", "infinite-scroll"],
+      "default": "load-more",
+      "label": "Pagination Style"
+    },
+    "featuredFirst": {
+      "type": "boolean",
+      "default": false,
+      "label": "Featured First Post"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"],
+    "stackBehavior": "reduce-columns-on-mobile"
+  }
+}

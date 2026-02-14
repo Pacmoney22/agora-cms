@@ -1,0 +1,51 @@
+{
+  "id": "table-of-contents",
+  "name": "Table of Contents",
+  "category": "Navigation",
+  "icon": "table-of-contents",
+  "acceptsChildren": false,
+  "properties": {
+    "headingLevels": {
+      "type": "array",
+      "label": "Heading Levels",
+      "description": "Which heading levels to include in the table of contents",
+      "items": {
+        "type": "enum",
+        "values": ["h2", "h3", "h4", "h5", "h6"]
+      },
+      "default": ["h2", "h3"]
+    },
+    "style": {
+      "type": "enum",
+      "values": ["sidebar", "inline", "floating"],
+      "default": "sidebar",
+      "label": "Display Style"
+    },
+    "showNumbers": {
+      "type": "boolean",
+      "default": false,
+      "label": "Show Numbers"
+    },
+    "scrollspy": {
+      "type": "boolean",
+      "default": true,
+      "label": "Enable Scrollspy",
+      "description": "Highlights the active section as user scrolls"
+    },
+    "smoothScroll": {
+      "type": "boolean",
+      "default": true,
+      "label": "Smooth Scroll",
+      "description": "Smoothly scrolls to section on click"
+    },
+    "title": {
+      "type": "string",
+      "default": "Table of Contents",
+      "label": "Title"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"],
+    "stackBehavior": "hidden-on-mobile"
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "list",
+  "name": "List",
+  "category": "Typography",
+  "icon": "list",
+  "acceptsChildren": false,
+  "properties": {
+    "items": {
+      "type": "array",
+      "label": "List Items",
+      "items": {
+        "type": "object",
+        "properties": {
+          "text": { "type": "string", "default": "List item", "label": "Text" },
+          "description": { "type": "string", "default": null, "label": "Description" },
+          "icon": { "type": "string", "default": null, "label": "Icon Name" },
+          "children": {
+            "type": "array",
+            "label": "Sub-items",
+            "items": {
+              "type": "object",
+              "properties": {
+                "text": { "type": "string", "default": "Sub-item", "label": "Text" },
+                "description": { "type": "string", "default": null, "label": "Description" },
+                "icon": { "type": "string", "default": null, "label": "Icon Name" }
+              }
+            },
+            "default": []
+          }
+        }
+      },
+      "default": [
+        { "text": "First item" },
+        { "text": "Second item" },
+        { "text": "Third item" }
+      ]
+    },
+    "listType": {
+      "type": "enum",
+      "values": ["unordered", "ordered", "icon", "checklist"],
+      "default": "unordered",
+      "label": "List Type"
+    },
+    "bulletStyle": {
+      "type": "enum",
+      "values": ["disc", "circle", "square", "dash", "none"],
+      "default": "disc",
+      "label": "Bullet Style"
+    },
+    "iconColor": {
+      "type": "color",
+      "default": null,
+      "label": "Icon Color"
+    },
+    "spacing": {
+      "type": "enum",
+      "values": ["compact", "normal", "relaxed"],
+      "default": "normal",
+      "label": "Spacing"
+    },
+    "columns": {
+      "type": "enum",
+      "values": [1, 2, 3],
+      "default": 1,
+      "label": "Columns"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"],
+    "stackBehavior": "single-column-on-mobile"
+  }
+}

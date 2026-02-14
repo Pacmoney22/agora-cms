@@ -1,0 +1,67 @@
+{
+  "id": "logo-cloud",
+  "name": "Logo Cloud",
+  "category": "Marketing",
+  "icon": "image",
+  "acceptsChildren": false,
+  "properties": {
+    "heading": {
+      "type": "string",
+      "default": "",
+      "label": "Heading"
+    },
+    "logos": {
+      "type": "array",
+      "label": "Logos",
+      "items": {
+        "type": "object",
+        "properties": {
+          "image": {
+            "type": "image",
+            "label": "Logo Image",
+            "constraints": { "formats": ["svg", "png", "webp"] }
+          },
+          "alt": {
+            "type": "string",
+            "label": "Alt Text",
+            "default": "Company logo"
+          },
+          "url": {
+            "type": "url",
+            "label": "Link URL",
+            "default": null
+          }
+        }
+      },
+      "default": []
+    },
+    "style": {
+      "type": "enum",
+      "values": ["static", "scroll", "grid"],
+      "default": "static",
+      "label": "Layout Style"
+    },
+    "grayscale": {
+      "type": "boolean",
+      "default": true,
+      "label": "Grayscale Logos"
+    },
+    "maxLogoHeight": {
+      "type": "number",
+      "default": 40,
+      "label": "Max Logo Height (px)",
+      "min": 20,
+      "max": 120
+    },
+    "scrollSpeed": {
+      "type": "number",
+      "default": 30,
+      "label": "Scroll Speed",
+      "min": 5,
+      "max": 100
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

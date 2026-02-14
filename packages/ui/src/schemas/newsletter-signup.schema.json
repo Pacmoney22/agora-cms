@@ -1,0 +1,48 @@
+{
+  "id": "newsletter-signup",
+  "name": "Newsletter Signup",
+  "category": "Forms",
+  "icon": "newsletter-signup",
+  "acceptsChildren": false,
+  "properties": {
+    "heading": {
+      "type": "string",
+      "default": "Stay up to date",
+      "label": "Heading"
+    },
+    "description": {
+      "type": "string",
+      "default": "Get the latest news and updates delivered to your inbox.",
+      "label": "Description"
+    },
+    "placeholder": {
+      "type": "string",
+      "default": "Enter your email",
+      "label": "Email Placeholder"
+    },
+    "submitLabel": {
+      "type": "string",
+      "default": "Subscribe",
+      "label": "Submit Button Label"
+    },
+    "layout": {
+      "type": "enum",
+      "values": ["inline", "stacked", "card"],
+      "default": "inline",
+      "label": "Layout"
+    },
+    "showNameField": {
+      "type": "boolean",
+      "default": false,
+      "label": "Show Name Field"
+    },
+    "doubleOptIn": {
+      "type": "boolean",
+      "default": false,
+      "label": "Double Opt-In"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

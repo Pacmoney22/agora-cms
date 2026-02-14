@@ -1,0 +1,68 @@
+{
+  "id": "announcement-bar",
+  "name": "Announcement Bar",
+  "category": "Marketing",
+  "icon": "megaphone",
+  "acceptsChildren": false,
+  "properties": {
+    "message": {
+      "type": "string",
+      "default": "Welcome to our site!",
+      "label": "Message",
+      "maxLength": 200
+    },
+    "backgroundColor": {
+      "type": "color",
+      "default": "#1e40af",
+      "label": "Background Color"
+    },
+    "textColor": {
+      "type": "color",
+      "default": "#ffffff",
+      "label": "Text Color"
+    },
+    "dismissible": {
+      "type": "boolean",
+      "default": true,
+      "label": "Dismissible"
+    },
+    "link": {
+      "type": "url",
+      "default": null,
+      "label": "Link URL"
+    },
+    "icon": {
+      "type": "string",
+      "default": null,
+      "label": "Icon Name"
+    },
+    "position": {
+      "type": "enum",
+      "values": ["top", "bottom"],
+      "default": "top",
+      "label": "Position"
+    },
+    "schedule": {
+      "type": "object",
+      "default": null,
+      "label": "Schedule",
+      "properties": {
+        "startDate": {
+          "type": "string",
+          "label": "Start Date",
+          "format": "datetime",
+          "default": null
+        },
+        "endDate": {
+          "type": "string",
+          "label": "End Date",
+          "format": "datetime",
+          "default": null
+        }
+      }
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

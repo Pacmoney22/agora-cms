@@ -1,0 +1,53 @@
+{
+  "id": "toast",
+  "name": "Toast Notification",
+  "category": "Interactive",
+  "icon": "bell",
+  "acceptsChildren": false,
+  "properties": {
+    "trigger": {
+      "type": "enum",
+      "values": ["event", "time-delay"],
+      "default": "time-delay",
+      "label": "Trigger"
+    },
+    "eventName": {
+      "type": "string",
+      "default": null,
+      "label": "Event Name"
+    },
+    "message": {
+      "type": "string",
+      "default": "This is a notification message.",
+      "label": "Message",
+      "maxLength": 300
+    },
+    "variant": {
+      "type": "enum",
+      "values": ["info", "success", "warning", "error"],
+      "default": "info",
+      "label": "Variant"
+    },
+    "position": {
+      "type": "enum",
+      "values": ["top-right", "top-left", "bottom-right", "bottom-left", "top-center"],
+      "default": "top-right",
+      "label": "Position"
+    },
+    "duration": {
+      "type": "number",
+      "default": 5000,
+      "label": "Duration (ms)",
+      "min": 0,
+      "max": 30000
+    },
+    "showDismiss": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Dismiss Button"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+.next/
+.turbo/
+*.tsbuildinfo
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+coverage/
+
+# Prisma
+packages/database/prisma/*.db
+
+# Docker volumes
+docker/data/
+
+# MinIO
+minio_data/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Scan reports
+snyk-report.json

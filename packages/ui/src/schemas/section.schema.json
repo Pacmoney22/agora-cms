@@ -1,0 +1,24 @@
+{
+  "id": "section",
+  "name": "Section",
+  "category": "Layout",
+  "icon": "section",
+  "acceptsChildren": true,
+  "properties": {
+    "paddingTop": {
+      "type": "string",
+      "default": "48px",
+      "label": "Padding Top"
+    },
+    "paddingBottom": {
+      "type": "string",
+      "default": "48px",
+      "label": "Padding Bottom"
+    },
+    "backgroundColor": {
+      "type": "color",
+      "default": null,
+      "label": "Background Color"
+    }
+  }
+}

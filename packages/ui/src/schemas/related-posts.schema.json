@@ -1,0 +1,52 @@
+{
+  "id": "related-posts",
+  "name": "Related Posts",
+  "category": "Blog",
+  "icon": "newspaper",
+  "acceptsChildren": false,
+  "properties": {
+    "posts": {
+      "type": "array",
+      "label": "Posts",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string", "default": "", "label": "Title", "required": true },
+          "excerpt": { "type": "string", "default": "", "label": "Excerpt" },
+          "image": { "type": "image", "default": null, "label": "Image" },
+          "date": { "type": "string", "default": "", "label": "Date" },
+          "category": { "type": "string", "default": "", "label": "Category" },
+          "slug": { "type": "string", "default": "", "label": "Slug", "required": true }
+        }
+      },
+      "default": []
+    },
+    "source": {
+      "type": "enum",
+      "values": ["auto", "manual"],
+      "default": "auto",
+      "label": "Source"
+    },
+    "maxPosts": {
+      "type": "number",
+      "default": 3,
+      "label": "Max Posts",
+      "min": 2,
+      "max": 6
+    },
+    "heading": {
+      "type": "string",
+      "default": "Related Posts",
+      "label": "Heading"
+    },
+    "showImage": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Image"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"],
+    "stackBehavior": "reduce-columns-on-mobile"
+  }
+}

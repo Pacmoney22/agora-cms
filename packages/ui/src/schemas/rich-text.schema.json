@@ -1,0 +1,39 @@
+{
+  "id": "rich-text",
+  "name": "Rich Text Block",
+  "category": "Typography",
+  "icon": "rich-text",
+  "acceptsChildren": false,
+  "properties": {
+    "content": {
+      "type": "richtext",
+      "default": "<p>Enter your content here...</p>",
+      "label": "Content"
+    },
+    "maxWidth": {
+      "type": "enum",
+      "values": ["none", "prose", "narrow", "wide"],
+      "default": "prose",
+      "label": "Max Width"
+    },
+    "typographyPreset": {
+      "type": "enum",
+      "values": ["editorial", "compact", "technical"],
+      "default": "editorial",
+      "label": "Typography Preset"
+    },
+    "enableTableOfContents": {
+      "type": "boolean",
+      "default": false,
+      "label": "Enable Table of Contents"
+    },
+    "enableFootnotes": {
+      "type": "boolean",
+      "default": false,
+      "label": "Enable Footnotes"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

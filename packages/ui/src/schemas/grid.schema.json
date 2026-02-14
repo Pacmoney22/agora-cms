@@ -1,0 +1,24 @@
+{
+  "id": "grid",
+  "name": "Grid",
+  "category": "Layout",
+  "icon": "grid",
+  "acceptsChildren": true,
+  "properties": {
+    "columns": {
+      "type": "enum",
+      "values": [2, 3, 4],
+      "default": 3,
+      "label": "Columns"
+    },
+    "gap": {
+      "type": "string",
+      "default": "24px",
+      "label": "Gap"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"],
+    "stackBehavior": "vertical-on-mobile"
+  }
+}

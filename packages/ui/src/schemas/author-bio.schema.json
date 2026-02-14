@@ -1,0 +1,66 @@
+{
+  "id": "author-bio",
+  "name": "Author Bio",
+  "category": "Blog",
+  "icon": "user-circle",
+  "acceptsChildren": false,
+  "properties": {
+    "author": {
+      "type": "object",
+      "label": "Author",
+      "default": null,
+      "properties": {
+        "name": { "type": "string", "default": "Author Name", "label": "Name", "required": true },
+        "bio": { "type": "string", "default": "", "label": "Bio", "maxLength": 500 },
+        "avatar": { "type": "image", "default": null, "label": "Avatar" },
+        "socialLinks": {
+          "type": "array",
+          "label": "Social Links",
+          "items": {
+            "type": "object",
+            "properties": {
+              "platform": { "type": "string", "default": "", "label": "Platform" },
+              "url": { "type": "url", "default": "", "label": "URL" }
+            }
+          },
+          "default": []
+        }
+      }
+    },
+    "authorSource": {
+      "type": "enum",
+      "values": ["auto", "manual"],
+      "default": "manual",
+      "label": "Author Source"
+    },
+    "showAvatar": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Avatar"
+    },
+    "showBio": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Bio"
+    },
+    "showSocialLinks": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Social Links"
+    },
+    "layout": {
+      "type": "enum",
+      "values": ["horizontal", "vertical", "card"],
+      "default": "horizontal",
+      "label": "Layout"
+    },
+    "linkToAuthorPage": {
+      "type": "boolean",
+      "default": true,
+      "label": "Link to Author Page"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

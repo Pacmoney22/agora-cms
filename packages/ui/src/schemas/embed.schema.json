@@ -1,0 +1,46 @@
+{
+  "id": "embed",
+  "name": "Embed",
+  "category": "Social",
+  "icon": "code",
+  "acceptsChildren": false,
+  "properties": {
+    "embedUrl": {
+      "type": "url",
+      "default": "",
+      "label": "Embed URL",
+      "required": true
+    },
+    "embedType": {
+      "type": "enum",
+      "values": ["auto", "youtube", "vimeo", "twitter", "instagram", "codepen", "google-maps", "spotify", "custom-iframe"],
+      "default": "auto",
+      "label": "Embed Type"
+    },
+    "aspectRatio": {
+      "type": "enum",
+      "values": ["16:9", "4:3", "1:1", "auto"],
+      "default": "16:9",
+      "label": "Aspect Ratio"
+    },
+    "maxWidth": {
+      "type": "enum",
+      "values": ["small", "medium", "large", "full"],
+      "default": "full",
+      "label": "Max Width"
+    },
+    "caption": {
+      "type": "string",
+      "default": null,
+      "label": "Caption"
+    },
+    "lazyLoad": {
+      "type": "boolean",
+      "default": true,
+      "label": "Lazy Load"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

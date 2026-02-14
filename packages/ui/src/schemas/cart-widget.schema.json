@@ -1,0 +1,65 @@
+{
+  "id": "cart-widget",
+  "name": "Cart Widget",
+  "category": "Commerce",
+  "icon": "shopping-cart",
+  "acceptsChildren": false,
+  "properties": {
+    "style": {
+      "type": "enum",
+      "values": ["icon-badge", "icon-text", "text-only"],
+      "default": "icon-badge",
+      "label": "Widget Style"
+    },
+    "icon": {
+      "type": "string",
+      "default": "shopping-cart",
+      "label": "Icon"
+    },
+    "showItemCount": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Item Count"
+    },
+    "showTotal": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Total"
+    },
+    "dropdownPreview": {
+      "type": "boolean",
+      "default": true,
+      "label": "Enable Dropdown Preview"
+    },
+    "maxPreviewItems": {
+      "type": "number",
+      "default": 3,
+      "min": 1,
+      "max": 10,
+      "label": "Max Preview Items"
+    },
+    "checkoutButtonLabel": {
+      "type": "string",
+      "default": "Checkout",
+      "label": "Checkout Button Label"
+    },
+    "items": {
+      "type": "array",
+      "label": "Cart Items",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "default": "", "label": "Item Name", "required": true },
+          "price": { "type": "number", "default": 0, "label": "Price", "min": 0 },
+          "quantity": { "type": "number", "default": 1, "label": "Quantity", "min": 1 },
+          "image": { "type": "image", "default": null, "label": "Image" }
+        }
+      },
+      "default": []
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"],
+    "stackBehavior": "icon-only-on-mobile"
+  }
+}

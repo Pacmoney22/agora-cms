@@ -1,0 +1,86 @@
+{
+  "id": "site-meta",
+  "name": "Site Meta",
+  "category": "Global",
+  "icon": "globe",
+  "acceptsChildren": false,
+  "properties": {
+    "siteName": {
+      "type": "string",
+      "default": "",
+      "label": "Site Name",
+      "required": true
+    },
+    "defaultMetaTitle": {
+      "type": "string",
+      "default": "",
+      "label": "Default Meta Title",
+      "maxLength": 60,
+      "seo": { "required": true }
+    },
+    "defaultMetaDescription": {
+      "type": "string",
+      "default": "",
+      "label": "Default Meta Description",
+      "maxLength": 160,
+      "seo": { "required": true }
+    },
+    "favicon": {
+      "type": "image",
+      "default": null,
+      "label": "Favicon",
+      "constraints": { "formats": ["ico", "png", "svg"] }
+    },
+    "ogDefaultImage": {
+      "type": "image",
+      "default": null,
+      "label": "OG Default Image",
+      "constraints": { "formats": ["jpg", "png", "webp"], "minWidth": 1200, "minHeight": 630 }
+    },
+    "twitterHandle": {
+      "type": "string",
+      "default": null,
+      "label": "Twitter Handle"
+    },
+    "googleSiteVerification": {
+      "type": "string",
+      "default": null,
+      "label": "Google Site Verification"
+    },
+    "customHeadCode": {
+      "type": "string",
+      "default": null,
+      "label": "Custom Head Code"
+    },
+    "organizationSchema": {
+      "type": "object",
+      "label": "Organization Schema",
+      "default": null,
+      "properties": {
+        "name": { "type": "string", "default": "", "label": "Organization Name" },
+        "url": { "type": "url", "default": "", "label": "Website URL" },
+        "logo": { "type": "image", "default": "", "label": "Logo" },
+        "sameAs": {
+          "type": "array",
+          "label": "Social Profiles",
+          "items": { "type": "url", "default": "", "label": "Profile URL" },
+          "default": []
+        }
+      }
+    },
+    "localBusinessSchema": {
+      "type": "object",
+      "label": "Local Business Schema",
+      "default": null,
+      "properties": {
+        "name": { "type": "string", "default": "", "label": "Business Name" },
+        "address": { "type": "string", "default": "", "label": "Address" },
+        "phone": { "type": "string", "default": "", "label": "Phone" },
+        "openingHours": { "type": "string", "default": "", "label": "Opening Hours" }
+      }
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

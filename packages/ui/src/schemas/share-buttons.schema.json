@@ -1,0 +1,49 @@
+{
+  "id": "share-buttons",
+  "name": "Share Buttons",
+  "category": "Social",
+  "icon": "share",
+  "acceptsChildren": false,
+  "properties": {
+    "platforms": {
+      "type": "array",
+      "label": "Platforms",
+      "items": {
+        "type": "enum",
+        "values": ["facebook", "x", "linkedin", "email", "whatsapp", "pinterest", "reddit", "copy-link"]
+      },
+      "default": ["facebook", "x", "linkedin", "email"]
+    },
+    "style": {
+      "type": "enum",
+      "values": ["icon-only", "icon-text", "button"],
+      "default": "icon-only",
+      "label": "Display Style"
+    },
+    "shareUrl": {
+      "type": "enum",
+      "values": ["current-page", "custom"],
+      "default": "current-page",
+      "label": "Share URL"
+    },
+    "customUrl": {
+      "type": "url",
+      "default": null,
+      "label": "Custom URL"
+    },
+    "layout": {
+      "type": "enum",
+      "values": ["horizontal", "vertical", "floating"],
+      "default": "horizontal",
+      "label": "Layout"
+    },
+    "showCount": {
+      "type": "boolean",
+      "default": false,
+      "label": "Show Share Count"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

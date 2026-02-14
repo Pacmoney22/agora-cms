@@ -1,0 +1,82 @@
+{
+  "id": "product-configurator",
+  "name": "Product Configurator",
+  "category": "Commerce",
+  "icon": "settings",
+  "acceptsChildren": false,
+  "properties": {
+    "productId": {
+      "type": "string",
+      "default": "",
+      "label": "Product ID"
+    },
+    "product": {
+      "type": "object",
+      "label": "Product Data",
+      "properties": {
+        "name": { "type": "string", "default": "Configurable Product", "label": "Product Name", "required": true },
+        "basePrice": { "type": "number", "default": 0, "label": "Base Price", "min": 0 },
+        "steps": {
+          "type": "array",
+          "label": "Configuration Steps",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": { "type": "string", "default": "", "label": "Step Title", "required": true },
+              "options": {
+                "type": "array",
+                "label": "Options",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": { "type": "string", "default": "", "label": "Option Name", "required": true },
+                    "priceModifier": { "type": "number", "default": 0, "label": "Price Modifier" },
+                    "image": { "type": "image", "default": null, "label": "Option Image" }
+                  }
+                },
+                "default": []
+              }
+            }
+          },
+          "default": []
+        }
+      }
+    },
+    "layout": {
+      "type": "enum",
+      "values": ["side-by-side", "stepper", "single-page"],
+      "default": "stepper",
+      "label": "Layout"
+    },
+    "showPriceBreakdown": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Price Breakdown"
+    },
+    "showRunningTotal": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Running Total"
+    },
+    "showPreviewImage": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Preview Image"
+    },
+    "showSkuDisplay": {
+      "type": "boolean",
+      "default": false,
+      "label": "Show SKU Display"
+    },
+    "addToCartPosition": {
+      "type": "enum",
+      "values": ["bottom", "sticky", "inline"],
+      "default": "bottom",
+      "label": "Add to Cart Position"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"],
+    "stackBehavior": "vertical-on-mobile"
+  }
+}

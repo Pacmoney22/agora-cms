@@ -1,0 +1,28 @@
+{
+  "id": "container",
+  "name": "Container",
+  "category": "Layout",
+  "icon": "container",
+  "acceptsChildren": true,
+  "properties": {
+    "maxWidth": {
+      "type": "enum",
+      "values": ["sm", "md", "lg", "xl", "full"],
+      "default": "xl",
+      "label": "Max Width"
+    },
+    "padding": {
+      "type": "string",
+      "default": "16px",
+      "label": "Padding"
+    },
+    "backgroundColor": {
+      "type": "color",
+      "default": null,
+      "label": "Background Color"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

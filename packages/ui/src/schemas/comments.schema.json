@@ -1,0 +1,91 @@
+{
+  "id": "comments",
+  "name": "Comments",
+  "category": "Blog",
+  "icon": "message-circle",
+  "acceptsChildren": false,
+  "properties": {
+    "comments": {
+      "type": "array",
+      "label": "Comments",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "default": "", "label": "ID", "required": true },
+          "author": { "type": "string", "default": "", "label": "Author", "required": true },
+          "avatar": { "type": "image", "default": null, "label": "Avatar" },
+          "content": { "type": "string", "default": "", "label": "Content", "required": true },
+          "date": { "type": "string", "default": "", "label": "Date" },
+          "likes": { "type": "number", "default": 0, "label": "Likes" },
+          "replies": {
+            "type": "array",
+            "label": "Replies",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "string", "default": "", "label": "ID" },
+                "author": { "type": "string", "default": "", "label": "Author" },
+                "avatar": { "type": "image", "default": null, "label": "Avatar" },
+                "content": { "type": "string", "default": "", "label": "Content" },
+                "date": { "type": "string", "default": "", "label": "Date" },
+                "likes": { "type": "number", "default": 0, "label": "Likes" }
+              }
+            },
+            "default": []
+          }
+        }
+      },
+      "default": []
+    },
+    "provider": {
+      "type": "enum",
+      "values": ["native", "disqus"],
+      "default": "native",
+      "label": "Comment Provider"
+    },
+    "allowNested": {
+      "type": "boolean",
+      "default": true,
+      "label": "Allow Nested Replies"
+    },
+    "maxDepth": {
+      "type": "number",
+      "default": 3,
+      "label": "Max Reply Depth",
+      "min": 1,
+      "max": 5
+    },
+    "sortDefault": {
+      "type": "enum",
+      "values": ["newest", "oldest", "most-liked"],
+      "default": "newest",
+      "label": "Default Sort"
+    },
+    "requireAuth": {
+      "type": "boolean",
+      "default": false,
+      "label": "Require Authentication"
+    },
+    "moderation": {
+      "type": "enum",
+      "values": ["none", "pre-moderation", "post-moderation"],
+      "default": "none",
+      "label": "Moderation"
+    },
+    "showAvatars": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Avatars"
+    },
+    "perPage": {
+      "type": "number",
+      "default": 10,
+      "label": "Comments Per Page",
+      "min": 5,
+      "max": 50
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

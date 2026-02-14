@@ -1,0 +1,77 @@
+{
+  "id": "gallery",
+  "name": "Gallery",
+  "category": "Media",
+  "icon": "gallery",
+  "acceptsChildren": false,
+  "properties": {
+    "images": {
+      "type": "array",
+      "label": "Images",
+      "items": {
+        "type": "object",
+        "properties": {
+          "src": {
+            "type": "image",
+            "default": "",
+            "label": "Image",
+            "constraints": { "formats": ["jpg", "jpeg", "png", "webp", "avif", "gif"] }
+          },
+          "alt": {
+            "type": "string",
+            "default": "",
+            "label": "Alt Text",
+            "required": true,
+            "seo": { "required": true }
+          },
+          "caption": {
+            "type": "string",
+            "default": null,
+            "label": "Caption"
+          }
+        }
+      },
+      "default": []
+    },
+    "layout": {
+      "type": "enum",
+      "values": ["grid", "masonry", "collage", "filmstrip"],
+      "default": "grid",
+      "label": "Layout"
+    },
+    "columns": {
+      "type": "number",
+      "default": 3,
+      "min": 2,
+      "max": 6,
+      "label": "Columns"
+    },
+    "gap": {
+      "type": "enum",
+      "values": ["none", "small", "medium", "large"],
+      "default": "medium",
+      "label": "Gap"
+    },
+    "borderRadius": {
+      "type": "enum",
+      "values": ["none", "small", "medium", "large"],
+      "default": "small",
+      "label": "Border Radius"
+    },
+    "lightbox": {
+      "type": "boolean",
+      "default": true,
+      "label": "Enable Lightbox"
+    },
+    "showCaptions": {
+      "type": "enum",
+      "values": ["always", "hover", "lightbox-only", "hidden"],
+      "default": "hover",
+      "label": "Show Captions"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"],
+    "stackBehavior": "reduce-columns-on-mobile"
+  }
+}

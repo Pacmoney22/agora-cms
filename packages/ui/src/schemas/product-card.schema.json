@@ -1,0 +1,93 @@
+{
+  "id": "product-card",
+  "name": "Product Card",
+  "category": "Commerce",
+  "icon": "shopping-bag",
+  "acceptsChildren": false,
+  "properties": {
+    "productSource": {
+      "type": "enum",
+      "values": ["manual", "dynamic"],
+      "default": "manual",
+      "label": "Product Source"
+    },
+    "productId": {
+      "type": "string",
+      "default": null,
+      "label": "Product ID",
+      "visibleWhen": { "productSource": "dynamic" }
+    },
+    "product": {
+      "type": "object",
+      "label": "Product Data",
+      "visibleWhen": { "productSource": "manual" },
+      "properties": {
+        "name": { "type": "string", "default": "Product Name", "label": "Product Name", "required": true },
+        "price": { "type": "number", "default": 0, "label": "Price", "min": 0 },
+        "salePrice": { "type": "number", "default": null, "label": "Sale Price", "min": 0 },
+        "image": { "type": "image", "default": null, "label": "Product Image", "constraints": { "formats": ["jpg", "jpeg", "png", "webp"] } },
+        "rating": { "type": "number", "default": null, "label": "Rating", "min": 0, "max": 5 },
+        "badge": { "type": "string", "default": null, "label": "Badge Text" },
+        "slug": { "type": "string", "default": "", "label": "Product Slug", "required": true },
+        "type": { "type": "string", "default": null, "label": "Product Type" }
+      }
+    },
+    "showImage": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Image"
+    },
+    "imageAspectRatio": {
+      "type": "enum",
+      "values": ["1:1", "4:3", "3:4", "16:9"],
+      "default": "1:1",
+      "label": "Image Aspect Ratio"
+    },
+    "showPrice": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Price"
+    },
+    "showRating": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Rating"
+    },
+    "showBadge": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Badge"
+    },
+    "showQuickAdd": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Quick Add"
+    },
+    "showVariantSelector": {
+      "type": "boolean",
+      "default": false,
+      "label": "Show Variant Selector"
+    },
+    "showProductType": {
+      "type": "boolean",
+      "default": false,
+      "label": "Show Product Type"
+    },
+    "cardStyle": {
+      "type": "enum",
+      "values": ["standard", "minimal", "overlay", "horizontal"],
+      "default": "standard",
+      "label": "Card Style"
+    },
+    "hoverEffect": {
+      "type": "enum",
+      "values": ["none", "zoom", "swap-image", "shadow"],
+      "default": "zoom",
+      "label": "Hover Effect"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"],
+    "stackBehavior": "full-width-on-mobile"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "id": "social-links",
+  "name": "Social Links",
+  "category": "Social",
+  "icon": "share-2",
+  "acceptsChildren": false,
+  "properties": {
+    "links": {
+      "type": "array",
+      "label": "Social Links",
+      "items": {
+        "type": "object",
+        "properties": {
+          "platform": {
+            "type": "enum",
+            "values": ["facebook", "x", "instagram", "linkedin", "youtube", "github", "tiktok", "discord", "pinterest"],
+            "default": "facebook",
+            "label": "Platform"
+          },
+          "url": {
+            "type": "url",
+            "default": "",
+            "label": "Profile URL",
+            "required": true
+          }
+        }
+      },
+      "default": []
+    },
+    "style": {
+      "type": "enum",
+      "values": ["icon-only", "icon-text", "icon-circle", "icon-square"],
+      "default": "icon-only",
+      "label": "Display Style"
+    },
+    "size": {
+      "type": "enum",
+      "values": ["small", "medium", "large"],
+      "default": "medium",
+      "label": "Size"
+    },
+    "colorMode": {
+      "type": "enum",
+      "values": ["brand", "monochrome", "custom"],
+      "default": "brand",
+      "label": "Color Mode"
+    },
+    "alignment": {
+      "type": "enum",
+      "values": ["left", "center", "right"],
+      "default": "center",
+      "label": "Alignment"
+    },
+    "openInNewTab": {
+      "type": "boolean",
+      "default": true,
+      "label": "Open in New Tab"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

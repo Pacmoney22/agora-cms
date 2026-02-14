@@ -1,0 +1,14 @@
+{
+  "id": "spacer",
+  "name": "Spacer",
+  "category": "Layout",
+  "icon": "spacer",
+  "acceptsChildren": false,
+  "properties": {
+    "height": {
+      "type": "string",
+      "default": "32px",
+      "label": "Height"
+    }
+  }
+}

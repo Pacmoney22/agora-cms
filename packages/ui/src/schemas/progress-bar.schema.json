@@ -1,0 +1,51 @@
+{
+  "id": "progress-bar",
+  "name": "Progress Bar",
+  "category": "Data Display",
+  "icon": "loader",
+  "acceptsChildren": false,
+  "properties": {
+    "value": {
+      "type": "number",
+      "default": 0,
+      "min": 0,
+      "max": 100,
+      "label": "Value (%)"
+    },
+    "label": {
+      "type": "string",
+      "default": null,
+      "label": "Label"
+    },
+    "showPercentage": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Percentage"
+    },
+    "color": {
+      "type": "color",
+      "default": "#3b82f6",
+      "label": "Bar Color"
+    },
+    "height": {
+      "type": "enum",
+      "values": ["thin", "medium", "thick"],
+      "default": "medium",
+      "label": "Height / Size"
+    },
+    "animated": {
+      "type": "boolean",
+      "default": true,
+      "label": "Animate on Scroll"
+    },
+    "style": {
+      "type": "enum",
+      "values": ["linear", "circular", "semicircle"],
+      "default": "linear",
+      "label": "Style"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

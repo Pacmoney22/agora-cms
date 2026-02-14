@@ -1,0 +1,78 @@
+{
+  "id": "lightbox",
+  "name": "Lightbox Gallery",
+  "category": "Interactive",
+  "icon": "maximize-2",
+  "acceptsChildren": false,
+  "properties": {
+    "images": {
+      "type": "array",
+      "label": "Images",
+      "items": {
+        "type": "object",
+        "properties": {
+          "src": {
+            "type": "image",
+            "default": "",
+            "label": "Image",
+            "required": true,
+            "constraints": { "formats": ["jpg", "jpeg", "png", "webp", "avif", "gif"] }
+          },
+          "alt": {
+            "type": "string",
+            "default": "",
+            "label": "Alt Text",
+            "required": true,
+            "seo": { "required": true }
+          },
+          "caption": {
+            "type": "string",
+            "default": null,
+            "label": "Caption"
+          }
+        }
+      },
+      "default": []
+    },
+    "showThumbnails": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Thumbnails"
+    },
+    "showCaptions": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Captions"
+    },
+    "showCounter": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Counter"
+    },
+    "enableZoom": {
+      "type": "boolean",
+      "default": true,
+      "label": "Enable Zoom"
+    },
+    "enableSlideshow": {
+      "type": "boolean",
+      "default": false,
+      "label": "Enable Slideshow"
+    },
+    "slideshowInterval": {
+      "type": "number",
+      "default": 3000,
+      "label": "Slideshow Interval (ms)",
+      "min": 1000,
+      "max": 10000
+    },
+    "backgroundColor": {
+      "type": "color",
+      "default": "rgba(0, 0, 0, 0.95)",
+      "label": "Background Color"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}
