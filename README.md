@@ -16,7 +16,7 @@ A modern, all-in-one platform combining a headless CMS, e-commerce engine, learn
 ## Architecture
 
 ```
-nextgen-cms/
+agora-cms/
 ├── apps/
 │   ├── admin-dashboard/    # Admin UI (Next.js - port 3300)
 │   ├── page-builder/       # Visual editor (Next.js - port 3100)
