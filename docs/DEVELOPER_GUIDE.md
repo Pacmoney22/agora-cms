@@ -1,4 +1,4 @@
-# Developer Guide -- NextGen CMS
+# Developer Guide -- Agora CMS
 
 **Version:** 2.0
 **Last Updated:** February 2026
@@ -41,7 +41,7 @@
 
 ## 1. Architecture Overview
 
-NextGen CMS is a monorepo-based, microservices-oriented platform combining a headless CMS, e-commerce engine, LMS (Learning Management System), and a drag-and-drop visual page builder. The architecture uses an API gateway pattern with event-driven communication between services.
+Agora CMS is a monorepo-based, microservices-oriented platform combining a headless CMS, e-commerce engine, LMS (Learning Management System), and a drag-and-drop visual page builder. The architecture uses an API gateway pattern with event-driven communication between services.
 
 ### High-Level Request Flow
 
