@@ -23,7 +23,9 @@
     "react-chartjs-2": "^5.2.0"
   },
   "devDependencies": {
+    "@agora-cms/eslint-config": "workspace:*",
     "@agora-cms/tsconfig": "workspace:*",
+    "eslint": "^9.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "react": "^19.0.0",

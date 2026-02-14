@@ -14,7 +14,9 @@
     "zod": "^3.24.0"
   },
   "devDependencies": {
+    "@agora-cms/eslint-config": "workspace:*",
     "@agora-cms/tsconfig": "workspace:*",
+    "eslint": "^9.0.0",
     "@types/node": "^22.0.0",
     "jest": "^29.7.0",
     "ts-jest": "^29.2.0",

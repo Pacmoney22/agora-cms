@@ -19,7 +19,9 @@
     "@prisma/client": "^6.3.0"
   },
   "devDependencies": {
+    "@agora-cms/eslint-config": "workspace:*",
     "@agora-cms/tsconfig": "workspace:*",
+    "eslint": "^9.0.0",
     "@types/node": "^25.2.3",
     "prisma": "^6.3.0",
     "tsup": "^8.3.0",
