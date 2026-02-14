@@ -31,7 +31,7 @@ export interface CreateCategoryDto {
   seo?: Record<string, unknown> | null;
 }
 
-export interface UpdateCategoryDto extends Partial<CreateCategoryDto> {}
+export type UpdateCategoryDto = Partial<CreateCategoryDto>;
 
 @Injectable()
 export class CategoryService {
