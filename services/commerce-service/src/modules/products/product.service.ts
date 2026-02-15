@@ -528,6 +528,8 @@ export class ProductService {
       service: row.service,
       configuration: row.configuration,
       course: row.course,
+      affiliate: row.affiliate,
+      printful: row.printful,
       variantAttrs: row.variantAttrs,
       variants: row.variants,
       images: row.images,

@@ -9,7 +9,10 @@ async function main() {
   // ============================================================
   // USERS - One per role
   // ============================================================
-  const passwordHash = await bcrypt.hash('Password123!', 12);
+  // Development/test password for seeded demo users only
+  // IMPORTANT: This is a well-known demo password - NEVER use in production
+  const DEMO_PASSWORD = 'Password123!';
+  const passwordHash = await bcrypt.hash(DEMO_PASSWORD, 12);
 
   const users = await Promise.all([
     prisma.user.upsert({

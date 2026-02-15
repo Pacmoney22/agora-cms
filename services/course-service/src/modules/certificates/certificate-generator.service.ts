@@ -10,12 +10,17 @@ export class CertificateGeneratorService {
   private readonly s3Client: S3Client;
 
   constructor(private readonly config: ConfigService) {
+    // MinIO default credentials for local development only
+    // IMPORTANT: These are public MinIO defaults - do NOT use in production
+    const MINIO_DEFAULT_USER = 'minioadmin';
+    const MINIO_DEFAULT_PASSWORD = 'minioadmin';
+
     this.s3Client = new S3Client({
       region: this.config.get<string>('AWS_REGION') || 'us-east-1',
       endpoint: this.config.get<string>('S3_ENDPOINT') || 'http://localhost:9000',
       credentials: {
-        accessKeyId: this.config.get<string>('AWS_ACCESS_KEY_ID') || 'minioadmin',
-        secretAccessKey: this.config.get<string>('AWS_SECRET_ACCESS_KEY') || 'minioadmin',
+        accessKeyId: this.config.get<string>('AWS_ACCESS_KEY_ID') || MINIO_DEFAULT_USER,
+        secretAccessKey: this.config.get<string>('AWS_SECRET_ACCESS_KEY') || MINIO_DEFAULT_PASSWORD,
       },
       forcePathStyle: true, // Required for MinIO
     });

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
 import { QueryProvider } from '@/components/providers/QueryProvider';
+import { AuthProvider } from '@/lib/auth-context';
 import { Sidebar } from '@/components/layout/Sidebar';
 import './globals.css';
 
@@ -20,15 +21,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <QueryProvider>
-          <div className="flex h-screen">
-            <Sidebar />
-            <main className="flex-1 overflow-y-auto bg-gray-50">
-              {children}
-            </main>
-          </div>
-          <Toaster position="bottom-right" />
-        </QueryProvider>
+        <AuthProvider>
+          <QueryProvider>
+            <div className="flex h-screen">
+              <Sidebar />
+              <main className="flex-1 overflow-y-auto bg-gray-50">
+                {children}
+              </main>
+            </div>
+            <Toaster position="bottom-right" />
+          </QueryProvider>
+        </AuthProvider>
       </body>
     </html>
   );

@@ -11,8 +11,9 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiHeader, ApiResponse } from '@nestjs/swagger';
 import { Request } from 'express';
-import type { IPaymentGateway } from '@agora-cms/shared';
+import type { IPaymentGateway, IPrintfulConnector } from '@agora-cms/shared';
 import { PAYMENT_GATEWAY } from '../stripe/stripe.module';
+import { PRINTFUL_CONNECTOR } from '../printful/printful.module';
 
 @ApiTags('webhooks')
 @Controller('api/v1/webhooks')
@@ -22,6 +23,8 @@ export class WebhookController {
   constructor(
     @Inject(PAYMENT_GATEWAY)
     private readonly paymentGateway: IPaymentGateway,
+    @Inject(PRINTFUL_CONNECTOR)
+    private readonly printfulConnector: IPrintfulConnector,
   ) {}
 
   @Post('stripe')
@@ -79,6 +82,94 @@ export class WebhookController {
     } catch (error) {
       this.logger.error(
         `Failed to process Stripe webhook: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      );
+      throw new BadRequestException('Webhook processing failed');
+    }
+  }
+
+  @Post('printful')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Handle Printful webhook events',
+    description:
+      'Receives and processes Printful webhook events such as package_shipped, order_failed, stock_updated, etc.',
+  })
+  @ApiHeader({
+    name: 'x-pf-signature',
+    description: 'Printful webhook signature for payload verification',
+    required: true,
+  })
+  @ApiResponse({ status: 200, description: 'Webhook processed successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid webhook payload or signature' })
+  async handlePrintfulWebhook(
+    @Req() req: Request,
+    @Headers('x-pf-signature') signature: string,
+  ) {
+    if (!signature) {
+      throw new BadRequestException('Missing x-pf-signature header');
+    }
+
+    const payload = req.body as Buffer;
+
+    try {
+      const event = await this.printfulConnector.handleWebhook(payload, signature);
+
+      this.logger.log(
+        `Processed Printful webhook: ${event.type}`,
+      );
+
+      switch (event.type) {
+        case 'package_shipped':
+          this.logger.log(
+            `Package shipped: Order ${event.data.order?.externalId}, Tracking: ${event.data.shipment?.trackingNumber}`,
+          );
+          // TODO: Update PrintfulFulfillment status to 'fulfilled'
+          // TODO: Update Order shipment with tracking info
+          // TODO: Emit ORDER_SHIPPED event via Kafka
+          break;
+
+        case 'package_returned':
+          this.logger.warn(
+            `Package returned: Order ${event.data.order?.externalId}, Reason: ${event.data.reason}`,
+          );
+          // TODO: Update PrintfulFulfillment status to 'returned'
+          // TODO: Emit ORDER_RETURN event via Kafka
+          break;
+
+        case 'order_failed':
+          this.logger.error(
+            `Order failed: Order ${event.data.order?.externalId}, Reason: ${event.data.reason}`,
+          );
+          // TODO: Update PrintfulFulfillment status to 'failed'
+          // TODO: Emit ORDER_FAILED event via Kafka
+          break;
+
+        case 'order_canceled':
+          this.logger.log(
+            `Order canceled: Order ${event.data.order?.externalId}`,
+          );
+          // TODO: Update PrintfulFulfillment status to 'cancelled'
+          // TODO: Emit ORDER_CANCELLED event via Kafka
+          break;
+
+        case 'product_synced':
+          this.logger.log('Product synced with Printful catalog');
+          // TODO: Update PrintfulProduct lastSyncedAt timestamp
+          break;
+
+        case 'stock_updated':
+          this.logger.log('Printful product stock updated');
+          // TODO: Update product inventory from Printful
+          break;
+
+        default:
+          this.logger.log(`Unhandled Printful event type: ${event.type}`);
+      }
+
+      return { received: true, eventType: event.type };
+    } catch (error) {
+      this.logger.error(
+        `Failed to process Printful webhook: ${error instanceof Error ? error.message : 'Unknown error'}`,
       );
       throw new BadRequestException('Webhook processing failed');
     }

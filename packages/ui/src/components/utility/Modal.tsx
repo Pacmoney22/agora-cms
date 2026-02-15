@@ -16,7 +16,7 @@ export interface ModalProps {
   className?: string;
 }
 
-const SESSION_KEY = 'cms-modal-shown';
+const MODAL_SHOWN_STORAGE_KEY = 'cms-modal-shown';
 
 const sizeClasses: Record<string, string> = {
   small: 'max-w-sm w-full',
@@ -59,7 +59,7 @@ export const Modal: React.FC<ModalProps> = ({
   const shouldShow = useCallback(() => {
     if (!showOncePerSession) return true;
     try {
-      return !sessionStorage.getItem(SESSION_KEY);
+      return !sessionStorage.getItem(MODAL_SHOWN_STORAGE_KEY);
     } catch {
       return true;
     }
@@ -71,7 +71,7 @@ export const Modal: React.FC<ModalProps> = ({
     setIsOpen(true);
     if (showOncePerSession) {
       try {
-        sessionStorage.setItem(SESSION_KEY, 'true');
+        sessionStorage.setItem(MODAL_SHOWN_STORAGE_KEY, 'true');
       } catch {
         // sessionStorage unavailable
       }

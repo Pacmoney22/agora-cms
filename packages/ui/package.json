@@ -14,23 +14,23 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "clsx": "^2.1.0",
-    "lucide-react": "^0.468.0",
-    "embla-carousel-react": "^8.5.0",
-    "react-intersection-observer": "^9.13.0",
-    "prismjs": "^1.29.0",
     "chart.js": "^4.4.0",
-    "react-chartjs-2": "^5.2.0"
+    "clsx": "^2.1.0",
+    "embla-carousel-react": "^8.5.0",
+    "lucide-react": "^0.468.0",
+    "prismjs": "^1.29.0",
+    "react-chartjs-2": "^5.2.0",
+    "react-intersection-observer": "^9.13.0"
   },
   "devDependencies": {
     "@agora-cms/eslint-config": "workspace:*",
     "@agora-cms/tsconfig": "workspace:*",
-    "eslint": "^9.0.0",
+    "@types/prismjs": "^1.26.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "eslint": "^9.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "@types/prismjs": "^1.26.0",
     "tsup": "^8.3.0",
     "typescript": "^5.7.0"
   },

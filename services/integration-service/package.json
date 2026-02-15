@@ -15,6 +15,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
+    "@google-analytics/data": "^4.8.0",
     "@nestjs/common": "^10.4.0",
     "@nestjs/config": "^3.3.0",
     "@nestjs/core": "^10.4.0",
@@ -22,10 +23,13 @@
     "@nestjs/swagger": "^7.4.0",
     "@agora-cms/database": "workspace:*",
     "@agora-cms/shared": "workspace:*",
+    "axios": "^1.7.0",
     "ioredis": "^5.4.0",
+    "jsforce": "^3.10.14",
     "kafkajs": "^2.2.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.0",
+    "stripe": "^17.6.0",
     "uuid": "^11.0.0"
   },
   "devDependencies": {

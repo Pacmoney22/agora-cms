@@ -1,4 +1,4 @@
-export type ProductType = 'physical' | 'virtual' | 'service' | 'configurable' | 'course';
+export type ProductType = 'physical' | 'virtual' | 'service' | 'configurable' | 'course' | 'affiliate' | 'printful';
 
 export interface ProductPricing {
   currency: string;
@@ -108,6 +108,33 @@ export interface ProductVariant {
   barcode: string | null;
 }
 
+export interface ProductAffiliate {
+  externalUrl: string;  // Affiliate link destination
+  affiliateNetwork?: string;  // 'ShareASale', 'Amazon Associates', 'CJ Affiliate', etc.
+  commissionRate: number;  // Percentage * 100 (e.g., 1500 = 15%)
+  commissionFixed?: number;  // Fixed commission in cents (optional)
+  cookieDuration: number;  // Days to track conversion (default: 30)
+  trackingParameters: Record<string, string>;  // Query params to append { 'ref': 'agora123' }
+  autoOpenNewTab: boolean;  // Open in new window (default: true)
+}
+
+export interface ProductPrintful {
+  printfulSyncId: string;  // Printful sync product ID
+  catalogProductId: number;  // Printful catalog product ID (e.g., 71 = Unisex Staple T-Shirt)
+  mockupFiles: Array<{
+    variantId: number;
+    placementType: string;  // 'front', 'back', 'left', 'right'
+    mockupUrl: string;
+  }>;
+  printFiles: Array<{
+    variantId: number;
+    placementType: string;
+    printFileUrl: string;
+  }>;
+  autoFulfill: boolean;  // Auto-confirm orders with Printful (default: true)
+  lastSyncedAt?: string;
+}
+
 export interface ProductImage {
   url: string;
   alt: string;
@@ -129,6 +156,8 @@ export interface ProductDto {
   service: ProductService | null;
   configuration: ProductConfiguration | null;
   course: ProductCourse | null;
+  affiliate: ProductAffiliate | null;
+  printful: ProductPrintful | null;
   variantAttrs: VariantAttribute[] | null;
   variants: ProductVariant[] | null;
   images: ProductImage[] | null;

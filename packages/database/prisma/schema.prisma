@@ -18,6 +18,12 @@ enum UserRole {
   store_manager
   admin
   super_admin
+  // Scoped roles (hierarchy -1)
+  instructor
+  course_administrator
+  exhibitor
+  event_staff
+  kiosk_user
 }
 
 enum PageStatus {
@@ -33,6 +39,8 @@ enum ProductType {
   service
   configurable
   course
+  affiliate  // External product with commission tracking
+  printful   // Print-on-demand via Printful
 }
 
 enum ProductStatus {
@@ -144,6 +152,19 @@ model User {
   lessonVersions  CourseLessonVersion[] @relation("CourseLessonVersionAuthor")
   enrollments     CourseEnrollment[] @relation("StudentEnrollments")
   gradedQuizzes   QuizAttempt[]    @relation("QuizGrader")
+
+  // Scoped role assignments
+  instructorAssignments    InstructorAssignment[]  @relation("InstructorAssignments")
+  assignedInstructors      InstructorAssignment[]  @relation("AssignedInstructors")
+  eventStaffAssignments    EventStaffAssignment[]  @relation("EventStaffAssignments")
+  assignedEventStaff       EventStaffAssignment[]  @relation("AssignedEventStaff")
+  exhibitorAssignments     ExhibitorAssignment[]   @relation("ExhibitorAssignments")
+  assignedExhibitors       ExhibitorAssignment[]   @relation("AssignedExhibitors")
+  kioskAssignments         KioskAssignment[]       @relation("KioskAssignments")
+  assignedKiosks           KioskAssignment[]       @relation("AssignedKiosks")
+
+  // Event attendees
+  attendees                Attendee[]
 
   @@map("users")
 }
@@ -287,6 +308,9 @@ model Product {
 
   categories      ProductCategory[]
   licenseKeyPools LicenseKeyPool[]
+  printfulProduct PrintfulProduct?
+  affiliateClicks AffiliateClick[]
+  affiliateConversions AffiliateConversion[]
 
   @@index([type, status])
   @@index([slug])
@@ -329,6 +353,94 @@ model ProductCategory {
 }
 
 // ============================================================
+// PRINTFUL INTEGRATION (Print-on-Demand)
+// ============================================================
+
+model PrintfulProduct {
+  id              String   @id @default(uuid()) @db.Uuid
+  productId       String   @unique @map("product_id") @db.Uuid
+  printfulSyncId  String   @unique @map("printful_sync_id") @db.Text  // Printful sync product ID
+  printfulData    Json     @map("printful_data") @db.JsonB  // Full sync product data
+  // { variants: [...], mockupFiles: [...], printFiles: [...] }
+
+  lastSyncedAt    DateTime @map("last_synced_at")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([printfulSyncId])
+  @@map("printful_products")
+}
+
+model PrintfulFulfillment {
+  id              String   @id @default(uuid()) @db.Uuid
+  orderId         String   @map("order_id") @db.Uuid
+  orderLineItemId String   @map("order_line_item_id") @db.Text  // Reference to JSON line item
+  printfulOrderId String?  @unique @map("printful_order_id") @db.Text  // Printful external ID
+
+  status          String   @db.VarChar(50)  // draft, pending, failed, fulfilled, cancelled
+  // Printful statuses: draft, pending, onhold, inprocess, partial, fulfilled, cancelled
+
+  printfulData    Json?    @map("printful_data") @db.JsonB  // Full Printful order data
+  trackingNumber  String?  @map("tracking_number") @db.VarChar(100)
+  carrier         String?  @db.VarChar(50)
+  estimatedDelivery DateTime? @map("estimated_delivery")
+  shippedAt       DateTime? @map("shipped_at")
+
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  order           Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@index([status])
+  @@index([printfulOrderId])
+  @@map("printful_fulfillments")
+}
+
+// ============================================================
+// AFFILIATE PRODUCTS (External links with commission tracking)
+// ============================================================
+
+model AffiliateClick {
+  id              String   @id @default(uuid()) @db.Uuid
+  productId       String   @map("product_id") @db.Uuid
+  userId          String?  @map("user_id") @db.Uuid  // Logged-in user (optional)
+  sessionId       String   @map("session_id") @db.VarChar(255)  // Anonymous session tracking
+  ipAddress       String   @map("ip_address") @db.VarChar(45)
+  userAgent       String?  @map("user_agent") @db.Text
+  referer         String?  @db.Text  // Where click originated
+  clickedAt       DateTime @default(now()) @map("clicked_at")
+
+  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId, clickedAt])
+  @@index([sessionId])
+  @@map("affiliate_clicks")
+}
+
+model AffiliateConversion {
+  id              String   @id @default(uuid()) @db.Uuid
+  productId       String   @map("product_id") @db.Uuid
+  userId          String?  @map("user_id") @db.Uuid
+  sessionId       String   @map("session_id") @db.VarChar(255)  // Links back to click
+
+  orderReference  String?  @map("order_reference") @db.VarChar(255)  // External order ID
+  commissionAmount Int?    @map("commission_amount")  // In cents
+  commissionRate  Int?     @map("commission_rate")  // Percentage * 100 (e.g., 1500 = 15%)
+
+  convertedAt     DateTime @default(now()) @map("converted_at")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId, convertedAt])
+  @@index([sessionId])
+  @@map("affiliate_conversions")
+}
+
+// ============================================================
 // ORDERS & EVENTS
 // ============================================================
 
@@ -360,6 +472,8 @@ model Order {
   serviceBookings ServiceBooking[]
   licenseKeys     LicenseKey[]
   enrollments     CourseEnrollment[]
+  printfulFulfillments PrintfulFulfillment[]
+  tickets         Ticket[]
 
   @@index([userId, status])
   @@index([orderNumber])
@@ -685,6 +799,7 @@ model CourseSection {
 
   course          Course     @relation(fields: [courseId], references: [id], onDelete: Cascade)
   lessons         CourseLesson[]
+  instructorAssignments InstructorAssignment[]
 
   @@index([courseId, position])
   @@map("course_sections")
@@ -895,4 +1010,328 @@ model Certificate {
   @@index([enrollmentId])
   @@index([verificationCode])
   @@map("certificates")
+}
+
+// ============================================================
+// SCOPED ROLE ASSIGNMENTS
+// ============================================================
+
+// Instructor assignment to course sections
+model InstructorAssignment {
+  id              String   @id @default(uuid()) @db.Uuid
+  userId          String   @map("user_id") @db.Uuid
+  courseSectionId String   @map("course_section_id") @db.Uuid
+  assignedBy      String   @map("assigned_by") @db.Uuid  // Admin who created assignment
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade, name: "InstructorAssignments")
+  courseSection   CourseSection @relation(fields: [courseSectionId], references: [id], onDelete: Cascade)
+  assignedByUser  User          @relation(fields: [assignedBy], references: [id], name: "AssignedInstructors")
+
+  @@unique([userId, courseSectionId])
+  @@index([userId])
+  @@index([courseSectionId])
+  @@map("instructor_assignments")
+}
+
+// Event staff assignment to events
+model EventStaffAssignment {
+  id              String   @id @default(uuid()) @db.Uuid
+  userId          String   @map("user_id") @db.Uuid
+  eventId         String   @map("event_id") @db.Uuid
+  assignedBy      String   @map("assigned_by") @db.Uuid
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade, name: "EventStaffAssignments")
+  event           Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  assignedByUser  User     @relation(fields: [assignedBy], references: [id], name: "AssignedEventStaff")
+
+  @@unique([userId, eventId])
+  @@index([userId])
+  @@index([eventId])
+  @@map("event_staff_assignments")
+}
+
+// Exhibitor assignment to events
+model ExhibitorAssignment {
+  id              String   @id @default(uuid()) @db.Uuid
+  userId          String   @map("user_id") @db.Uuid
+  eventId         String   @map("event_id") @db.Uuid
+  boothNumber     String?  @map("booth_number") @db.VarChar(50)
+  assignedBy      String   @map("assigned_by") @db.Uuid
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade, name: "ExhibitorAssignments")
+  event           Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  assignedByUser  User     @relation(fields: [assignedBy], references: [id], name: "AssignedExhibitors")
+
+  @@unique([userId, eventId])
+  @@index([userId])
+  @@index([eventId])
+  @@map("exhibitor_assignments")
+}
+
+// Kiosk user assignment to events
+model KioskAssignment {
+  id              String   @id @default(uuid()) @db.Uuid
+  userId          String   @map("user_id") @db.Uuid
+  eventId         String   @map("event_id") @db.Uuid
+  kioskIdentifier String   @map("kiosk_identifier") @db.VarChar(100)  // e.g., "KIOSK-ENTRANCE-A"
+  assignedBy      String   @map("assigned_by") @db.Uuid
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade, name: "KioskAssignments")
+  event           Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  assignedByUser  User     @relation(fields: [assignedBy], references: [id], name: "AssignedKiosks")
+
+  @@unique([userId, eventId])
+  @@index([userId])
+  @@index([eventId])
+  @@map("kiosk_assignments")
+}
+
+// ============================================================
+// EVENTS & VENUES
+// ============================================================
+
+enum EventStatus {
+  draft
+  published
+  cancelled
+  completed
+}
+
+enum TicketStatus {
+  valid
+  used
+  cancelled
+  refunded
+}
+
+model Venue {
+  id              String   @id @default(uuid()) @db.Uuid
+  name            String   @db.VarChar(255)
+  slug            String   @unique @db.VarChar(500)
+  address         Json?    @db.JsonB  // { street, city, state, zip, country }
+  capacity        Int?
+  amenities       String[] @default([])  // ['WiFi', 'Parking', 'ADA Accessible']
+  contactInfo     Json?    @map("contact_info") @db.JsonB  // { phone, email, website }
+  imageUrl        String?  @map("image_url") @db.Text
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  events          Event[]
+
+  @@index([slug])
+  @@map("venues")
+}
+
+model Event {
+  id              String      @id @default(uuid()) @db.Uuid
+  title           String      @db.VarChar(255)
+  slug            String      @unique @db.VarChar(500)
+  description     String?     @db.Text
+  status          EventStatus @default(draft)
+
+  // Event dates
+  startDate       DateTime    @map("start_date")
+  endDate         DateTime    @map("end_date")
+  timezone        String      @default("UTC") @db.VarChar(50)
+
+  // Venue
+  venueId         String?     @map("venue_id") @db.Uuid
+  virtualEventUrl String?     @map("virtual_event_url") @db.Text  // For online events
+
+  // External registration
+  isExternalRegistration Boolean @default(false) @map("is_external_registration")
+  externalRegistrationUrl String? @map("external_registration_url") @db.Text
+
+  // Event metadata
+  imageUrl        String?     @map("image_url") @db.Text
+  bannerUrl       String?     @map("banner_url") @db.Text
+  maxAttendees    Int?        @map("max_attendees")
+  tags            String[]    @default([])
+  seo             Json?       @db.JsonB
+
+  publishedAt     DateTime?   @map("published_at")
+  createdAt       DateTime    @default(now()) @map("created_at")
+  updatedAt       DateTime    @updatedAt @map("updated_at")
+
+  venue           Venue?      @relation(fields: [venueId], references: [id])
+  sessions        EventSession[]
+  sponsors        Sponsor[]
+  ticketTypes     TicketType[]
+  tickets         Ticket[]
+  attendees       Attendee[]
+
+  // Scoped role assignments
+  eventStaffAssignments EventStaffAssignment[]
+  exhibitorAssignments  ExhibitorAssignment[]
+  kioskAssignments      KioskAssignment[]
+
+  @@index([status, startDate])
+  @@index([slug])
+  @@map("events")
+}
+
+model EventSession {
+  id              String   @id @default(uuid()) @db.Uuid
+  eventId         String   @map("event_id") @db.Uuid
+  title           String   @db.VarChar(255)
+  description     String?  @db.Text
+  sessionType     String   @map("session_type") @db.VarChar(50)  // keynote, workshop, panel, networking
+
+  startTime       DateTime @map("start_time")
+  endTime         DateTime @map("end_time")
+
+  room            String?  @db.VarChar(100)
+  capacity        Int?
+  requiresTicket  Boolean  @default(false) @map("requires_ticket")
+
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  event           Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  speakers        SessionSpeaker[]
+
+  @@index([eventId, startTime])
+  @@map("event_sessions")
+}
+
+model Speaker {
+  id              String   @id @default(uuid()) @db.Uuid
+  name            String   @db.VarChar(255)
+  slug            String   @unique @db.VarChar(500)
+  title           String?  @db.VarChar(255)  // Job title
+  company         String?  @db.VarChar(255)
+  bio             String?  @db.Text
+  photoUrl        String?  @map("photo_url") @db.Text
+  socialLinks     Json?    @map("social_links") @db.JsonB  // { twitter, linkedin, website }
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  sessions        SessionSpeaker[]
+
+  @@index([slug])
+  @@map("speakers")
+}
+
+model SessionSpeaker {
+  sessionId       String   @map("session_id") @db.Uuid
+  speakerId       String   @map("speaker_id") @db.Uuid
+  role            String   @default("speaker") @db.VarChar(50)  // speaker, moderator, panelist
+
+  session         EventSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  speaker         Speaker  @relation(fields: [speakerId], references: [id], onDelete: Cascade)
+
+  @@id([sessionId, speakerId])
+  @@map("session_speakers")
+}
+
+model Sponsor {
+  id              String   @id @default(uuid()) @db.Uuid
+  eventId         String   @map("event_id") @db.Uuid
+  name            String   @db.VarChar(255)
+  tier            String   @db.VarChar(50)  // platinum, gold, silver, bronze
+  logoUrl         String   @map("logo_url") @db.Text
+  websiteUrl      String?  @map("website_url") @db.Text
+  description     String?  @db.Text
+  position        Int      @default(0)
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  event           Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@index([eventId, tier])
+  @@map("sponsors")
+}
+
+model TicketType {
+  id              String   @id @default(uuid()) @db.Uuid
+  eventId         String   @map("event_id") @db.Uuid
+  name            String   @db.VarChar(255)  // General Admission, VIP, Early Bird
+  description     String?  @db.Text
+  price           Int      // cents
+  currency        String   @default("USD") @db.VarChar(3)
+  quantity        Int?     // null = unlimited
+  quantitySold    Int      @default(0) @map("quantity_sold")
+
+  salesStart      DateTime? @map("sales_start")
+  salesEnd        DateTime? @map("sales_end")
+
+  isActive        Boolean  @default(true) @map("is_active")
+  position        Int      @default(0)
+
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  event           Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  tickets         Ticket[]
+
+  @@index([eventId, isActive])
+  @@map("ticket_types")
+}
+
+model Ticket {
+  id              String       @id @default(uuid()) @db.Uuid
+  eventId         String       @map("event_id") @db.Uuid
+  ticketTypeId    String       @map("ticket_type_id") @db.Uuid
+  attendeeId      String?      @map("attendee_id") @db.Uuid
+  orderId         String?      @map("order_id") @db.Uuid
+
+  ticketNumber    String       @unique @map("ticket_number") @db.VarChar(50)
+  qrCode          String       @unique @map("qr_code") @db.VarChar(255)  // QR code data
+  status          TicketStatus @default(valid)
+
+  // Apple Wallet
+  passUrl         String?      @map("pass_url") @db.Text  // S3 URL to .pkpass file
+  passSerial      String?      @unique @map("pass_serial") @db.VarChar(100)
+
+  checkedInAt     DateTime?    @map("checked_in_at")
+  checkedInBy     String?      @map("checked_in_by") @db.Uuid  // User who scanned (kiosk/staff)
+
+  createdAt       DateTime     @default(now()) @map("created_at")
+  updatedAt       DateTime     @updatedAt @map("updated_at")
+
+  event           Event        @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  ticketType      TicketType   @relation(fields: [ticketTypeId], references: [id])
+  attendee        Attendee?    @relation(fields: [attendeeId], references: [id])
+  order           Order?       @relation(fields: [orderId], references: [id])
+
+  @@index([eventId, status])
+  @@index([ticketNumber])
+  @@index([qrCode])
+  @@index([passSerial])
+  @@map("tickets")
+}
+
+model Attendee {
+  id              String   @id @default(uuid()) @db.Uuid
+  eventId         String   @map("event_id") @db.Uuid
+  userId          String?  @map("user_id") @db.Uuid  // Linked user account (optional)
+
+  firstName       String   @map("first_name") @db.VarChar(100)
+  lastName        String   @map("last_name") @db.VarChar(100)
+  email           String   @db.VarChar(255)
+  phone           String?  @db.VarChar(50)
+  company         String?  @db.VarChar(255)
+  jobTitle        String?  @map("job_title") @db.VarChar(255)
+
+  customData      Json?    @map("custom_data") @db.JsonB  // Additional form fields
+
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  event           Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user            User?    @relation(fields: [userId], references: [id])
+  tickets         Ticket[]
+
+  @@unique([eventId, email])
+  @@index([eventId])
+  @@index([userId])
+  @@map("attendees")
 }

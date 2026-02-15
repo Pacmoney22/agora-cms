@@ -90,6 +90,32 @@ function ShareIcon({ platform, size }: { platform: string; size: number }) {
   );
 }
 
+/**
+ * Validates that a URL is safe (no javascript:, data:, or file: schemes)
+ * Returns the validated URL or empty string if invalid
+ */
+function validateUrl(url: string): string {
+  if (!url || typeof url !== 'string') return '';
+
+  const trimmed = url.trim().toLowerCase();
+
+  // Block dangerous protocols
+  const dangerousProtocols = ['javascript:', 'data:', 'file:', 'vbscript:'];
+  if (dangerousProtocols.some(protocol => trimmed.startsWith(protocol))) {
+    console.warn('ShareButtons: Blocked potentially unsafe URL protocol');
+    return '';
+  }
+
+  // Only allow http(s):, mailto:, or relative URLs
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://') ||
+      trimmed.startsWith('mailto:') || trimmed.startsWith('/') || trimmed.startsWith('./')) {
+    return url.trim();
+  }
+
+  // If no protocol, assume https for safety
+  return '';
+}
+
 export const ShareButtons: React.FC<ShareButtonsProps> = ({
   platforms = ['facebook', 'x', 'linkedin', 'email'],
   style = 'icon-only',
@@ -101,12 +127,15 @@ export const ShareButtons: React.FC<ShareButtonsProps> = ({
 }) => {
   const [copied, setCopied] = useState(false);
 
-  const url =
+  const rawUrl =
     shareUrl === 'custom' && customUrl
       ? customUrl
       : typeof window !== 'undefined'
         ? window.location.href
         : '';
+
+  // Validate URL to prevent open redirect vulnerabilities
+  const url = validateUrl(rawUrl);
 
   const handleCopyLink = async () => {
     try {
@@ -127,9 +156,19 @@ export const ShareButtons: React.FC<ShareButtonsProps> = ({
     const config = platformConfig[platform];
     if (!config) return;
 
+    // Ensure URL is valid before building share link
+    if (!url) {
+      console.warn('ShareButtons: Cannot share invalid or empty URL');
+      return;
+    }
+
     const shareHref = config.buildUrl(url, document?.title);
     if (shareHref) {
-      window.open(shareHref, '_blank', 'noopener,noreferrer,width=600,height=400');
+      // Additional validation: share URLs should only be to known platforms
+      const validatedShareHref = validateUrl(shareHref);
+      if (validatedShareHref) {
+        window.open(validatedShareHref, '_blank', 'noopener,noreferrer,width=600,height=400');
+      }
     }
   };
 

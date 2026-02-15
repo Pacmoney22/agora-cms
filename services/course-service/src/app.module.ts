@@ -9,6 +9,7 @@ import { EnrollmentsModule } from './modules/enrollments/enrollments.module';
 import { ProgressModule } from './modules/progress/progress.module';
 import { QuizzesModule } from './modules/quizzes/quizzes.module';
 import { CertificatesModule } from './modules/certificates/certificates.module';
+import { AssignmentsModule } from './modules/assignments/assignments.module';
 
 @Global()
 @Module({
@@ -24,6 +25,7 @@ import { CertificatesModule } from './modules/certificates/certificates.module';
     ProgressModule,
     QuizzesModule,
     CertificatesModule,
+    AssignmentsModule,
   ],
   controllers: [AppController],
   providers: [

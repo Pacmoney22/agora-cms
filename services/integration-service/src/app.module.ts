@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { StripeModule } from './modules/stripe/stripe.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { SalesforceModule } from './modules/salesforce/salesforce.module';
+import { PrintfulModule } from './modules/printful/printful.module';
 import { WebhooksModule } from './modules/webhooks/webhooks.module';
 
 @Module({
@@ -14,6 +15,7 @@ import { WebhooksModule } from './modules/webhooks/webhooks.module';
     StripeModule,
     AnalyticsModule,
     SalesforceModule,
+    PrintfulModule,
     WebhooksModule,
   ],
 })

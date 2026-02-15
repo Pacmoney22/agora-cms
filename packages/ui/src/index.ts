@@ -116,3 +116,6 @@ export { Lightbox } from './components/interactive/Lightbox';
 export { SiteMeta } from './components/global/SiteMeta';
 export { ErrorPage } from './components/global/ErrorPage';
 export { MaintenancePage } from './components/global/MaintenancePage';
+
+// Utilities
+export { sanitizeHtml, sanitizeJsonLd } from './utils/sanitize';
