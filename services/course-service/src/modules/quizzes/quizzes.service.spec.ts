@@ -1,5 +1,5 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException, BadRequestException } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
 
 import { QuizzesService } from './quizzes.service';
 
@@ -877,7 +877,7 @@ describe('QuizzesService', () => {
       const result = await service.getPendingGrading('instructor-1');
 
       expect(result).toHaveLength(1);
-      expect(result[0].id).toBe('a1');
+      expect(result[0]!.id).toBe('a1');
     });
 
     it('should return empty array when no pending attempts match instructor', async () => {

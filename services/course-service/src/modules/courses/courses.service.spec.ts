@@ -1,7 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException, BadRequestException } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
 
 import { CoursesService } from './courses.service';
+import { CourseLevel } from './dto/create-course.dto';
 
 describe('CoursesService', () => {
   let service: CoursesService;
@@ -146,7 +147,7 @@ describe('CoursesService', () => {
       title: 'Introduction to TypeScript',
       description: 'Learn TS basics',
       thumbnail: 'http://example.com/thumb.jpg',
-      level: 'beginner' as const,
+      level: 'beginner' as CourseLevel,
       estimatedHours: 10,
       category: 'Programming',
       tags: ['typescript', 'javascript'],

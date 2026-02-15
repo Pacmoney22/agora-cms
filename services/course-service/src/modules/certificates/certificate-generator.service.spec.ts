@@ -8,7 +8,7 @@ jest.mock('pdfkit', () => {
   return jest.fn().mockImplementation(() => {
     const handlers: Record<string, Array<(...args: unknown[]) => void>> = {};
 
-    const mockDoc = {
+    const mockDoc: Record<string, unknown> = {
       page: { width: 842, height: 595 },
       on: jest.fn((event: string, handler: (...args: unknown[]) => void) => {
         if (!handlers[event]) handlers[event] = [];
