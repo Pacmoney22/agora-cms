@@ -143,7 +143,7 @@ describe('WebhookController', () => {
         fail('Should have thrown');
       } catch (e) {
         expect(e).toBeInstanceOf(BadRequestException);
-        expect(e.message).toBe('Webhook processing failed');
+        expect((e as BadRequestException).message).toBe('Webhook processing failed');
       }
     });
   });
@@ -304,7 +304,7 @@ describe('WebhookController', () => {
         fail('Should have thrown');
       } catch (e) {
         expect(e).toBeInstanceOf(BadRequestException);
-        expect(e.message).toBe('Webhook processing failed');
+        expect((e as BadRequestException).message).toBe('Webhook processing failed');
       }
     });
   });

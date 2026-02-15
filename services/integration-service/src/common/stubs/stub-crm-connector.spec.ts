@@ -193,7 +193,7 @@ describe('StubCRMConnector', () => {
       const result = await connector.getFieldMappings();
 
       expect(result).toHaveLength(1);
-      expect(result[0].cmsField).toBe('single');
+      expect(result[0]!.cmsField).toBe('single');
     });
 
     it('should store a copy of mappings (not mutable reference)', async () => {

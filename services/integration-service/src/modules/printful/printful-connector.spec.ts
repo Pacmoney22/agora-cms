@@ -253,6 +253,7 @@ describe('PrintfulConnector', () => {
         stateCode: 'CA',
         countryCode: 'US',
         zip: '90210',
+        email: 'john@example.com',
       },
       items: [
         { syncVariantId: 1000001, quantity: 2, retailPrice: '24.99' },
@@ -357,7 +358,7 @@ describe('PrintfulConnector', () => {
       expect(mockGet).toHaveBeenCalledWith('/orders/999001');
       expect(result.id).toBe(999001);
       expect(result.shipments).toHaveLength(1);
-      expect(result.shipments![0].trackingNumber).toBe('TRACK123');
+      expect(result.shipments![0]!.trackingNumber).toBe('TRACK123');
       expect(result.costs?.additionalFee).toBe('0.00');
     });
 
@@ -516,8 +517,8 @@ describe('PrintfulConnector', () => {
       });
 
       expect(result).toHaveLength(2);
-      expect(result[0].id).toBe('STANDARD');
-      expect(result[1].rate).toBe('14.99');
+      expect(result[0]!.id).toBe('STANDARD');
+      expect(result[1]!.rate).toBe('14.99');
     });
 
     it('should use provided currency and locale', async () => {

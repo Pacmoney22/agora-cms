@@ -20,7 +20,7 @@ describe('StubPrintfulConnector', () => {
             externalId: 'ext_1',
             variantId: 4012,
             retailPrice: 2499,
-            files: [{ url: 'https://example.com/design.png', type: 'default' }],
+            files: [{ url: 'https://example.com/design.png', position: 'front' }],
           },
           {
             externalId: 'ext_2',
@@ -36,9 +36,9 @@ describe('StubPrintfulConnector', () => {
       expect(result.success).toBe(true);
       expect(result.syncProductId).toBeDefined();
       expect(result.syncVariants).toHaveLength(2);
-      expect(result.syncVariants[0].externalId).toBe('ext_1');
-      expect(result.syncVariants[0].variantId).toBe(4012);
-      expect(result.syncVariants[1].externalId).toBe('ext_2');
+      expect(result.syncVariants[0]!.externalId).toBe('ext_1');
+      expect(result.syncVariants[0]!.variantId).toBe(4012);
+      expect(result.syncVariants[1]!.externalId).toBe('ext_2');
     });
   });
 
@@ -60,9 +60,9 @@ describe('StubPrintfulConnector', () => {
       expect(result.externalId).toBe('product_123456');
       expect(result.name).toBe('Stub T-Shirt');
       expect(result.variants).toHaveLength(1);
-      expect(result.variants[0].id).toBe(1000001);
-      expect(result.variants[0].currency).toBe('USD');
-      expect(result.variants[0].files).toHaveLength(1);
+      expect(result.variants[0]!.id).toBe(1000001);
+      expect(result.variants[0]!.currency).toBe('USD');
+      expect(result.variants[0]!.files).toHaveLength(1);
     });
   });
 
@@ -73,9 +73,9 @@ describe('StubPrintfulConnector', () => {
       const result = await promise;
 
       expect(result).toHaveLength(2);
-      expect(result[0].name).toBe('Stub T-Shirt 1');
-      expect(result[1].name).toBe('Stub Hoodie');
-      expect(result[0].variants).toEqual([]);
+      expect(result[0]!.name).toBe('Stub T-Shirt 1');
+      expect(result[1]!.name).toBe('Stub Hoodie');
+      expect(result[0]!.variants).toEqual([]);
     });
 
     it('should accept optional params', async () => {
@@ -105,6 +105,7 @@ describe('StubPrintfulConnector', () => {
         stateCode: 'CA',
         countryCode: 'US',
         zip: '90210',
+        email: 'john@example.com',
       },
       items: [
         { syncVariantId: 1000001, quantity: 2, retailPrice: '24.99' },
@@ -148,8 +149,8 @@ describe('StubPrintfulConnector', () => {
       expect(result.status).toBe('fulfilled');
       expect(result.shipments).toBeDefined();
       expect(result.shipments!).toHaveLength(1);
-      expect(result.shipments![0].carrier).toBe('USPS');
-      expect(result.shipments![0].trackingNumber).toBeDefined();
+      expect(result.shipments![0]!.carrier).toBe('USPS');
+      expect(result.shipments![0]!.trackingNumber).toBeDefined();
       expect(result.costs).toBeDefined();
     });
   });
@@ -196,9 +197,9 @@ describe('StubPrintfulConnector', () => {
       const result = await promise;
 
       expect(result).toHaveLength(3);
-      expect(result[0].id).toBe('STANDARD');
-      expect(result[1].id).toBe('EXPRESS');
-      expect(result[2].id).toBe('OVERNIGHT');
+      expect(result[0]!.id).toBe('STANDARD');
+      expect(result[1]!.id).toBe('EXPRESS');
+      expect(result[2]!.id).toBe('OVERNIGHT');
     });
 
     it('should use provided currency', async () => {
@@ -209,7 +210,7 @@ describe('StubPrintfulConnector', () => {
       jest.runAllTimers();
       const result = await promise;
 
-      expect(result[0].currency).toBe('EUR');
+      expect(result[0]!.currency).toBe('EUR');
     });
 
     it('should default to USD currency', async () => {
@@ -217,7 +218,7 @@ describe('StubPrintfulConnector', () => {
       jest.runAllTimers();
       const result = await promise;
 
-      expect(result[0].currency).toBe('USD');
+      expect(result[0]!.currency).toBe('USD');
     });
 
     it('should include delivery day ranges', async () => {
@@ -225,9 +226,9 @@ describe('StubPrintfulConnector', () => {
       jest.runAllTimers();
       const result = await promise;
 
-      expect(result[0].minDeliveryDays).toBeDefined();
-      expect(result[0].maxDeliveryDays).toBeDefined();
-      expect(result[0].minDeliveryDays).toBeLessThanOrEqual(result[0].maxDeliveryDays);
+      expect(result[0]!.minDeliveryDays).toBeDefined();
+      expect(result[0]!.maxDeliveryDays).toBeDefined();
+      expect(result[0]!.minDeliveryDays!).toBeLessThanOrEqual(result[0]!.maxDeliveryDays!);
     });
   });
 
