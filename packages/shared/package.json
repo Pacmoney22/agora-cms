@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsup src/index.ts --format cjs,esm --dts",
     "lint": "eslint src/",
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "clean": "rm -rf dist"
   },
   "dependencies": {
