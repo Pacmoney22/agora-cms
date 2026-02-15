@@ -568,6 +568,15 @@ The content service is the core CMS engine. It manages pages, media assets, temp
 | RedirectsModule | `modules/redirects/` | URL redirect rules (301/302) |
 | SeoModule | `modules/seo/` | Per-page SEO, sitemap generation, robots.txt, SEO analyzer (12 checks, 0-100 score), JSON-LD structured data |
 | SettingsModule | `modules/settings/` | Key-value site settings (general, theme, analytics, payments, system), public endpoint for storefront, theme CSS endpoint |
+| PassesModule | `modules/passes/` | Apple Wallet PKPass generation for event tickets with QR codes |
+
+#### Authorization Guards
+
+The content service implements specialized guards for event management:
+
+- **EventStaffGuard**: Requires `event_staff` role for event management endpoints
+- **ExhibitorGuard**: Requires `exhibitor` role for exhibitor portal access
+- **KioskGuard**: Requires `kiosk` role for self-service kiosk operations (check-in, badge printing)
 
 #### Key Features
 
@@ -576,6 +585,7 @@ The content service is the core CMS engine. It manages pages, media assets, temp
 - **SEO Analyzer**: 12-point on-page SEO analysis with composite score (0-100) and actionable suggestions.
 - **Structured Data**: Auto-generates JSON-LD markup (WebPage/Article + BreadcrumbList).
 - **Theme CSS**: Generates CSS custom properties from theme settings, served with a 5-minute cache header.
+- **Apple Wallet Passes**: Generates PKPass files for event tickets with QR codes, stores in S3, and provides public download URLs.
 
 #### Caching Strategy
 
@@ -652,22 +662,77 @@ Expired reservations are automatically released.
 **Bootstrap:** `services/integration-service/src/main.ts`
 **Swagger:** http://localhost:3003/api/docs
 
-The integration service connects Agora CMS to external platforms. It implements the adapter pattern with feature-flag-based activation (`STRIPE_ENABLED`, `GA4_ENABLED`, `SALESFORCE_ENABLED`).
+The integration service connects Agora CMS to external platforms. It implements the adapter pattern with automatic stub/real mode switching based on environment variables. When an API key is provided, the real integration is used; otherwise, a stub implementation allows development without live credentials.
 
 #### Modules
 
 | Module | Path | Purpose |
 |---|---|---|
 | StripeModule | `modules/stripe/` | Payment gateway adapter (implements `IPaymentGateway`) |
-| AnalyticsModule | `modules/analytics/` | GA4 tracking (implements `IAnalyticsProvider`) |
+| AnalyticsModule | `modules/analytics/` | GA4 tracking and dashboard analytics (implements `IAnalyticsProvider`) |
 | SalesforceModule | `modules/salesforce/` | CRM sync for contacts, leads, opportunities (implements `ICRMConnector`) |
-| WebhooksModule | `modules/webhooks/` | Inbound webhook handler (Stripe signature verification) |
+| PrintfulModule | `modules/printful/` | Print-on-demand fulfillment (implements `IPrintfulConnector`) |
+| WebhooksModule | `modules/webhooks/` | Inbound webhook handler with signature verification |
 
-#### Stripe Webhook Events Handled
+#### Stripe Integration
 
+**Real Implementation:** `StripePaymentGateway`
+**Activation:** Requires `STRIPE_SECRET_KEY` environment variable
+
+Features:
+- Payment Intents API with automatic payment methods
+- Customer management and metadata storage
+- Refund processing
+- Webhook signature verification (HMAC-SHA256)
+
+Webhook Events Handled:
 - `payment_intent.succeeded` - Payment success
 - `payment_intent.payment_failed` - Payment failure
 - `charge.refunded` - Refund processed
+
+#### Google Analytics 4 Integration
+
+**Real Implementation:** `GoogleAnalyticsProvider`
+**Activation:** Requires `GA4_MEASUREMENT_ID` and `GA4_API_SECRET`
+
+Features:
+- Measurement Protocol v2 for server-side event tracking
+- Data API (BetaAnalyticsDataClient) for dashboard analytics
+- Real-time metrics: active users, top pages, traffic sources
+- E-commerce funnel analysis and revenue tracking
+
+#### Salesforce Integration
+
+**Real Implementation:** `SalesforceConnector`
+**Activation:** Requires `SALESFORCE_USERNAME`, `SALESFORCE_CLIENT_ID`, and `SALESFORCE_PRIVATE_KEY`
+
+Features:
+- JWT OAuth authentication with Connected App
+- Contact synchronization with custom field mapping (CMS_User_ID__c)
+- Lead creation and tracking
+- Opportunity management
+- Automatic upsert based on external ID
+
+#### Printful Integration
+
+**Real Implementation:** `PrintfulConnector`
+**Activation:** Requires `PRINTFUL_API_KEY`
+
+Features:
+- Product catalog sync with variant mapping
+- Order creation and confirmation (draft → pending → fulfilled)
+- Real-time shipping rate calculations
+- Shipment tracking integration
+- Webhook support for order updates
+
+Webhook Events Handled:
+- `package_shipped` - Tracking information available
+- `order_updated` - Status changes
+- `order_failed` - Production issues
+
+Database Models:
+- **PrintfulProduct**: Links CMS products to Printful sync variants
+- **PrintfulFulfillment**: Tracks order fulfillment status and shipments
 
 #### Adapter Interfaces
 
@@ -676,6 +741,7 @@ All integrations implement typed interfaces from `@agora-cms/shared`:
 - **IPaymentGateway**: `createPaymentIntent()`, `confirmPayment()`, `createRefund()`, `createCustomer()`, `handleWebhook()`
 - **IAnalyticsProvider**: `trackEvent()`, `trackServerEvent()`, `getDashboardData()`
 - **ICRMConnector**: `syncContact()`, `syncLead()`, `syncOpportunity()`, `getFieldMappings()`
+- **IPrintfulConnector**: `syncProduct()`, `createOrder()`, `confirmOrder()`, `calculateShippingRates()`, `handleWebhook()`
 
 ### 5.4 Shipping Gateway (port 3004)
 
@@ -738,6 +804,17 @@ The course service provides full LMS (Learning Management System) functionality 
 | ProgressModule | `modules/progress/` | Lesson-level progress tracking with video resume points |
 | QuizzesModule | `modules/quizzes/` | Quiz CRUD, question management, attempt submission, auto-grading + manual grading |
 | CertificatesModule | `modules/certificates/` | PDF certificate generation (pdfkit), verification by code |
+| AssignmentsModule | `modules/assignments/` | Instructor assignments with submissions and grading |
+
+#### Authorization Guards
+
+The course service implements role-based guards for instructor and administrative access:
+
+- **JwtAuthGuard**: Base JWT authentication using `@nestjs/passport`
+- **InstructorGuard**: Requires `instructor` or `course_admin` role
+- **CourseAdminGuard**: Requires `course_admin` role for administrative operations
+
+Guards use the scoped role system from the User model to control access to course management endpoints.
 
 #### Kafka Consumer
 
@@ -1037,8 +1114,9 @@ The database uses PostgreSQL 16 with a single schema managed by Prisma. All mode
 
 ```
 UserRole:            customer, viewer, editor, store_manager, admin, super_admin
+ScopedRoles:         event_staff, exhibitor, kiosk, course_admin, instructor
 PageStatus:          draft, review, published, archived
-ProductType:         physical, virtual, service, configurable, course
+ProductType:         physical, virtual, service, configurable, course, affiliate, printful
 ProductStatus:       draft, active, archived
 OrderStatus:         pending, confirmed, processing, shipped, in_transit, delivered,
                      completed, cancelled, refunded, returned
@@ -1534,6 +1612,42 @@ customer (0) < viewer (1) < editor (2) < store_manager (3) < admin (4) < super_a
 ```
 
 The `hasMinimumRole(userRole, requiredRole)` function from `@agora-cms/shared` checks if a user's role meets the minimum required level.
+
+### Scoped Roles
+
+In addition to the global role hierarchy, the platform supports specialized scoped roles for specific use cases:
+
+- **event_staff**: Access to event management, attendee check-in, badge printing
+- **exhibitor**: Access to exhibitor portal, booth management, lead capture
+- **kiosk**: Self-service kiosk operations (check-in, badge printing without full admin access)
+- **course_admin**: Course administration without full LMS admin privileges
+- **instructor**: Teaching capabilities (create courses, assignments, grade submissions)
+
+Scoped roles are stored as boolean flags on the User model and checked via dedicated guards (`EventStaffGuard`, `ExhibitorGuard`, `KioskGuard`, `InstructorGuard`, `CourseAdminGuard`).
+
+### Security Improvements (v2.0)
+
+**Dependency Security:**
+- Upgraded Next.js to 16.1.6 (fixes CVE for resource allocation without limits)
+- Forced ajv@8.18.0 via package overrides (fixes ReDoS vulnerability)
+- All critical security patches applied
+
+**XSS Prevention:**
+- HTML sanitization utilities in `@agora-cms/ui/utils/sanitize`
+  - `sanitizeHtml()`: Removes dangerous tags, scripts, and event handlers
+  - `escapeHtml()`: Escapes HTML entities for safe display
+  - `sanitizeJsonLd()`: Escapes JSON-LD for script injection prevention
+- Use these utilities on all user-generated content before rendering with `dangerouslySetInnerHTML`
+
+**Open Redirect Prevention:**
+- URL validation in ShareButtons component blocks `javascript:`, `data:`, `file:`, and `vbscript:` protocols
+- All share URLs validated before `window.open()`
+- External links force `target="_blank"` and `rel="noopener noreferrer"`
+
+**Development Credentials:**
+- MinIO defaults clearly marked as development-only (MINIO_DEFAULT_USER/PASSWORD constants)
+- Demo seed password documented with production warnings
+- All production deployments require explicit environment variable configuration
 
 ### Account Security
 
@@ -2329,6 +2443,25 @@ Add type definitions to `packages/shared/src/types/` and export from `packages/s
 | `SALESFORCE_PRIVATE_KEY` | (empty) | JWT auth private key |
 | `SALESFORCE_USERNAME` | (empty) | Integration user |
 | `SALESFORCE_LOGIN_URL` | `https://login.salesforce.com` | Login URL |
+
+#### Printful
+
+| Variable | Default | Description |
+|---|---|---|
+| `PRINTFUL_API_KEY` | (empty) | Printful API key from dashboard |
+| `PRINTFUL_WEBHOOK_SECRET` | (empty) | Webhook signature verification secret |
+
+#### Apple Wallet (PKPass)
+
+| Variable | Default | Description |
+|---|---|---|
+| `APPLE_PASS_TEMPLATE_PATH` | `./pass-templates/event-ticket` | Path to .pass template directory |
+| `APPLE_SIGNER_CERT_PATH` | (empty) | Path to Apple Pass Type ID certificate (.pem) |
+| `APPLE_SIGNER_KEY_PATH` | (empty) | Path to certificate private key (.pem) |
+| `APPLE_WWDR_CERT_PATH` | (empty) | Path to Apple WWDR certificate (.pem) |
+| `APPLE_ORGANIZATION_NAME` | `Agora CMS` | Organization name displayed in Wallet |
+| `AWS_REGION` | `us-east-1` | S3 region for pass storage |
+| `S3_BUCKET` | `agora-cms` | S3 bucket for .pkpass files |
 
 #### Shipping Carriers
 
