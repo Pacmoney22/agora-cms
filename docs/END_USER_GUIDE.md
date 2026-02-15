@@ -38,16 +38,16 @@ Agora CMS is a modern, all-in-one content management system that combines a visu
 - **Content Management** -- Pages, articles, categories, tags, comments, reviews, custom forms, gated files, and navigation menus
 - **Media Library** -- Upload images, videos, and documents with automatic WebP conversion and responsive thumbnail generation
 - **Built-in SEO Analyzer** -- 12 automated checks with letter-grade scoring and actionable recommendations
-- **E-Commerce Engine** -- Five product types (Physical, Virtual/Digital, Service, Configurable, Course) with variants, inventory tracking, and flexible pricing
+- **E-Commerce Engine** -- Seven product types (Physical, Virtual/Digital, Service, Configurable, Course, Affiliate, Print-on-Demand) with variants, inventory tracking, and flexible pricing
 - **Order Management** -- Full order lifecycle from payment through fulfillment, shipping, and refunds
 - **Coupons & Promotions** -- Percentage, fixed amount, free shipping, and buy-X-get-Y discount codes
-- **Event Management** -- In-person, virtual, and hybrid events with attendee tracking, sessions, badges, QR check-in, sponsor management, and post-event surveys
-- **Learning Management System (LMS)** -- Courses with sections, lessons, quizzes, enrollments, grading, and auto-generated certificates
+- **Event Management** -- In-person, virtual, and hybrid events with attendee tracking, sessions, badges, QR check-in, Apple Wallet tickets, sponsor management, and post-event surveys
+- **Learning Management System (LMS)** -- Courses with sections, lessons, assignments, quizzes, enrollments, instructor grading, and auto-generated certificates
 - **Email Templates** -- 22 built-in templates across 5 categories with merge tags, trigger events, and test sending
 - **Product Feeds** -- Multi-platform feed generation for Google, Facebook, Pinterest, TikTok, and Bing
-- **Role-Based Access Control** -- Six user roles from read-only viewers to super administrators
+- **Role-Based Access Control** -- Six user roles + five scoped roles (event staff, exhibitor, kiosk, instructor, course admin)
 - **Structured Data** -- Automatic JSON-LD generation for products, organization, and breadcrumbs
-- **Integrations** -- Google Analytics 4, Stripe, PayPal, SMTP email, and Salesforce lead capture via forms
+- **Integrations** -- Google Analytics 4, Stripe payments, Salesforce CRM, Printful print-on-demand fulfillment, and shipping carriers (UPS, USPS, FedEx, DHL)
 
 ### Who Should Use This Guide
 
@@ -878,7 +878,7 @@ No manual configuration is required. The structured data is generated from your 
 
 ## 8. Product Management
 
-Agora CMS supports five distinct product types to accommodate different business models. Each type has specialized features tailored to its delivery method.
+Agora CMS supports seven distinct product types to accommodate different business models. Each type has specialized features tailored to its delivery method.
 
 ### Product Types Overview
 
@@ -961,6 +961,58 @@ Products that are linked to a course in the Learning Management System (LMS).
 - Auto-enrollment upon purchase (student is automatically enrolled in the course when payment is confirmed)
 
 **Examples:** Online training programs, certification courses, workshop access
+
+#### 6. Affiliate Products (v2.0)
+
+Products fulfilled through third-party affiliate programs.
+
+**Key Features:**
+- External affiliate URL where customers are redirected to complete purchase
+- Affiliate tracking ID integration
+- Commission tracking and reporting
+- "Buy Now" button redirects to partner site instead of adding to cart
+- No inventory management required (handled by affiliate partner)
+
+**Examples:** Amazon Associates products, partner marketplace items, referral program products
+
+**Configuration:**
+1. Set product type to "Affiliate"
+2. Enter affiliate URL (e.g., `https://partner.com/product?id=123&ref=yourID`)
+3. Configure commission rate for reporting purposes
+4. Product appears in your catalog but purchases happen on partner site
+
+#### 7. Print-on-Demand (Printful) Products (v2.0)
+
+Products manufactured and shipped on-demand through Printful integration.
+
+**Key Features:**
+- Automatic synchronization with Printful product catalog
+- Variant mapping (link CMS product variants to Printful sync variants)
+- Automated order fulfillment workflow
+- Real-time shipping rate calculations from Printful
+- Tracking number integration and shipment updates
+- No inventory management (Printful handles production and shipping)
+
+**Examples:** Custom t-shirts, posters, mugs, phone cases, apparel, home decor
+
+**Setup Requirements:**
+1. Configure `PRINTFUL_API_KEY` in environment variables (admin/developer task)
+2. Sync products from Printful catalog via Integration Service
+3. Link CMS product variants to Printful sync variant IDs
+4. Set retail pricing (Printful cost + your markup)
+5. Orders automatically forward to Printful for fulfillment
+
+**Order Workflow:**
+1. Customer places order on your site → Order status: "Pending"
+2. Integration service creates draft order in Printful
+3. Order confirmed in Printful → Status: "Processing"
+4. Printful manufactures and ships → Status: "Shipped" (tracking number added)
+5. Customer receives shipment → Status: "Delivered"
+
+**Webhook integration** provides real-time updates for:
+- `package_shipped` -- Tracking information available
+- `order_updated` -- Status changes during production
+- `order_failed` -- Production issues requiring attention
 
 ### Creating a Product (Step by Step)
 
@@ -1421,6 +1473,7 @@ Each event has an **Attendees** sub-page where you manage everyone who has regis
 **Attendee management features:**
 
 - **QR Code Generation** -- A unique QR code is generated for each attendee, which can be used for check-in, badge printing, and session scanning
+- **Apple Wallet Passes (v2.0)** -- Event tickets can be automatically generated as PKPass files for iOS devices. Attendees receive a digital pass with their QR code that can be added to Apple Wallet for easy check-in. The pass includes event details, venue location, and the QR code for scanning. Passes are automatically sent via email upon ticket purchase and can be re-downloaded from the attendee dashboard.
 - **Check-In / Check-Out Actions** -- Mark attendees as checked in or checked out with a single click
 - **Waitlist Management** -- When an event reaches capacity, additional registrants are placed on a waitlist and notified if spots open up
 - **Seat Assignments** -- Assign specific seats to attendees (useful for conferences, theaters, or training rooms)
@@ -1629,6 +1682,60 @@ Quizzes assess student knowledge and can be placed within any section of the cou
 4. For each question, set the **Points** value.
 5. Build a **Question Bank** -- create a pool of questions and have the system randomly select a subset for each student.
 6. Click **Save Quiz**.
+
+### Assignments (v2.0)
+
+Instructors can create assignments for students to complete and submit for grading. Unlike quizzes, assignments support file uploads, longer-form responses, and detailed rubric-based grading.
+
+#### Creating an Assignment
+
+1. Within a course, click **Assignments** tab.
+2. Click **Create Assignment**.
+3. Configure assignment settings:
+   - **Title** -- Assignment name (e.g., "Week 3 Project Proposal")
+   - **Instructions** -- Detailed instructions, requirements, and expectations
+   - **Due Date** -- Submission deadline (optional)
+   - **Points** -- Maximum points available
+   - **Submission Type**:
+     - **Text** -- Students type their response directly
+     - **File Upload** -- Students upload documents, images, or other files
+     - **Both** -- Combination of text and file uploads
+   - **Grading Rubric** -- Define criteria and point values for consistent grading
+4. Click **Save Assignment**.
+
+#### Student Submission Workflow
+
+1. Student views assignment instructions
+2. Student creates submission (types response and/or uploads files)
+3. Student clicks **Submit** → Status changes to "Submitted"
+4. Instructor reviews submission in Grading Queue
+5. Instructor assigns grade and feedback → Status changes to "Graded"
+
+#### Grading Submissions
+
+1. Open a course and click the **Assignments** tab.
+2. Select an assignment to see all submissions.
+3. For each submission:
+   - View student's text response
+   - Download and review any uploaded files
+   - Apply rubric criteria (if defined)
+   - Assign points and write detailed feedback
+4. Click **Submit Grade** to finalize.
+
+**Submission statuses:**
+
+| Status | Meaning |
+|--------|---------|
+| **Draft** | Student is working on submission but hasn't submitted yet |
+| **Submitted** | Awaiting instructor review |
+| **Graded** | Instructor has provided grade and feedback |
+| **Returned** | Instructor returned for revision (student can resubmit) |
+
+**Instructor-only features:**
+- Instructors with the `instructor` or `course_admin` scoped role can create and manage assignments
+- Grade submissions with custom rubrics
+- Bulk download all submissions for offline review
+- Export grades to CSV for record-keeping
 
 ### Enrollments
 

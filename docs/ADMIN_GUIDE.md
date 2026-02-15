@@ -70,7 +70,7 @@
                                                     | :9000/:9001|
                                                     +-----------+
 
-    Frontend Apps (Next.js 14):
+    Frontend Apps (Next.js 16):
     +-------------------+  +-------------------+  +-------------------+
     | Page Builder      |  | Storefront        |  | Admin Dashboard   |
     | :3100             |  | :3200             |  | :3300             |
@@ -84,15 +84,15 @@ Agora CMS is a microservices-based platform built as a Turborepo monorepo using 
 ```
 agora-cms/
 ├── apps/
-│   ├── admin-dashboard/     # Next.js 14 - Admin UI (port 3300)
-│   ├── page-builder/        # Next.js 14 - Visual Page Builder (port 3100)
-│   └── storefront/          # Next.js 14 - Customer-facing store (port 3200)
+│   ├── admin-dashboard/     # Next.js 16 - Admin UI (port 3300)
+│   ├── page-builder/        # Next.js 16 - Visual Page Builder (port 3100)
+│   └── storefront/          # Next.js 16 - Customer-facing store (port 3200)
 ├── services/
-│   ├── content-service/     # NestJS - Pages, media, navigation, auth, users (port 3001)
+│   ├── content-service/     # NestJS - Pages, media, navigation, Apple Wallet passes, auth, users (port 3001)
 │   ├── commerce-service/    # NestJS - Products, orders, cart, coupons, fulfillment (port 3002)
-│   ├── integration-service/ # NestJS - Stripe, Salesforce, GA4, webhooks (port 3003)
+│   ├── integration-service/ # NestJS - Stripe, Salesforce, GA4, Printful, webhooks (port 3003)
 │   ├── shipping-gateway/    # NestJS - UPS, USPS, FedEx, DHL rates & labels (port 3004)
-│   └── course-service/      # NestJS - LMS courses, quizzes, certificates (port 3005)
+│   └── course-service/      # NestJS - LMS courses, quizzes, assignments, certificates (port 3005)
 ├── packages/
 │   ├── database/            # Prisma schema, migrations, seed data
 │   ├── shared/              # Shared TypeScript types, constants, utilities
@@ -1544,6 +1544,39 @@ customer (0)  <  viewer (1)  <  editor (2)  <  store_manager (3)  <  admin (4)  
 
 The `hasMinimumRole(userRole, requiredRole)` function checks if a user's role meets or exceeds the required role level.
 
+### Scoped Roles (v2.0)
+
+In addition to the main role hierarchy, Agora CMS supports specialized scoped roles for specific use cases. These are stored as boolean flags on the User model and provide targeted access without granting full administrative privileges.
+
+| Scoped Role | Purpose | Accessed Via |
+|------------|---------|--------------|
+| `event_staff` | Event management, attendee check-in, badge printing | EventStaffGuard |
+| `exhibitor` | Exhibitor portal, booth management, lead capture | ExhibitorGuard |
+| `kiosk` | Self-service kiosk operations (check-in, badge printing without admin access) | KioskGuard |
+| `course_admin` | Course administration without full LMS admin privileges | CourseAdminGuard |
+| `instructor` | Teaching capabilities (create courses, assignments, grade submissions) | InstructorGuard |
+
+**Implementation:**
+- Scoped role guards are located in service-specific `common/guards/` directories
+- Guards check boolean flags on the User model (e.g., `user.isEventStaff`, `user.isInstructor`)
+- Can be combined with main roles for granular access control
+- Event and course management endpoints use dedicated guards for access control
+
+**Managing scoped roles:**
+```bash
+# Grant event staff access
+curl -X PATCH http://localhost:3001/api/v1/users/{id} \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <token>" \
+  -d '{"isEventStaff": true}'
+
+# Grant instructor access
+curl -X PATCH http://localhost:3001/api/v1/users/{id} \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <token>" \
+  -d '{"isInstructor": true}'
+```
+
 ### Role Permissions
 
 | Capability | customer | viewer | editor | store_manager | admin | super_admin |
@@ -1766,9 +1799,63 @@ The CRM module (`services/integration-service/src/modules/salesforce/salesforce.
 4. For OAuth: enable Client Credentials Flow
 5. Configure the credentials in the Admin Dashboard under Settings > System > Salesforce Integration
 
+### Printful (Print-on-Demand)
+
+**Configuration**: Set `PRINTFUL_API_KEY` and optionally `PRINTFUL_WEBHOOK_SECRET` in `.env`.
+
+The Printful module (`services/integration-service/src/modules/printful/printful.module.ts`) automatically switches between real and stub implementations based on the presence of the API key.
+
+**Features:**
+- Product catalog synchronization with variant mapping
+- Automated order fulfillment workflow
+- Real-time shipping rate calculations
+- Shipment tracking integration
+- Webhook notifications for order updates
+
+**Webhook endpoint**: `POST /api/v1/webhooks/printful` on the integration service (port 3003). It handles:
+- `package_shipped` -- Update tracking information
+- `order_updated` -- Sync order status changes
+- `order_failed` -- Handle production failures
+
+**Database integration:**
+- `PrintfulProduct` table links CMS products to Printful sync variants
+- `PrintfulFulfillment` table tracks order fulfillment status and shipments
+
+**Setup steps:**
+1. Obtain API key from Printful dashboard (https://www.printful.com/dashboard/store)
+2. Configure webhook URL in Printful: `https://your-domain.com/api/v1/webhooks/printful`
+3. Copy webhook secret from Printful and set `PRINTFUL_WEBHOOK_SECRET`
+4. Create products in CMS with `type: "printful"`
+5. Sync products via Integration Service API or admin dashboard
+
+### Apple Wallet Passes
+
+**Configuration**: Set Apple certificates and template paths in `.env`:
+- `APPLE_PASS_TEMPLATE_PATH` -- Path to .pass template directory
+- `APPLE_SIGNER_CERT_PATH` -- Pass Type ID certificate (.pem)
+- `APPLE_SIGNER_KEY_PATH` -- Certificate private key (.pem)
+- `APPLE_WWDR_CERT_PATH` -- Apple WWDR certificate (.pem)
+- `APPLE_ORGANIZATION_NAME` -- Name displayed in Wallet
+
+**Implemented in**: `services/content-service/src/modules/passes/passes.service.ts`
+
+**Features:**
+- Generate PKPass files for event tickets
+- QR code integration for check-in
+- Upload to S3 with public read access
+- Automatic pass updates via push notifications
+
+**Setup steps:**
+1. Enroll in Apple Developer Program
+2. Create Pass Type ID in Apple Developer portal
+3. Generate certificates and export with private keys
+4. Create pass template directory with required assets (icon.png, logo.png, pass.json)
+5. Configure environment variables with certificate paths
+6. Event tickets automatically generate passes when purchased
+
 ### Webhook Idempotency
 
-The `processed_events` table tracks processed webhook event IDs to prevent duplicate processing. Each record stores the event ID, source (e.g., `stripe`, `salesforce`), and processing timestamp.
+The `processed_events` table tracks processed webhook event IDs to prevent duplicate processing. Each record stores the event ID, source (e.g., `stripe`, `salesforce`, `printful`), and processing timestamp.
 
 ---
 
@@ -2161,6 +2248,71 @@ add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; prelo
 ### Sensitive Field Masking
 
 The settings service (`services/content-service/src/modules/settings/settings.service.ts`) automatically masks sensitive fields before returning them to the client. Payment secret keys and webhook secrets are masked as `sk_test••••last4`. When updating settings, masked values are detected and the original value is preserved.
+
+### XSS Prevention (v2.0)
+
+The platform includes comprehensive XSS protection utilities in `@agora-cms/ui/utils/sanitize`:
+
+**sanitizeHtml(html: string)**
+- Removes dangerous tags: `<script>`, `<iframe>`, `<object>`, `<embed>`, `<form>`, `<input>`, `<button>`, `<style>`
+- Strips event handlers: `onclick`, `onerror`, `onload`, `onmouseover`, etc.
+- Blocks dangerous protocols: `javascript:`, `data:`, `vbscript:`
+- Safe for use with `dangerouslySetInnerHTML`
+
+**escapeHtml(unsafe: string)**
+- Escapes HTML entities: `<`, `>`, `&`, `"`, `'`
+- Use for displaying untrusted text content
+
+**sanitizeJsonLd(jsonLd: object)**
+- Escapes JSON-LD for safe script tag injection
+- Prevents XSS through structured data
+
+**Usage in production:**
+```typescript
+import { sanitizeHtml } from '@agora-cms/ui';
+
+// User-generated content
+<div dangerouslySetInnerHTML={{ __html: sanitizeHtml(userContent) }} />
+```
+
+### Open Redirect Prevention (v2.0)
+
+URL validation in ShareButtons component (`packages/ui/src/components/social/ShareButtons.tsx`) prevents open redirect attacks:
+
+- Validates all URLs before `window.open()`
+- Blocks dangerous protocols: `javascript:`, `data:`, `file:`, `vbscript:`
+- Only allows: `http://`, `https://`, `mailto:`, or relative URLs
+- Forces `target="_blank"` and `rel="noopener noreferrer"` on external links
+
+### Dependency Security (v2.0)
+
+**Recent security patches:**
+- **Next.js 16.1.6** -- Fixes CVE for allocation of resources without limits/throttling (upgraded from 15.5.10)
+- **ajv 8.18.0** -- Fixes ReDoS vulnerability (forced via pnpm overrides from 6.12.6)
+
+**Package overrides** in `package.json`:
+```json
+"pnpm": {
+  "overrides": {
+    "qs": ">=6.14.2",
+    "js-yaml": ">=4.1.1",
+    "lodash": ">=4.17.23",
+    "ajv": ">=8.18.0"
+  }
+}
+```
+
+These overrides force all nested dependencies to use secure versions, even if sub-dependencies specify older vulnerable versions.
+
+### Development Credentials
+
+All default development credentials are clearly marked with warnings:
+
+- **MinIO**: `minioadmin` / `minioadmin` (public defaults for local dev only)
+- **Demo users**: Password `Password123!` (seed data only, never use in production)
+- **JWT secret**: `dev-secret-change-in-production` (must be changed for deployment)
+
+These are defined as named constants with documentation warnings in the codebase.
 
 ### Secrets Management
 

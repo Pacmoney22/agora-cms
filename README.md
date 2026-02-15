@@ -5,13 +5,14 @@ A modern, all-in-one platform combining a headless CMS, e-commerce engine, learn
 ## Features
 
 - **Visual Page Builder** — Drag-and-drop editor with 88 components across 14 categories
-- **E-Commerce** — 5 product types (physical, digital, service, configurable, course), cart, checkout, orders, coupons, inventory
-- **Content Management** — Pages, articles, media library, navigation menus, forms, SEO analyzer
-- **Learning Management** — Courses, curriculum builder, quizzes, enrollments, grading, certificates
-- **Event Management** — Events, sessions, attendees, badge printing, QR check-in, sponsors, surveys
+- **E-Commerce** — 7 product types (physical, digital, service, configurable, course, affiliate, print-on-demand), cart, checkout, orders, coupons, inventory
+- **Content Management** — Pages, articles, media library, navigation menus, forms, SEO analyzer, Apple Wallet pass generation
+- **Learning Management** — Courses, curriculum builder, assignments, quizzes, enrollments, grading, certificates
+- **Event Management** — Events, sessions, attendees, badge printing, QR check-in, Apple Wallet tickets, sponsors, surveys
 - **Email System** — 22 email templates with merge tags and trigger-based automation
-- **Integrations** — Stripe payments, Google Analytics 4, Salesforce, shipping carriers (UPS, USPS, FedEx, DHL)
-- **Role-Based Access** — 6 user roles with granular permissions
+- **Integrations** — Stripe payments, Google Analytics 4, Salesforce CRM, Printful print-on-demand, shipping carriers (UPS, USPS, FedEx, DHL)
+- **Role-Based Access** — 6 user roles + 5 scoped roles for specialized access
+- **Security** — XSS prevention, open redirect protection, secure password hashing (bcrypt 12 rounds), dependency vulnerability fixes
 
 ## Architecture
 
@@ -22,11 +23,11 @@ agora-cms/
 │   ├── page-builder/       # Visual editor (Next.js - port 3100)
 │   └── storefront/         # Public-facing site (Next.js - port 3200)
 ├── services/
-│   ├── content-service/    # Pages, media, templates (NestJS - port 3001)
+│   ├── content-service/    # Pages, media, templates, Apple Wallet passes (NestJS - port 3001)
 │   ├── commerce-service/   # Products, orders, payments (NestJS - port 3002)
-│   ├── integration-service/# Stripe, GA4, Salesforce (NestJS - port 3003)
+│   ├── integration-service/# Stripe, GA4, Salesforce, Printful (NestJS - port 3003)
 │   ├── shipping-gateway/   # Carrier rate calculations (NestJS - port 3004)
-│   └── course-service/     # LMS, quizzes, certificates (NestJS - port 3005)
+│   └── course-service/     # LMS, quizzes, assignments, certificates (NestJS - port 3005)
 ├── packages/
 │   ├── ui/                 # Shared component library (88 components)
 │   ├── shared/             # Shared types, schemas, utilities
@@ -41,7 +42,7 @@ agora-cms/
 | Layer | Technology |
 |-------|-----------|
 | Runtime | Node.js 20+, TypeScript, pnpm, Turborepo |
-| Frontend | Next.js 15, React 19, Tailwind CSS |
+| Frontend | Next.js 16, React 19, Tailwind CSS |
 | Backend | NestJS, Prisma ORM |
 | Database | PostgreSQL 16 |
 | Cache | Redis 7 |
@@ -51,6 +52,7 @@ agora-cms/
 | Gateway | Kong API Gateway |
 | Testing | Jest, Playwright |
 | CI/CD | GitHub Actions |
+| Integrations | Stripe SDK 17.6, Google Analytics Data API 4.8, jsforce 3.10, Printful REST API |
 
 ## Quick Start
 
