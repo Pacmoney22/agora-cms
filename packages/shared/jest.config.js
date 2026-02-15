@@ -1,6 +1,6 @@
 /** @type {import('jest').Config} */
 module.exports = {
-  displayName: 'course-service',
+  displayName: 'shared',
   preset: 'ts-jest',
   testEnvironment: 'node',
   rootDir: '.',
@@ -8,14 +8,9 @@ module.exports = {
   collectCoverageFrom: [
     'src/**/*.ts',
     '!src/**/*.spec.ts',
-    '!src/**/*.module.ts',
-    '!src/**/*.dto.ts',
-    '!src/**/*.interface.ts',
-    '!src/main.ts',
+    '!src/**/index.ts',
+    '!src/types/**/*.ts',
   ],
-  moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1',
-  },
   coverageDirectory: './coverage',
-  coverageReporters: ['text', 'lcov', 'html'],
+  coverageReporters: ['text', 'lcov'],
 };

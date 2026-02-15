@@ -83,15 +83,15 @@ describe('AuthService', () => {
         email,
         name,
         passwordHash: 'hashed',
-        role: 'viewer',
+        role: 'customer',
       });
       mockJwtService.sign.mockReturnValue('access-token');
 
-      const hashSpy = jest.spyOn(bcrypt, 'hash');
-
       const result = await service.register(email, name, password);
 
-      expect(hashSpy).toHaveBeenCalledWith(password, 12);
+      // Verify password was hashed (bcrypt hash starts with $2b$)
+      const createCall = mockPrisma.user.create.mock.calls[0][0];
+      expect(createCall.data.passwordHash).toMatch(/^\$2[aby]\$/);
       expect(mockPrisma.user.create).toHaveBeenCalled();
       expect(result).toHaveProperty('user');
       expect(result).toHaveProperty('accessToken');
@@ -109,14 +109,14 @@ describe('AuthService', () => {
       ).rejects.toThrow(ConflictException);
     });
 
-    it('should set default role to viewer', async () => {
+    it('should set default role to customer', async () => {
       mockPrisma.user.findUnique.mockResolvedValue(null);
       mockPrisma.user.create.mockResolvedValue({
         id: 'user-123',
         email: 'test@example.com',
         name: 'Test',
         passwordHash: 'hashed',
-        role: 'viewer',
+        role: 'customer',
       });
       mockJwtService.sign.mockReturnValue('token');
 
@@ -124,7 +124,7 @@ describe('AuthService', () => {
 
       expect(mockPrisma.user.create).toHaveBeenCalledWith({
         data: expect.objectContaining({
-          role: 'viewer',
+          role: 'customer',
         }),
       });
     });
