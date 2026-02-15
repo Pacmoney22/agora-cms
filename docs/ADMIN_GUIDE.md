@@ -361,9 +361,1064 @@ docker build -f apps/storefront/Dockerfile -t agora-cms/storefront:latest .
 docker build -f apps/admin-dashboard/Dockerfile -t agora-cms/admin-dashboard:latest .
 ```
 
-### 3.3 Bare Metal Deployment (PM2 + Nginx)
+### 3.3 Budget VPS Deployment (Contabo)
 
-This is the recommended approach for GoDaddy VPS or any Ubuntu-based server.
+This guide provides step-by-step instructions for deploying Agora CMS on a budget-friendly Contabo VPS, starting at **$6.99/month**. This deployment method is ideal for small to medium-sized organizations that need full CMS functionality without the complexity and cost of managed cloud services.
+
+#### Why Contabo VPS S?
+
+**Server Specifications:**
+- 4 vCPU cores (dedicated)
+- 8 GB RAM
+- 200 GB SSD storage
+- 32 TB traffic
+- 1 Gbps network port
+- **Price: $6.99/month** (billed monthly, no long-term commitment)
+
+**Why This Works for Agora CMS:**
+- Sufficient resources to run all 5 backend services + 3 frontend apps simultaneously
+- Docker Compose infrastructure (PostgreSQL, Redis, Elasticsearch, MinIO, Kafka) fits comfortably in 8GB RAM
+- SSD storage provides fast database and search performance
+- Location options: US East, US West, Europe, Asia-Pacific (choose closest to your users)
+- No bandwidth overage charges with 32TB included traffic
+- Full root access - complete control over the server
+
+**Alternative VPS Providers:**
+- Hetzner Cloud CX22 (€5.83/month) - 2 vCPU, 4GB RAM, 40GB SSD (Germany datacenter)
+- DigitalOcean Droplet ($24/month) - 2 vCPU, 4GB RAM, 80GB SSD (better support, higher cost)
+- Vultr High Frequency ($12/month) - 1 vCPU, 2GB RAM, 55GB SSD (minimal but workable)
+
+#### Step 1: Provision Contabo VPS
+
+1. **Sign up and order:**
+   - Visit https://contabo.com/en/vps/
+   - Select **VPS S** (4 vCPU, 8GB RAM, 200GB SSD)
+   - Choose **Ubuntu 22.04 LTS** as operating system
+   - Select datacenter region closest to your target audience
+   - Add optional features:
+     - **Managed Firewall** ($1/month) - Recommended for security
+     - **Backup Storage** ($2/month) - Optional but recommended
+   - Complete payment (credit card, PayPal, or cryptocurrency accepted)
+
+2. **Access credentials:**
+   - You'll receive an email (usually within 1-24 hours) with:
+     - Server IP address
+     - Root password
+     - VNC console URL (backup access if SSH fails)
+
+3. **Initial SSH connection:**
+   ```bash
+   ssh root@<your-server-ip>
+   # Enter the password from your email
+   # You'll be prompted to change the password on first login
+   ```
+
+4. **Create a non-root user with sudo access:**
+   ```bash
+   adduser agora
+   # Set a strong password when prompted
+
+   usermod -aG sudo agora
+
+   # Allow sudo without password (optional, for convenience)
+   echo "agora ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/agora
+
+   # Copy SSH keys to new user (if you're using key-based auth)
+   rsync --archive --chown=agora:agora ~/.ssh /home/agora
+   ```
+
+5. **Switch to the non-root user:**
+   ```bash
+   su - agora
+   ```
+
+#### Step 2: Server Hardening and Initial Setup
+
+**Update system packages:**
+```bash
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y build-essential git curl wget unzip software-properties-common ufw fail2ban
+```
+
+**Configure firewall (UFW):**
+```bash
+# Allow SSH (change 22 to your custom port if you changed it)
+sudo ufw allow 22/tcp
+
+# Allow HTTP and HTTPS
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+
+# Enable firewall
+sudo ufw --force enable
+
+# Verify status
+sudo ufw status
+```
+
+**Configure fail2ban (brute force protection):**
+```bash
+sudo systemctl enable fail2ban
+sudo systemctl start fail2ban
+
+# Create custom SSH jail
+sudo tee /etc/fail2ban/jail.local > /dev/null <<EOF
+[sshd]
+enabled = true
+port = 22
+filter = sshd
+logpath = /var/log/auth.log
+maxretry = 3
+bantime = 3600
+EOF
+
+sudo systemctl restart fail2ban
+```
+
+#### Step 3: Install Dependencies
+
+**Install Node.js 20 via nvm:**
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+source ~/.bashrc
+nvm install 20
+nvm alias default 20
+node --version  # Should show v20.x.x
+```
+
+**Install pnpm:**
+```bash
+corepack enable
+corepack prepare pnpm@latest --activate
+pnpm --version  # Verify installation
+```
+
+**Install PM2 (process manager):**
+```bash
+npm install -g pm2
+pm2 --version
+```
+
+**Install Docker and Docker Compose:**
+```bash
+# Install Docker
+curl -fsSL https://get.docker.com | sh
+
+# Add current user to docker group
+sudo usermod -aG docker $USER
+
+# Install Docker Compose v2
+sudo apt install -y docker-compose-plugin
+
+# Log out and back in for group changes to take effect
+exit
+ssh agora@<your-server-ip>
+
+# Verify Docker installation
+docker --version
+docker compose version
+```
+
+**Install and configure PostgreSQL (alternative to Docker):**
+```bash
+# Install PostgreSQL 16
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+wget -qO- https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo tee /etc/apt/trusted.gpg.d/pgdg.asc &>/dev/null
+sudo apt update
+sudo apt install -y postgresql-16 postgresql-contrib-16
+
+# Start and enable PostgreSQL
+sudo systemctl enable postgresql
+sudo systemctl start postgresql
+
+# Create database and user
+sudo -u postgres psql << 'PSQLEOF'
+CREATE DATABASE agora_cms;
+CREATE USER agora WITH ENCRYPTED PASSWORD 'change-this-secure-password';
+GRANT ALL PRIVILEGES ON DATABASE agora_cms TO agora;
+\c agora_cms
+GRANT ALL ON SCHEMA public TO agora;
+ALTER DATABASE agora_cms OWNER TO agora;
+\q
+PSQLEOF
+
+# Configure PostgreSQL to allow local connections
+sudo sed -i "s/#listen_addresses = 'localhost'/listen_addresses = 'localhost'/" /etc/postgresql/16/main/postgresql.conf
+
+# Update pg_hba.conf for password authentication
+sudo tee -a /etc/postgresql/16/main/pg_hba.conf > /dev/null <<EOF
+# Agora CMS local connections
+local   agora_cms       agora                                   md5
+host    agora_cms       agora           127.0.0.1/32            md5
+EOF
+
+sudo systemctl restart postgresql
+```
+
+**Install and configure Redis (alternative to Docker):**
+```bash
+# Install Redis 7
+sudo apt install -y redis-server
+
+# Configure Redis for production
+sudo sed -i 's/^supervised no/supervised systemd/' /etc/redis/redis.conf
+sudo sed -i 's/^# maxmemory <bytes>/maxmemory 512mb/' /etc/redis/redis.conf
+sudo sed -i 's/^# maxmemory-policy noeviction/maxmemory-policy allkeys-lru/' /etc/redis/redis.conf
+
+# Enable and start Redis
+sudo systemctl enable redis-server
+sudo systemctl start redis-server
+
+# Verify Redis
+redis-cli ping  # Should return PONG
+```
+
+**Install Nginx:**
+```bash
+sudo apt install -y nginx
+sudo systemctl enable nginx
+sudo systemctl start nginx
+
+# Verify Nginx is running
+curl http://localhost  # Should show Nginx welcome page
+```
+
+#### Step 4: Clone and Configure Agora CMS
+
+**Clone repository:**
+```bash
+sudo mkdir -p /opt/agora-cms
+sudo chown $USER:$USER /opt/agora-cms
+cd /opt/agora-cms
+
+# Clone from your repository
+git clone https://github.com/your-org/agora-cms.git .
+
+# If using private repo, set up deploy keys or use HTTPS with token
+# git clone https://<token>@github.com/your-org/agora-cms.git .
+```
+
+**Configure environment variables:**
+```bash
+cp .env.example .env
+nano .env
+```
+
+Update the following critical variables in `.env`:
+
+```bash
+# Database (if using native PostgreSQL, not Docker)
+DATABASE_URL="postgresql://agora:change-this-secure-password@localhost:5432/agora_cms"
+
+# Redis (if using native Redis, not Docker)
+REDIS_URL="redis://localhost:6379"
+
+# JWT Secret (generate with: openssl rand -base64 32)
+JWT_SECRET="<generate-secure-random-string>"
+JWT_REFRESH_SECRET="<generate-different-secure-random-string>"
+
+# Session Secret (generate with: openssl rand -base64 32)
+SESSION_SECRET="<generate-secure-random-string>"
+
+# Email (configure your SMTP provider)
+SMTP_HOST="smtp.sendgrid.net"
+SMTP_PORT="587"
+SMTP_USER="apikey"
+SMTP_PASS="<your-sendgrid-api-key>"
+SMTP_FROM="noreply@yourdomain.com"
+
+# URLs (update with your domain)
+FRONTEND_URL="https://yourdomain.com"
+ADMIN_URL="https://admin.yourdomain.com"
+API_URL="https://api.yourdomain.com"
+
+# Stripe (for payments)
+STRIPE_SECRET_KEY="sk_live_..."
+STRIPE_WEBHOOK_SECRET="whsec_..."
+STRIPE_PUBLISHABLE_KEY="pk_live_..."
+
+# Google Analytics 4 (optional)
+GA4_MEASUREMENT_ID="G-XXXXXXXXXX"
+GA4_API_SECRET="<your-api-secret>"
+GA4_PROPERTY_ID="properties/XXXXXXXXX"
+GA4_SERVICE_ACCOUNT_JSON="/opt/agora-cms/credentials/ga4-service-account.json"
+
+# Salesforce (optional)
+SALESFORCE_CLIENT_ID="<your-client-id>"
+SALESFORCE_CLIENT_SECRET="<your-client-secret>"
+SALESFORCE_USERNAME="<your-username>"
+SALESFORCE_INSTANCE_URL="https://yourinstance.salesforce.com"
+
+# Printful (optional)
+PRINTFUL_API_KEY="<your-api-key>"
+PRINTFUL_WEBHOOK_SECRET="<your-webhook-secret>"
+
+# Apple Wallet (optional)
+APPLE_PASS_TYPE_ID="pass.com.yourdomain.eventticket"
+APPLE_TEAM_ID="<your-team-id>"
+APPLE_ORGANIZATION_NAME="Your Organization"
+APPLE_SIGNER_CERT_PATH="/opt/agora-cms/certificates/signerCert.pem"
+APPLE_SIGNER_KEY_PATH="/opt/agora-cms/certificates/signerKey.pem"
+APPLE_WWDR_CERT_PATH="/opt/agora-cms/certificates/wwdr.pem"
+
+# Storage (MinIO via Docker, or use S3)
+S3_ENDPOINT="http://localhost:9000"
+S3_ACCESS_KEY="minioadmin"
+S3_SECRET_KEY="minioadmin"
+S3_BUCKET_NAME="agora-media"
+
+# Node Environment
+NODE_ENV="production"
+```
+
+**Install dependencies and build:**
+```bash
+cd /opt/agora-cms
+pnpm install --frozen-lockfile
+pnpm --filter @agora-cms/database exec prisma generate
+pnpm build
+```
+
+#### Step 5: Infrastructure Services (Docker Compose)
+
+If using Docker for infrastructure (recommended for Elasticsearch, Kafka, MinIO):
+
+```bash
+cd /opt/agora-cms/docker
+docker compose up -d
+
+# Wait for services to become healthy
+docker compose ps
+
+# Verify all services are running
+docker ps
+```
+
+**Alternative: Skip Docker and use native services only:**
+- PostgreSQL: Installed natively in Step 3 ✓
+- Redis: Installed natively in Step 3 ✓
+- Elasticsearch: Skip if not using full-text search initially
+- Kafka: Skip if not using event streaming initially
+- MinIO: Skip if using external S3 or local file storage
+
+For minimal deployment without Docker (PostgreSQL + Redis only), update `.env`:
+```bash
+# Use native PostgreSQL and Redis
+DATABASE_URL="postgresql://agora:your-password@localhost:5432/agora_cms"
+REDIS_URL="redis://localhost:6379"
+
+# Disable services not in use
+ELASTICSEARCH_ENABLED="false"
+KAFKA_ENABLED="false"
+```
+
+#### Step 6: Database Migrations and Seeding
+
+```bash
+cd /opt/agora-cms
+pnpm db:migrate
+pnpm db:seed
+```
+
+This creates the database schema and seeds demo data (users, products, pages, navigation).
+
+#### Step 7: PM2 Process Manager Setup
+
+Create PM2 ecosystem configuration optimized for Contabo VPS S (8GB RAM):
+
+```bash
+sudo mkdir -p /var/log/agora && sudo chown $USER:$USER /var/log/agora
+
+cat > /opt/agora-cms/ecosystem.config.js << 'PMEOF'
+module.exports = {
+  apps: [
+    // Backend Services (NestJS)
+    {
+      name: 'content-service',
+      cwd: '/opt/agora-cms/services/content-service',
+      script: 'dist/main.js',
+      instances: 1,  // Single instance for budget deployment
+      exec_mode: 'fork',
+      env: { NODE_ENV: 'production', PORT: 3001 },
+      max_memory_restart: '768M',
+      error_file: '/var/log/agora/content-service-error.log',
+      out_file: '/var/log/agora/content-service-out.log',
+      merge_logs: true,
+      time: true,
+    },
+    {
+      name: 'commerce-service',
+      cwd: '/opt/agora-cms/services/commerce-service',
+      script: 'dist/main.js',
+      instances: 1,
+      exec_mode: 'fork',
+      env: { NODE_ENV: 'production', PORT: 3002 },
+      max_memory_restart: '512M',
+      error_file: '/var/log/agora/commerce-service-error.log',
+      out_file: '/var/log/agora/commerce-service-out.log',
+      merge_logs: true,
+      time: true,
+    },
+    {
+      name: 'integration-service',
+      cwd: '/opt/agora-cms/services/integration-service',
+      script: 'dist/main.js',
+      instances: 1,
+      exec_mode: 'fork',
+      env: { NODE_ENV: 'production', PORT: 3003 },
+      max_memory_restart: '512M',
+      error_file: '/var/log/agora/integration-service-error.log',
+      out_file: '/var/log/agora/integration-service-out.log',
+      merge_logs: true,
+      time: true,
+    },
+    {
+      name: 'shipping-gateway',
+      cwd: '/opt/agora-cms/services/shipping-gateway',
+      script: 'dist/main.js',
+      instances: 1,
+      exec_mode: 'fork',
+      env: { NODE_ENV: 'production', PORT: 3004 },
+      max_memory_restart: '256M',
+      error_file: '/var/log/agora/shipping-gateway-error.log',
+      out_file: '/var/log/agora/shipping-gateway-out.log',
+      merge_logs: true,
+      time: true,
+    },
+    {
+      name: 'course-service',
+      cwd: '/opt/agora-cms/services/course-service',
+      script: 'dist/main.js',
+      instances: 1,
+      exec_mode: 'fork',
+      env: { NODE_ENV: 'production', PORT: 3005 },
+      max_memory_restart: '512M',
+      error_file: '/var/log/agora/course-service-error.log',
+      out_file: '/var/log/agora/course-service-out.log',
+      merge_logs: true,
+      time: true,
+    },
+
+    // Frontend Apps (Next.js)
+    {
+      name: 'page-builder',
+      cwd: '/opt/agora-cms/apps/page-builder',
+      script: 'node_modules/.bin/next',
+      args: 'start -p 3100',
+      instances: 1,
+      exec_mode: 'fork',
+      env: { NODE_ENV: 'production', PORT: 3100 },
+      max_memory_restart: '768M',
+      error_file: '/var/log/agora/page-builder-error.log',
+      out_file: '/var/log/agora/page-builder-out.log',
+      merge_logs: true,
+      time: true,
+    },
+    {
+      name: 'storefront',
+      cwd: '/opt/agora-cms/apps/storefront',
+      script: 'node_modules/.bin/next',
+      args: 'start -p 3200',
+      instances: 1,
+      exec_mode: 'fork',
+      env: { NODE_ENV: 'production', PORT: 3200 },
+      max_memory_restart: '768M',
+      error_file: '/var/log/agora/storefront-error.log',
+      out_file: '/var/log/agora/storefront-out.log',
+      merge_logs: true,
+      time: true,
+    },
+    {
+      name: 'admin-dashboard',
+      cwd: '/opt/agora-cms/apps/admin-dashboard',
+      script: 'node_modules/.bin/next',
+      args: 'start -p 3300',
+      instances: 1,
+      exec_mode: 'fork',
+      env: { NODE_ENV: 'production', PORT: 3300 },
+      max_memory_restart: '768M',
+      error_file: '/var/log/agora/admin-dashboard-error.log',
+      out_file: '/var/log/agora/admin-dashboard-out.log',
+      merge_logs: true,
+      time: true,
+    },
+  ],
+};
+PMEOF
+
+# Start all services
+pm2 start ecosystem.config.js
+
+# Save PM2 process list
+pm2 save
+
+# Generate systemd startup script (auto-start on reboot)
+pm2 startup systemd
+
+# The above command will output a command to run with sudo - copy and execute it
+```
+
+**Verify all processes are running:**
+```bash
+pm2 list
+pm2 logs  # View live logs (Ctrl+C to exit)
+pm2 monit  # Real-time monitoring dashboard
+```
+
+#### Step 8: Nginx Reverse Proxy Configuration
+
+Create Nginx configuration for your domain:
+
+```bash
+sudo nano /etc/nginx/sites-available/agora-cms
+```
+
+Add the following configuration:
+
+```nginx
+# Upstream definitions
+upstream storefront {
+  server 127.0.0.1:3200;
+  keepalive 64;
+}
+
+upstream admin {
+  server 127.0.0.1:3300;
+  keepalive 64;
+}
+
+upstream page_builder {
+  server 127.0.0.1:3100;
+  keepalive 64;
+}
+
+upstream api_gateway {
+  server 127.0.0.1:8000;
+  keepalive 64;
+}
+
+# Rate limiting
+limit_req_zone $binary_remote_addr zone=api_limit:10m rate=10r/s;
+limit_req_zone $binary_remote_addr zone=login_limit:10m rate=3r/m;
+
+# Main storefront (yourdomain.com)
+server {
+  listen 80;
+  listen [::]:80;
+  server_name yourdomain.com www.yourdomain.com;
+
+  # Redirect HTTP to HTTPS (will be configured after SSL setup)
+  # return 301 https://$server_name$request_uri;
+
+  # Temporary HTTP configuration (before SSL)
+  location / {
+    proxy_pass http://storefront;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection 'upgrade';
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_cache_bypass $http_upgrade;
+    proxy_read_timeout 60s;
+    proxy_connect_timeout 60s;
+  }
+
+  # Next.js static files with caching
+  location /_next/static/ {
+    proxy_pass http://storefront;
+    proxy_cache_valid 200 60m;
+    expires 1y;
+    add_header Cache-Control "public, immutable";
+  }
+}
+
+# Admin dashboard (admin.yourdomain.com)
+server {
+  listen 80;
+  listen [::]:80;
+  server_name admin.yourdomain.com;
+
+  location / {
+    proxy_pass http://admin;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection 'upgrade';
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_cache_bypass $http_upgrade;
+  }
+
+  # Rate limiting on login endpoints
+  location /api/auth/login {
+    limit_req zone=login_limit burst=5 nodelay;
+    proxy_pass http://admin;
+  }
+}
+
+# Page builder (builder.yourdomain.com)
+server {
+  listen 80;
+  listen [::]:80;
+  server_name builder.yourdomain.com;
+
+  location / {
+    proxy_pass http://page_builder;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection 'upgrade';
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_cache_bypass $http_upgrade;
+  }
+}
+
+# API Gateway (api.yourdomain.com)
+server {
+  listen 80;
+  listen [::]:80;
+  server_name api.yourdomain.com;
+
+  # API rate limiting
+  location / {
+    limit_req zone=api_limit burst=20 nodelay;
+
+    proxy_pass http://api_gateway;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+
+  # Webhook endpoints (no rate limiting)
+  location /webhooks/ {
+    proxy_pass http://api_gateway;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+}
+```
+
+**Enable the site and test configuration:**
+
+```bash
+# Create symbolic link to enable site
+sudo ln -s /etc/nginx/sites-available/agora-cms /etc/nginx/sites-enabled/
+
+# Remove default site
+sudo rm /etc/nginx/sites-enabled/default
+
+# Test Nginx configuration
+sudo nginx -t
+
+# Reload Nginx
+sudo systemctl reload nginx
+```
+
+#### Step 9: DNS Configuration
+
+**Point your domains to the Contabo server IP:**
+
+Create the following DNS A records in your domain registrar's DNS management panel:
+
+| Type | Hostname | Value | TTL |
+|------|----------|-------|-----|
+| A | @ | <your-contabo-ip> | 3600 |
+| A | www | <your-contabo-ip> | 3600 |
+| A | admin | <your-contabo-ip> | 3600 |
+| A | builder | <your-contabo-ip> | 3600 |
+| A | api | <your-contabo-ip> | 3600 |
+
+Wait 5-30 minutes for DNS propagation, then test:
+
+```bash
+nslookup yourdomain.com
+nslookup admin.yourdomain.com
+```
+
+#### Step 10: SSL Certificate Setup (Let's Encrypt)
+
+**Install Certbot:**
+```bash
+sudo apt install -y certbot python3-certbot-nginx
+```
+
+**Obtain SSL certificates for all subdomains:**
+```bash
+sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com \
+  -d admin.yourdomain.com -d builder.yourdomain.com -d api.yourdomain.com \
+  --email your-email@example.com --agree-tos --non-interactive --redirect
+```
+
+Certbot will:
+1. Obtain SSL certificates from Let's Encrypt
+2. Automatically modify Nginx configuration to use HTTPS
+3. Set up HTTP to HTTPS redirects
+4. Configure auto-renewal via systemd timer
+
+**Test auto-renewal:**
+```bash
+sudo certbot renew --dry-run
+```
+
+**Verify SSL is working:**
+```bash
+curl -I https://yourdomain.com
+# Should return 200 OK with HTTPS
+
+# Check SSL rating
+# Visit: https://www.ssllabs.com/ssltest/analyze.html?d=yourdomain.com
+```
+
+#### Step 11: Security Hardening
+
+**Enable automatic security updates:**
+```bash
+sudo apt install -y unattended-upgrades
+sudo dpkg-reconfigure --priority=low unattended-upgrades
+```
+
+**Configure log rotation:**
+```bash
+sudo tee /etc/logrotate.d/agora-cms > /dev/null <<'EOF'
+/var/log/agora/*.log {
+  daily
+  rotate 14
+  compress
+  delaycompress
+  notifempty
+  missingok
+  sharedscripts
+  postrotate
+    pm2 reloadLogs
+  endscript
+}
+EOF
+```
+
+**Secure PostgreSQL:**
+```bash
+# Disable remote connections (if not needed)
+sudo sed -i "s/listen_addresses = 'localhost'/listen_addresses = 'localhost'/" /etc/postgresql/16/main/postgresql.conf
+sudo systemctl restart postgresql
+```
+
+**Set up monitoring alerts (optional):**
+```bash
+# Install monitoring tools
+sudo apt install -y htop iotop nethogs
+
+# Monitor disk space
+cat > /usr/local/bin/check-disk-space.sh << 'EOF'
+#!/bin/bash
+THRESHOLD=80
+CURRENT=$(df -h / | awk 'NR==2 {print $5}' | sed 's/%//')
+if [ "$CURRENT" -gt "$THRESHOLD" ]; then
+  echo "WARNING: Disk usage is at ${CURRENT}%" | mail -s "Disk Space Alert" your-email@example.com
+fi
+EOF
+
+chmod +x /usr/local/bin/check-disk-space.sh
+
+# Add to crontab (runs daily at 2am)
+(crontab -l 2>/dev/null; echo "0 2 * * * /usr/local/bin/check-disk-space.sh") | crontab -
+```
+
+#### Step 12: Deployment Updates
+
+When you need to deploy code updates:
+
+```bash
+cd /opt/agora-cms
+
+# Pull latest code
+git pull origin main
+
+# Install new dependencies (if any)
+pnpm install --frozen-lockfile
+
+# Regenerate Prisma client (if schema changed)
+pnpm --filter @agora-cms/database exec prisma generate
+
+# Run database migrations (if any)
+pnpm db:migrate
+
+# Rebuild services
+pnpm build
+
+# Restart PM2 processes (zero-downtime reload)
+pm2 reload ecosystem.config.js
+
+# Or restart all at once
+pm2 restart all
+
+# View logs to verify deployment
+pm2 logs --lines 100
+```
+
+**Automated deployment script:**
+```bash
+cat > /opt/agora-cms/deploy.sh << 'EOF'
+#!/bin/bash
+set -e
+
+echo "🚀 Starting deployment..."
+
+# Navigate to project directory
+cd /opt/agora-cms
+
+# Pull latest code
+echo "📥 Pulling latest code from Git..."
+git pull origin main
+
+# Install dependencies
+echo "📦 Installing dependencies..."
+pnpm install --frozen-lockfile
+
+# Generate Prisma client
+echo "🔨 Generating Prisma client..."
+pnpm --filter @agora-cms/database exec prisma generate
+
+# Run database migrations
+echo "🗃️  Running database migrations..."
+pnpm db:migrate
+
+# Build all services and apps
+echo "🏗️  Building services and apps..."
+pnpm build
+
+# Reload PM2 processes
+echo "♻️  Reloading PM2 processes..."
+pm2 reload ecosystem.config.js
+
+# Show status
+echo "✅ Deployment complete!"
+pm2 list
+EOF
+
+chmod +x /opt/agora-cms/deploy.sh
+
+# Run deployments with:
+# /opt/agora-cms/deploy.sh
+```
+
+#### Step 13: Monitoring and Maintenance
+
+**Monitor PM2 processes:**
+```bash
+# List all processes with status
+pm2 list
+
+# View real-time logs
+pm2 logs
+
+# View logs for specific service
+pm2 logs content-service
+
+# Monitor CPU and memory usage
+pm2 monit
+
+# View detailed process info
+pm2 show content-service
+```
+
+**Monitor system resources:**
+```bash
+# Overall system status
+htop
+
+# Disk usage
+df -h
+
+# Memory usage
+free -h
+
+# Check Docker containers (if using Docker infrastructure)
+docker stats
+
+# PostgreSQL connections
+sudo -u postgres psql -c "SELECT count(*) FROM pg_stat_activity;"
+
+# Redis info
+redis-cli info stats
+```
+
+**Database backups:**
+```bash
+# Create backup script
+sudo tee /usr/local/bin/backup-postgres.sh > /dev/null <<'EOF'
+#!/bin/bash
+BACKUP_DIR="/opt/backups/postgres"
+TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+BACKUP_FILE="$BACKUP_DIR/agora_cms_$TIMESTAMP.sql.gz"
+
+mkdir -p "$BACKUP_DIR"
+
+# Create compressed backup
+sudo -u postgres pg_dump agora_cms | gzip > "$BACKUP_FILE"
+
+# Keep only last 7 days of backups
+find "$BACKUP_DIR" -name "*.sql.gz" -mtime +7 -delete
+
+echo "Backup created: $BACKUP_FILE"
+EOF
+
+sudo chmod +x /usr/local/bin/backup-postgres.sh
+
+# Schedule daily backups at 3am
+(crontab -l 2>/dev/null; echo "0 3 * * * /usr/local/bin/backup-postgres.sh") | crontab -
+```
+
+**Restore from backup:**
+```bash
+# Decompress and restore
+gunzip -c /opt/backups/postgres/agora_cms_20260215_030000.sql.gz | \
+  sudo -u postgres psql agora_cms
+```
+
+#### Cost Breakdown
+
+**Monthly Costs (Contabo VPS S):**
+
+| Item | Cost |
+|------|------|
+| **VPS S** (4 vCPU, 8GB RAM, 200GB SSD) | **$6.99** |
+| Managed Firewall (optional) | $1.00 |
+| Backup Storage 100GB (optional) | $2.00 |
+| **Total Base Cost** | **$6.99-$9.99/month** |
+
+**Additional Costs (Usage-Based):**
+
+| Service | Provider | Estimated Monthly Cost |
+|---------|----------|----------------------|
+| Domain Name | Namecheap, GoDaddy | $10-15/year ($1/month) |
+| Email (Transactional) | SendGrid Free Tier | $0 (up to 100 emails/day) |
+| Email (Production) | SendGrid Essentials | $19.95 (up to 50k emails/month) |
+| SSL Certificate | Let's Encrypt | **Free** |
+| CDN (Optional) | Cloudflare Free | **Free** (unlimited bandwidth) |
+| Stripe Payment Processing | Stripe | 2.9% + $0.30 per transaction |
+| Object Storage (Optional) | Wasabi S3-compatible | $5.99/TB/month |
+
+**Total Estimated Monthly Cost:**
+- **Minimal Setup**: $6.99/month (VPS only, Let's Encrypt SSL, SendGrid free tier)
+- **Recommended Setup**: $26.94/month (VPS + backups + SendGrid + domain)
+- **Production Setup**: $50-100/month (add Cloudflare Pro $20, Wasabi storage, higher email volume)
+
+**Cost Comparison:**
+- **Shared Hosting (GoDaddy)**: $6-12/month (NOT compatible - no Node.js, Docker, or root access)
+- **AWS Lightsail**: $40-80/month (4GB instance + RDS)
+- **DigitalOcean Managed**: $70-120/month (App Platform + Managed DB)
+- **AWS Full Stack**: $350-1200/month (see Section 3.5)
+- **Contabo VPS**: $6.99-10/month ✅ **Best value for small-medium deployments**
+
+#### Performance Tuning for 8GB RAM
+
+**Optimize PM2 memory limits:**
+- Total available: 8GB
+- OS + services: ~2GB
+- Docker infrastructure: ~2GB (PostgreSQL, Redis, MinIO)
+- Available for apps: ~4GB
+- PM2 config: 8 processes × 512-768MB = 4-6GB ✓
+
+**If experiencing memory pressure:**
+
+1. **Disable Docker infrastructure**, use native PostgreSQL + Redis (saves ~1.5GB)
+2. **Reduce PM2 instances** from cluster mode to single fork mode (already configured)
+3. **Enable swap** for additional headroom:
+   ```bash
+   # Create 4GB swap file
+   sudo fallocate -l 4G /swapfile
+   sudo chmod 600 /swapfile
+   sudo mkswap /swapfile
+   sudo swapon /swapfile
+
+   # Make permanent
+   echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+   ```
+
+4. **Upgrade to VPS M** if needed:
+   - 6 vCPU, 16GB RAM, 400GB SSD
+   - Cost: $12.99/month
+   - Allows running everything with comfortable headroom
+
+#### Troubleshooting
+
+**PM2 service won't start:**
+```bash
+# Check PM2 logs
+pm2 logs <service-name> --lines 100
+
+# Check if port is already in use
+sudo lsof -i :3001
+
+# Restart specific service
+pm2 restart <service-name>
+```
+
+**Nginx 502 Bad Gateway:**
+```bash
+# Check if backend service is running
+pm2 list
+curl http://localhost:3200  # Test direct connection
+
+# Check Nginx error logs
+sudo tail -f /var/log/nginx/error.log
+
+# Verify Nginx configuration
+sudo nginx -t
+```
+
+**Database connection errors:**
+```bash
+# Check PostgreSQL is running
+sudo systemctl status postgresql
+
+# Test connection
+psql -h localhost -U agora -d agora_cms
+
+# Check connection limit
+sudo -u postgres psql -c "SHOW max_connections;"
+```
+
+**Out of memory errors:**
+```bash
+# Check current memory usage
+free -h
+pm2 monit
+
+# Check for memory leaks
+pm2 logs | grep -i "memory"
+
+# Restart all PM2 processes
+pm2 restart all
+```
+
+**SSL certificate renewal fails:**
+```bash
+# Manual renewal
+sudo certbot renew --force-renewal
+
+# Check certbot logs
+sudo tail -f /var/log/letsencrypt/letsencrypt.log
+
+# Verify DNS is pointing to server
+nslookup yourdomain.com
+```
+
+---
+
+### 3.4 Bare Metal Deployment (PM2 + Nginx)
+
+This is the recommended approach for custom VPS deployments or any Ubuntu-based server.
 
 **Step 1: Server setup**
 
@@ -524,7 +1579,7 @@ pm2 startup systemd
 
 **Step 4: Nginx reverse proxy** -- See [Section 18: SSL/TLS & Domain Setup](#18-ssltls--domain-setup) for the full Nginx configuration.
 
-### 3.4 Deployment on AWS (ECS Fargate)
+### 3.5 Deployment on AWS (ECS Fargate)
 
 #### Recommended Architecture
 

@@ -42,3 +42,4 @@ pnpm-debug.log*
 
 # Scan reports
 snyk-report.json
+snyk-report.txt
