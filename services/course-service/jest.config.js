@@ -1,6 +1,5 @@
-import type { Config } from 'jest';
-
-const config: Config = {
+/** @type {import('jest').Config} */
+module.exports = {
   displayName: 'course-service',
   preset: 'ts-jest',
   testEnvironment: 'node',
@@ -18,5 +17,3 @@ const config: Config = {
   coverageDirectory: './coverage',
   coverageReporters: ['text', 'lcov', 'html'],
 };
-
-export default config;

@@ -1,6 +1,5 @@
-import type { Config } from '@jest/types';
-
-const config: Config.InitialOptions = {
+/** @type {import('jest').Config} */
+module.exports = {
   moduleFileExtensions: ['js', 'json', 'ts'],
   rootDir: '.',
   testRegex: '.*\\.spec\\.ts$',
@@ -25,5 +24,3 @@ const config: Config.InitialOptions = {
   testEnvironment: 'node',
   testTimeout: 10000,
 };
-
-export default config;
