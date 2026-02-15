@@ -1,16 +1,16 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
+import { Test, TestingModule } from '@nestjs/testing';
 
 import { CertificateGeneratorService } from './certificate-generator.service';
 
 // Mock pdfkit
 jest.mock('pdfkit', () => {
   return jest.fn().mockImplementation(() => {
-    const handlers: Record<string, Function[]> = {};
+    const handlers: Record<string, Array<(...args: unknown[]) => void>> = {};
 
     const mockDoc = {
       page: { width: 842, height: 595 },
-      on: jest.fn((event: string, handler: Function) => {
+      on: jest.fn((event: string, handler: (...args: unknown[]) => void) => {
         if (!handlers[event]) handlers[event] = [];
         handlers[event].push(handler);
         return mockDoc;
@@ -30,8 +30,8 @@ jest.mock('pdfkit', () => {
         const dataHandlers = handlers['data'] || [];
         const endHandlers = handlers['end'] || [];
         const chunk = Buffer.from('mock-pdf-content');
-        dataHandlers.forEach((h: Function) => h(chunk));
-        endHandlers.forEach((h: Function) => h());
+        dataHandlers.forEach((h) => h(chunk));
+        endHandlers.forEach((h) => h());
       }),
     };
     return mockDoc;

@@ -92,7 +92,7 @@ describe('EnrollmentConsumerService', () => {
   // ─── handleMessage (via eachMessage callback) ─────────────────────
 
   describe('message handling', () => {
-    let eachMessageHandler: Function;
+    let eachMessageHandler: (...args: unknown[]) => Promise<void>;
 
     beforeEach(async () => {
       mockConsumerConnect.mockResolvedValue(undefined);
