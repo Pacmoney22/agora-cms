@@ -1,7 +1,8 @@
+import { randomUUID } from 'crypto';
+
 import { Injectable, Inject, Logger, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaClient } from '@prisma/client';
-import { randomUUID } from 'crypto';
 
 /**
  * PassesService - Generates Apple Wallet (.pkpass) files for event tickets

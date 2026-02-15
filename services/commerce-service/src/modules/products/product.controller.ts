@@ -11,7 +11,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
-import { ProductService } from './product.service';
+
 import {
   CreateProductDto,
   UpdateProductDto,
@@ -20,6 +20,7 @@ import {
   GenerateVariantsDto,
   ConfigureProductDto,
 } from './dto/create-product.dto';
+import { ProductService } from './product.service';
 
 @ApiTags('products')
 @ApiBearerAuth()

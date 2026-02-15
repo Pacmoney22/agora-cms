@@ -1,8 +1,11 @@
-import { Module } from '@nestjs/common';
 import { prisma } from '@agora-cms/database';
+import { Module } from '@nestjs/common';
+
+import { ProductsModule } from '../products/product.module';
+
 import { OrderController } from './order.controller';
 import { OrderService } from './order.service';
-import { ProductsModule } from '../products/product.module';
+
 
 @Module({
   imports: [ProductsModule],

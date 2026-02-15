@@ -1,6 +1,6 @@
+import { hasMinimumRole } from '@agora-cms/shared';
 import { Injectable, CanActivate, ExecutionContext, ForbiddenException, Inject } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { hasMinimumRole } from '@agora-cms/shared';
 
 /**
  * EventStaffGuard - Verifies user has event staff access to an event

@@ -9,6 +9,7 @@ import {
   MaxLength,
   Min,
 } from 'class-validator';
+
 import { CourseLevel } from './create-course.dto';
 
 export class UpdateCourseDto {

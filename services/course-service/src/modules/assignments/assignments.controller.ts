@@ -1,7 +1,9 @@
 import { Controller, Get, Post, Delete, Param, Body, UseGuards, Request } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+
 import { CourseAdminGuard } from '../../common/guards/course-admin.guard';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+
 import { AssignmentsService } from './assignments.service';
 import { CreateInstructorAssignmentDto } from './dto/create-instructor-assignment.dto';
 

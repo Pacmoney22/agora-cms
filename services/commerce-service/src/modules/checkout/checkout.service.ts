@@ -1,20 +1,22 @@
 import {
-  Injectable,
-  Logger,
-  BadRequestException,
-} from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { v4 as uuidv4 } from 'uuid';
-import { Kafka, Producer } from 'kafkajs';
-import {
   EVENTS,
   type OrderDto,
   type OrderLineItem,
   type Address,
 } from '@agora-cms/shared';
+import {
+  Injectable,
+  Logger,
+  BadRequestException,
+} from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { Kafka, Producer } from 'kafkajs';
+import { v4 as uuidv4 } from 'uuid';
+
 import { CartService } from '../cart/cart.service';
-import { OrderService } from '../orders/order.service';
 import { ReservationService } from '../inventory/reservation.service';
+import { OrderService } from '../orders/order.service';
+
 import { TaxCalculationService } from './tax-calculation.service';
 
 export interface CheckoutRequest {

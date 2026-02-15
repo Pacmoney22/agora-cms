@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ScheduleModule } from '@nestjs/schedule';
 import Redis from 'ioredis';
+
+import { ProductsModule } from '../products/product.module';
+
 import { InventoryController } from './inventory.controller';
 import { InventoryService } from './inventory.service';
 import { ReservationService } from './reservation.service';
-import { ProductsModule } from '../products/product.module';
 
 @Module({
   imports: [ProductsModule, ScheduleModule.forRoot()],

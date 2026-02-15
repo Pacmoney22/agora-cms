@@ -1,5 +1,6 @@
 import { Injectable, Inject, NotFoundException, ConflictException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+
 import { CreateInstructorAssignmentDto } from './dto/create-instructor-assignment.dto';
 
 @Injectable()

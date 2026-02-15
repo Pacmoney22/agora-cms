@@ -17,8 +17,9 @@ import {
   ApiBearerAuth,
   ApiParam,
 } from '@nestjs/swagger';
-import { SectionsService } from './sections.service';
+
 import { CreateSectionDto } from './dto/create-section.dto';
+import { SectionsService } from './sections.service';
 
 @ApiTags('sections')
 @ApiBearerAuth()

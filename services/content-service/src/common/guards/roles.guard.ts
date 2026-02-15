@@ -1,3 +1,4 @@
+import { hasMinimumRole, type UserRole } from '@agora-cms/shared';
 import {
   Injectable,
   CanActivate,
@@ -7,7 +8,6 @@ import {
   SetMetadata,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { hasMinimumRole, type UserRole } from '@agora-cms/shared';
 
 export const ROLES_KEY = 'roles';
 

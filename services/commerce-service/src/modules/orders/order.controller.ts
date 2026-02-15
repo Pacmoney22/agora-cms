@@ -1,3 +1,4 @@
+import type { OrderStatus } from '@agora-cms/shared';
 import {
   Controller,
   Get,
@@ -9,6 +10,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsOptional,
   IsString,
@@ -16,8 +18,7 @@ import {
   IsIn,
   Min,
 } from 'class-validator';
-import { ApiPropertyOptional } from '@nestjs/swagger';
-import type { OrderStatus } from '@agora-cms/shared';
+
 import { OrderService } from './order.service';
 
 class ListOrdersQueryDto {

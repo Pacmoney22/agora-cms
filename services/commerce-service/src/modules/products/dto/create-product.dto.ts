@@ -1,3 +1,6 @@
+import type { ProductType } from '@agora-cms/shared';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsString,
   IsEnum,
@@ -12,9 +15,6 @@ import {
   IsIn,
   IsUUID,
 } from 'class-validator';
-import { Type } from 'class-transformer';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import type { ProductType } from '@agora-cms/shared';
 
 // --- Nested DTOs ---
 

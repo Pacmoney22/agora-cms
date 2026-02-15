@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, IsUUID, IsOptional, IsDate } from 'class-validator';
 import { Type } from 'class-transformer';
+import { IsString, IsUUID, IsOptional, IsDate } from 'class-validator';
 
 export class CreateEnrollmentDto {
   @ApiProperty({ description: 'User ID', example: '123e4567-e89b-12d3-a456-426614174000' })

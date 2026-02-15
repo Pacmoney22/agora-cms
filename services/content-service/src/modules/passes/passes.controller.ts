@@ -13,8 +13,10 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
-import { PassesService } from './passes.service';
+
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+
+import { PassesService } from './passes.service';
 
 @ApiTags('passes')
 @Controller('api/v1/passes')

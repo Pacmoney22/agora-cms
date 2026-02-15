@@ -1,3 +1,4 @@
+import { generateSlug, type PaginatedResponse } from '@agora-cms/shared';
 import {
   Injectable,
   Inject,
@@ -6,7 +7,6 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { generateSlug, type PaginatedResponse } from '@agora-cms/shared';
 
 export interface CategoryDto {
   id: string;

@@ -1,5 +1,6 @@
 import { Injectable, OnModuleInit, OnModuleDestroy, Logger } from '@nestjs/common';
 import { Kafka, Consumer, EachMessagePayload } from 'kafkajs';
+
 import { EnrollmentsService } from './enrollments.service';
 
 interface OrderCreatedEvent {

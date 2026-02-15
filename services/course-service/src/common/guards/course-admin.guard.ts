@@ -1,5 +1,5 @@
-import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@nestjs/common';
 import { hasMinimumRole } from '@agora-cms/shared';
+import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@nestjs/common';
 
 /**
  * CourseAdminGuard - Verifies user has course administration access

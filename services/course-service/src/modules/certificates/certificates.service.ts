@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { v4 as uuidv4 } from 'uuid';
+
 import { CertificateGeneratorService } from './certificate-generator.service';
 
 @Injectable()

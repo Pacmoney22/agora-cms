@@ -1,4 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsString,
   IsOptional,
@@ -9,7 +10,6 @@ import {
   MaxLength,
   Matches,
 } from 'class-validator';
-import { Type } from 'class-transformer';
 
 class PageSeoUpdateDto {
   @ApiPropertyOptional({ description: 'Meta title for SEO' })

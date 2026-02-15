@@ -1,5 +1,6 @@
-import { Module } from '@nestjs/common';
 import { prisma } from '@agora-cms/database';
+import { Module } from '@nestjs/common';
+
 import { LicenseKeyController } from './license-key.controller';
 import { LicenseKeyService } from './license-key.service';
 

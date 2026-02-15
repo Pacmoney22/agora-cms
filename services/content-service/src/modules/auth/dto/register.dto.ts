@@ -1,6 +1,6 @@
+import type { UserRole } from '@agora-cms/shared';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsString, MinLength, MaxLength, IsOptional, IsIn } from 'class-validator';
-import type { UserRole } from '@agora-cms/shared';
 
 export class RegisterDto {
   @ApiProperty({ example: 'john@example.com' })

@@ -19,11 +19,12 @@ import {
   ApiParam,
   ApiQuery,
 } from '@nestjs/swagger';
-import { QuizzesService } from './quizzes.service';
-import { CreateQuizDto } from './dto/create-quiz.dto';
-import { SubmitQuizAttemptDto } from './dto/submit-quiz-attempt.dto';
+
 import { CreateQuestionDto } from './dto/create-question.dto';
+import { CreateQuizDto } from './dto/create-quiz.dto';
 import { GradeEssayDto } from './dto/grade-essay.dto';
+import { SubmitQuizAttemptDto } from './dto/submit-quiz-attempt.dto';
+import { QuizzesService } from './quizzes.service';
 
 @ApiTags('quizzes')
 @ApiBearerAuth()

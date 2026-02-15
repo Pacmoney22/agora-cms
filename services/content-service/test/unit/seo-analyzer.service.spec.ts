@@ -1,6 +1,7 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { SeoAnalyzerService } from '../../src/modules/seo/seo-analyzer.service';
 import { NotFoundException } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
+
+import { SeoAnalyzerService } from '../../src/modules/seo/seo-analyzer.service';
 
 describe('SeoAnalyzerService', () => {
   let service: SeoAnalyzerService;

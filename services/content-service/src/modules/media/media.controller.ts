@@ -25,9 +25,11 @@ import {
   ApiBody,
   ApiParam,
 } from '@nestjs/swagger';
-import { MediaService } from './media.service';
+
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard, Roles } from '../../common/guards/roles.guard';
+
+import { MediaService } from './media.service';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 

@@ -1,7 +1,9 @@
 import { Controller, Get, Param, Query, ParseUUIDPipe, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse, ApiParam, ApiQuery } from '@nestjs/swagger';
+
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
+
 import { VersionsService } from './versions.service';
 
 @ApiTags('versions')

@@ -1,6 +1,6 @@
+import { hasMinimumRole } from '@agora-cms/shared';
 import { Injectable, CanActivate, ExecutionContext, ForbiddenException, Inject } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { hasMinimumRole } from '@agora-cms/shared';
 
 /**
  * InstructorGuard - Verifies user has instructor access to a course section
@@ -46,7 +46,7 @@ export class InstructorGuard implements CanActivate {
     const sectionId = request.params.sectionId;
     const courseId = request.params.courseId;
 
-    let targetSectionId = sectionId;
+    const targetSectionId = sectionId;
 
     // If only courseId provided, check if instructor has ANY section assignment for this course
     if (!targetSectionId && courseId) {

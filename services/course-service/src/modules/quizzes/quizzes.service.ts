@@ -6,6 +6,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+
 import { CreateQuizDto } from './dto/create-quiz.dto';
 
 @Injectable()

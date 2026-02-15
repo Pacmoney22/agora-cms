@@ -1,7 +1,7 @@
+import { type Address } from '@agora-cms/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Stripe from 'stripe';
-import { type Address } from '@agora-cms/shared';
 
 interface TaxSettings {
   enabled: boolean;

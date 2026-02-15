@@ -1,3 +1,12 @@
+import { randomUUID } from 'crypto';
+
+import {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+  DeleteObjectCommand,
+} from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import {
   Injectable,
   Inject,
@@ -7,16 +16,8 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import {
-  S3Client,
-  PutObjectCommand,
-  GetObjectCommand,
-  DeleteObjectCommand,
-} from '@aws-sdk/client-s3';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import sharp from 'sharp';
-import { randomUUID } from 'crypto';
 import { PrismaClient } from '@prisma/client';
+import sharp from 'sharp';
 
 export interface UploadedFile {
   fieldname: string;

@@ -1,5 +1,6 @@
-import { Module } from '@nestjs/common';
 import { prisma } from '@agora-cms/database';
+import { Module } from '@nestjs/common';
+
 import { VariantController } from './variant.controller';
 import { VariantService } from './variant.service';
 

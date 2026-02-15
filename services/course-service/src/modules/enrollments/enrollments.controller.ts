@@ -17,8 +17,9 @@ import {
   ApiQuery,
   ApiParam,
 } from '@nestjs/swagger';
-import { EnrollmentsService } from './enrollments.service';
+
 import { CreateEnrollmentDto } from './dto/create-enrollment.dto';
+import { EnrollmentsService } from './enrollments.service';
 
 @ApiTags('enrollments')
 @ApiBearerAuth()

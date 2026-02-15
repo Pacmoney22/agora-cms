@@ -17,8 +17,9 @@ import {
   ApiBearerAuth,
   ApiParam,
 } from '@nestjs/swagger';
-import { LessonsService } from './lessons.service';
+
 import { CreateLessonDto } from './dto/create-lesson.dto';
+import { LessonsService } from './lessons.service';
 
 @ApiTags('lessons')
 @ApiBearerAuth()

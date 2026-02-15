@@ -1,3 +1,6 @@
+import { randomUUID } from 'node:crypto';
+
+import type { UserRole, JwtPayload, AuthTokens } from '@agora-cms/shared';
 import {
   Injectable,
   Inject,
@@ -8,11 +11,9 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
-import { randomUUID } from 'node:crypto';
-import Redis from 'ioredis';
 import { PrismaClient, type UserRole as PrismaUserRole } from '@prisma/client';
-import type { UserRole, JwtPayload, AuthTokens } from '@agora-cms/shared';
+import * as bcrypt from 'bcrypt';
+import Redis from 'ioredis';
 
 const BCRYPT_ROUNDS = 12;
 const MAX_FAILED_LOGINS = 5;

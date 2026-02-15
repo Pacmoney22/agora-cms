@@ -22,12 +22,14 @@ import {
   ApiQuery,
   ApiParam,
 } from '@nestjs/swagger';
-import { PageService } from './page.service';
-import { CreatePageDto } from './dto/create-page.dto';
-import { UpdatePageDto } from './dto/update-page.dto';
+
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/guards/roles.guard';
+
+import { CreatePageDto } from './dto/create-page.dto';
+import { UpdatePageDto } from './dto/update-page.dto';
+import { PageService } from './page.service';
 
 @ApiTags('pages')
 @ApiBearerAuth()

@@ -1,8 +1,10 @@
+import { Readable } from 'stream';
+
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import PDFDocument from 'pdfkit';
-import { Readable } from 'stream';
+
 
 @Injectable()
 export class CertificateGeneratorService {

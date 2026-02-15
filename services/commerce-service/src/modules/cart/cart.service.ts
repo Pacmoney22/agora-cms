@@ -1,14 +1,4 @@
 import {
-  Injectable,
-  Logger,
-  NotFoundException,
-  BadRequestException,
-} from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { v4 as uuidv4 } from 'uuid';
-import Redis from 'ioredis';
-import { Kafka, Producer } from 'kafkajs';
-import {
   PRODUCT_TYPE_REQUIRES_SHIPPING,
   EVENTS,
   type CartDto,
@@ -16,6 +6,17 @@ import {
   type AddToCartDto,
   type ProductDto,
 } from '@agora-cms/shared';
+import {
+  Injectable,
+  Logger,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import Redis from 'ioredis';
+import { Kafka, Producer } from 'kafkajs';
+import { v4 as uuidv4 } from 'uuid';
+
 import { ProductService } from '../products/product.service';
 
 const CART_TTL_SECONDS = 60 * 60 * 24 * 30; // 30 days

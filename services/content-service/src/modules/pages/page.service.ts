@@ -1,3 +1,4 @@
+import { generateSlug } from '@agora-cms/shared';
 import {
   Injectable,
   Inject,
@@ -7,7 +8,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { generateSlug } from '@agora-cms/shared';
+
 import { CreatePageDto } from './dto/create-page.dto';
 import { UpdatePageDto } from './dto/update-page.dto';
 

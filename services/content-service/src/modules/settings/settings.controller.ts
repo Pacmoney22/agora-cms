@@ -14,8 +14,10 @@ import {
   ApiResponse,
   ApiParam,
 } from '@nestjs/swagger';
+
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard, Roles } from '../../common/guards/roles.guard';
+
 import { SettingsService } from './settings.service';
 
 @ApiTags('settings')

@@ -1,16 +1,4 @@
 import {
-  Injectable,
-  Inject,
-  Logger,
-  NotFoundException,
-  BadRequestException,
-} from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { PrismaClient } from '@prisma/client';
-import { v4 as uuidv4 } from 'uuid';
-import { Client as ElasticsearchClient } from '@elastic/elasticsearch';
-import { Kafka, Producer } from 'kafkajs';
-import {
   generateSlug,
   PRODUCT_TYPE_REQUIRES_SHIPPING,
   EVENTS,
@@ -19,6 +7,19 @@ import {
   type PaginatedResponse,
   type ProductVariant,
 } from '@agora-cms/shared';
+import { Client as ElasticsearchClient } from '@elastic/elasticsearch';
+import {
+  Injectable,
+  Inject,
+  Logger,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { PrismaClient } from '@prisma/client';
+import { Kafka, Producer } from 'kafkajs';
+import { v4 as uuidv4 } from 'uuid';
+
 import {
   CreateProductDto,
   UpdateProductDto,

@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsString,
   IsEnum,
@@ -11,7 +12,6 @@ import {
   IsArray,
   IsBoolean,
 } from 'class-validator';
-import { Type } from 'class-transformer';
 
 export type QuestionType = 'multiple_choice' | 'true_false' | 'fill_blank' | 'essay';
 

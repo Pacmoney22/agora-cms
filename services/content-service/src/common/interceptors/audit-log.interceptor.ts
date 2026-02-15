@@ -5,8 +5,8 @@ import {
   CallHandler,
   Logger,
 } from '@nestjs/common';
-import { Observable, tap } from 'rxjs';
 import { PrismaClient } from '@prisma/client';
+import { Observable, tap } from 'rxjs';
 
 @Injectable()
 export class AuditLogInterceptor implements NestInterceptor {

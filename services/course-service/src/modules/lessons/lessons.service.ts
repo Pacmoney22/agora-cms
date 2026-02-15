@@ -5,6 +5,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+
 import { CreateLessonDto } from './dto/create-lesson.dto';
 
 @Injectable()

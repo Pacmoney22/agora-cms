@@ -1,6 +1,7 @@
 import { Controller, Get, Patch, Post, Query, Param, Body } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiQuery } from '@nestjs/swagger';
 import type { UserRole } from '@prisma/client';
+
 import { UsersService } from './users.service';
 
 @ApiTags('users')

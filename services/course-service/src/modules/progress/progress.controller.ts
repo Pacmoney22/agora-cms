@@ -14,8 +14,9 @@ import {
   ApiParam,
   ApiProperty,
 } from '@nestjs/swagger';
-import { ProgressService } from './progress.service';
 import { IsBoolean, IsOptional, IsNumber, Min } from 'class-validator';
+
+import { ProgressService } from './progress.service';
 
 class UpdateLessonProgressDto {
   @ApiProperty({ description: 'Whether the lesson is completed', example: true })

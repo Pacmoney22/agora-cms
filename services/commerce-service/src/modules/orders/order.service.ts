@@ -1,4 +1,11 @@
 import {
+  EVENTS,
+  VALID_ORDER_TRANSITIONS,
+  type OrderDto,
+  type OrderStatus,
+  type PaginatedResponse,
+} from '@agora-cms/shared';
+import {
   Injectable,
   Inject,
   Logger,
@@ -7,15 +14,9 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaClient } from '@prisma/client';
-import { v4 as uuidv4 } from 'uuid';
 import { Kafka, Producer } from 'kafkajs';
-import {
-  EVENTS,
-  VALID_ORDER_TRANSITIONS,
-  type OrderDto,
-  type OrderStatus,
-  type PaginatedResponse,
-} from '@agora-cms/shared';
+import { v4 as uuidv4 } from 'uuid';
+
 import { ProductService } from '../products/product.service';
 
 @Injectable()

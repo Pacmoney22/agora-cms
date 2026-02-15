@@ -1,3 +1,4 @@
+import type { CartItemConfiguration } from '@agora-cms/shared';
 import {
   Controller,
   Get,
@@ -11,6 +12,8 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiHeader } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsString,
   IsNumber,
@@ -18,10 +21,8 @@ import {
   Min,
   ValidateNested,
 } from 'class-validator';
-import { Type } from 'class-transformer';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+
 import { CartService } from './cart.service';
-import type { CartItemConfiguration } from '@agora-cms/shared';
 
 // DTO classes declared inline for co-location
 class AddItemDto {

@@ -16,10 +16,12 @@ import {
   ApiParam,
   ApiQuery,
 } from '@nestjs/swagger';
+
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard, Roles } from '../../common/guards/roles.guard';
-import { SeoService } from './seo.service';
+
 import { SeoAnalyzerService } from './seo-analyzer.service';
+import { SeoService } from './seo.service';
 import { StructuredDataService } from './structured-data.service';
 
 @ApiTags('seo')

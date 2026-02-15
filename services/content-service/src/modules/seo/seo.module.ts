@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+
+import { SeoAnalyzerService } from './seo-analyzer.service';
 import { SeoController } from './seo.controller';
 import { SeoService } from './seo.service';
-import { SeoAnalyzerService } from './seo-analyzer.service';
 import { StructuredDataService } from './structured-data.service';
 
 @Module({

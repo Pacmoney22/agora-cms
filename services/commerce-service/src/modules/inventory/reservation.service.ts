@@ -1,3 +1,4 @@
+import { EVENTS, type ProductVariant } from '@agora-cms/shared';
 import {
   Injectable,
   Inject,
@@ -6,12 +7,12 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Cron } from '@nestjs/schedule';
 import { PrismaClient } from '@prisma/client';
-import { v4 as uuidv4 } from 'uuid';
 import Redis from 'ioredis';
 import { Kafka, Producer } from 'kafkajs';
-import { Cron } from '@nestjs/schedule';
-import { EVENTS, type ProductVariant } from '@agora-cms/shared';
+import { v4 as uuidv4 } from 'uuid';
+
 import { ProductService } from '../products/product.service';
 
 export interface ReservationItem {

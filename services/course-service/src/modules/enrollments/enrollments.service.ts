@@ -6,8 +6,10 @@ import {
   Logger,
 } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { CreateEnrollmentDto } from './dto/create-enrollment.dto';
+
 import { CertificatesService } from '../certificates/certificates.service';
+
+import { CreateEnrollmentDto } from './dto/create-enrollment.dto';
 
 @Injectable()
 export class EnrollmentsService {

@@ -1,6 +1,6 @@
+import type { ProductDto, ProductVariant } from '@agora-cms/shared';
 import { Injectable, Inject, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import type { ProductDto, ProductVariant } from '@agora-cms/shared';
 
 @Injectable()
 export class VariantService {
