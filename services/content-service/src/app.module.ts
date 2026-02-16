@@ -18,7 +18,7 @@ import { VersionsModule } from './modules/versions/versions.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['.env.local', '.env'],
+      envFilePath: ['.env.local', '.env', '../../.env'],
     }),
     ScheduleModule.forRoot(),
     AuthModule,

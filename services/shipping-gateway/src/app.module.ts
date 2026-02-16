@@ -10,7 +10,7 @@ import { BinPackingModule } from './modules/bin-packing/bin-packing.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['.env.local', '.env'],
+      envFilePath: ['.env.local', '.env', '../../.env'],
     }),
     ScheduleModule.forRoot(),
     RatesModule,

@@ -17,7 +17,7 @@ import { SectionsModule } from './modules/sections/sections.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['.env.local', '.env'],
+      envFilePath: ['.env.local', '.env', '../../.env'],
     }),
     CoursesModule,
     SectionsModule,

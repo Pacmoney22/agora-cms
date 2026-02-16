@@ -18,6 +18,7 @@
       "env": ["DATABASE_URL", "REDIS_URL", "ELASTICSEARCH_URL", "KAFKA_BROKERS"]
     },
     "dev": {
+      "dependsOn": ["^build"],
       "cache": false,
       "persistent": true
     },
