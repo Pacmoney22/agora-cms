@@ -3,7 +3,7 @@ import { Inter } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
 import { QueryProvider } from '@/components/providers/QueryProvider';
 import { AuthProvider } from '@/lib/auth-context';
-import { Sidebar } from '@/components/layout/Sidebar';
+import { AppShell } from '@/components/layout/AppShell';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -23,12 +23,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <AuthProvider>
           <QueryProvider>
-            <div className="flex h-screen">
-              <Sidebar />
-              <main className="flex-1 overflow-y-auto bg-gray-50">
-                {children}
-              </main>
-            </div>
+            <AppShell>{children}</AppShell>
             <Toaster position="bottom-right" />
           </QueryProvider>
         </AuthProvider>
