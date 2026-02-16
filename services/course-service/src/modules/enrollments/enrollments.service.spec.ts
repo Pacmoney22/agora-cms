@@ -1,5 +1,5 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException, ConflictException } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
 
 import { CertificatesService } from '../certificates/certificates.service';
 

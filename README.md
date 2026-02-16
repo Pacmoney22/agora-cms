@@ -76,7 +76,7 @@ pnpm install
 cp .env.example .env
 
 # Start infrastructure (PostgreSQL, Redis, Elasticsearch, Kafka, MinIO)
-docker compose up -d
+docker compose -f docker/docker-compose.yml up -d
 
 # Generate Prisma client & run migrations
 pnpm db:migrate

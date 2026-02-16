@@ -1,5 +1,5 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { ExecutionContext, ForbiddenException } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
 
 import { InstructorGuard } from './instructor.guard';
 
