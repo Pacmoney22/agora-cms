@@ -127,6 +127,14 @@ export const seoApi = {
   updatePageSeo: (pageId: string, seo: any) =>
     contentFetch<any>(`/api/v1/seo/page/${pageId}`, { method: 'PUT', body: JSON.stringify(seo) }),
   getSitemap: () => contentFetch<any[]>('/api/v1/seo/sitemap'),
+  analyze: (pageId: string) =>
+    contentFetch<{
+      pageId: string;
+      overallScore: number;
+      grade: 'A' | 'B' | 'C' | 'D' | 'F';
+      checks: Array<{ check: string; status: 'pass' | 'warning' | 'fail'; message: string; score: number; maxScore: number }>;
+      suggestions: string[];
+    }>(`/api/v1/seo/analyze/${pageId}`),
 };
 
 // Auth
@@ -471,6 +479,41 @@ export const reviewsApi = {
     contentFetch<any>('/api/v1/reviews/bulk', { method: 'POST', body: JSON.stringify({ ids, action }) }),
   stats: () =>
     contentFetch<{ pending: number; approved: number; flagged: number; total: number; averageRating: number }>('/api/v1/reviews/stats'),
+};
+
+// Assignments (scoped role management)
+export const assignmentsApi = {
+  // Instructor assignments (course-service)
+  getInstructorAssignments: (userId: string) =>
+    courseFetch<any[]>(`/api/v1/assignments/instructors/user/${userId}`),
+  createInstructorAssignment: (data: { userId: string; courseSectionId: string }) =>
+    courseFetch<any>('/api/v1/assignments/instructors', { method: 'POST', body: JSON.stringify(data) }),
+  deleteInstructorAssignment: (assignmentId: string) =>
+    courseFetch<void>(`/api/v1/assignments/instructors/${assignmentId}`, { method: 'DELETE' }),
+
+  // Event staff assignments (content-service)
+  getEventStaffAssignments: (userId: string) =>
+    contentFetch<any[]>(`/api/v1/assignments/event-staff/user/${userId}`),
+  createEventStaffAssignment: (data: { userId: string; eventId: string }) =>
+    contentFetch<any>('/api/v1/assignments/event-staff', { method: 'POST', body: JSON.stringify(data) }),
+  deleteEventStaffAssignment: (assignmentId: string) =>
+    contentFetch<void>(`/api/v1/assignments/event-staff/${assignmentId}`, { method: 'DELETE' }),
+
+  // Exhibitor assignments (content-service)
+  getExhibitorAssignments: (userId: string) =>
+    contentFetch<any[]>(`/api/v1/assignments/exhibitors/user/${userId}`),
+  createExhibitorAssignment: (data: { userId: string; eventId: string; boothNumber?: string }) =>
+    contentFetch<any>('/api/v1/assignments/exhibitors', { method: 'POST', body: JSON.stringify(data) }),
+  deleteExhibitorAssignment: (assignmentId: string) =>
+    contentFetch<void>(`/api/v1/assignments/exhibitors/${assignmentId}`, { method: 'DELETE' }),
+
+  // Kiosk assignments (content-service)
+  getKioskAssignments: (userId: string) =>
+    contentFetch<any[]>(`/api/v1/assignments/kiosks/user/${userId}`),
+  createKioskAssignment: (data: { userId: string; eventId: string; kioskIdentifier: string }) =>
+    contentFetch<any>('/api/v1/assignments/kiosks', { method: 'POST', body: JSON.stringify(data) }),
+  deleteKioskAssignment: (assignmentId: string) =>
+    contentFetch<void>(`/api/v1/assignments/kiosks/${assignmentId}`, { method: 'DELETE' }),
 };
 
 // Email Templates

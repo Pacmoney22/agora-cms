@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import { usersApi, authApi, settingsApi } from '@/lib/api-client';
+import { usersApi, authApi, settingsApi, assignmentsApi } from '@/lib/api-client';
 import { MediaPicker } from '@/components/MediaPicker';
 
 const ROLES = [
@@ -13,12 +13,227 @@ const ROLES = [
   { value: 'store_manager', label: 'Store Manager', color: 'bg-purple-100 text-purple-700' },
   { value: 'admin', label: 'Admin', color: 'bg-amber-100 text-amber-700' },
   { value: 'super_admin', label: 'Super Admin', color: 'bg-red-100 text-red-700' },
+  { value: 'instructor', label: 'Instructor', color: 'bg-teal-100 text-teal-700' },
+  { value: 'course_administrator', label: 'Course Admin', color: 'bg-cyan-100 text-cyan-700' },
+  { value: 'exhibitor', label: 'Exhibitor', color: 'bg-pink-100 text-pink-700' },
+  { value: 'event_staff', label: 'Event Staff', color: 'bg-indigo-100 text-indigo-700' },
+  { value: 'kiosk_user', label: 'Kiosk User', color: 'bg-slate-100 text-slate-700' },
 ];
+
+const SCOPED_ROLES = new Set(['instructor', 'course_administrator', 'exhibitor', 'event_staff', 'kiosk_user']);
 
 const roleColor = (role: string) =>
   ROLES.find((r) => r.value === role)?.color || 'bg-gray-100 text-gray-600';
 const roleLabel = (role: string) =>
   ROLES.find((r) => r.value === role)?.label || role;
+
+function ScopedAssignmentsPanel({ userId, role }: { userId: string; role: string }) {
+  const queryClient = useQueryClient();
+  const [newEventId, setNewEventId] = useState('');
+  const [newSectionId, setNewSectionId] = useState('');
+  const [newBoothNumber, setNewBoothNumber] = useState('');
+  const [newKioskId, setNewKioskId] = useState('');
+
+  const assignmentConfig: Record<string, {
+    label: string;
+    fetchFn: (id: string) => Promise<any[]>;
+    createFn: (data: any) => Promise<any>;
+    deleteFn: (id: string) => Promise<void>;
+    resourceLabel: string;
+    resourceIdField: string;
+  }> = {
+    instructor: {
+      label: 'Course Section Assignments',
+      fetchFn: assignmentsApi.getInstructorAssignments,
+      createFn: assignmentsApi.createInstructorAssignment,
+      deleteFn: assignmentsApi.deleteInstructorAssignment,
+      resourceLabel: 'Course Section ID',
+      resourceIdField: 'courseSectionId',
+    },
+    event_staff: {
+      label: 'Event Staff Assignments',
+      fetchFn: assignmentsApi.getEventStaffAssignments,
+      createFn: assignmentsApi.createEventStaffAssignment,
+      deleteFn: assignmentsApi.deleteEventStaffAssignment,
+      resourceLabel: 'Event ID',
+      resourceIdField: 'eventId',
+    },
+    exhibitor: {
+      label: 'Exhibitor Assignments',
+      fetchFn: assignmentsApi.getExhibitorAssignments,
+      createFn: assignmentsApi.createExhibitorAssignment,
+      deleteFn: assignmentsApi.deleteExhibitorAssignment,
+      resourceLabel: 'Event ID',
+      resourceIdField: 'eventId',
+    },
+    kiosk_user: {
+      label: 'Kiosk Assignments',
+      fetchFn: assignmentsApi.getKioskAssignments,
+      createFn: assignmentsApi.createKioskAssignment,
+      deleteFn: assignmentsApi.deleteKioskAssignment,
+      resourceLabel: 'Event ID',
+      resourceIdField: 'eventId',
+    },
+  };
+
+  const config = assignmentConfig[role];
+  if (!config) return null;
+
+  const { data: assignments, isLoading } = useQuery({
+    queryKey: ['assignments', role, userId],
+    queryFn: () => config.fetchFn(userId),
+  });
+
+  const createMutation = useMutation({
+    mutationFn: (data: any) => config.createFn(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['assignments', role, userId] });
+      toast.success('Assignment created');
+      setNewEventId('');
+      setNewSectionId('');
+      setNewBoothNumber('');
+      setNewKioskId('');
+    },
+    onError: (err: Error) => toast.error(err.message),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (assignmentId: string) => config.deleteFn(assignmentId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['assignments', role, userId] });
+      toast.success('Assignment removed');
+    },
+    onError: (err: Error) => toast.error(err.message),
+  });
+
+  const handleCreate = () => {
+    if (role === 'instructor') {
+      if (!newSectionId) return;
+      createMutation.mutate({ userId, courseSectionId: newSectionId });
+    } else if (role === 'exhibitor') {
+      if (!newEventId) return;
+      createMutation.mutate({ userId, eventId: newEventId, boothNumber: newBoothNumber || undefined });
+    } else if (role === 'kiosk_user') {
+      if (!newEventId || !newKioskId) return;
+      createMutation.mutate({ userId, eventId: newEventId, kioskIdentifier: newKioskId });
+    } else {
+      if (!newEventId) return;
+      createMutation.mutate({ userId, eventId: newEventId });
+    }
+  };
+
+  const getResourceDisplay = (assignment: any) => {
+    if (role === 'instructor') {
+      const section = assignment.courseSection;
+      return section
+        ? `${section.course?.title || 'Course'} / ${section.title}`
+        : assignment.courseSectionId;
+    }
+    return assignment.eventId;
+  };
+
+  return (
+    <div className="mt-5 border-t border-gray-100 pt-4">
+      <h3 className="text-sm font-semibold text-gray-900 mb-3">{config.label}</h3>
+      <p className="text-[10px] text-gray-400 mb-3">
+        Manage which resources this user has access to.
+      </p>
+
+      {/* Existing assignments */}
+      {isLoading ? (
+        <div className="text-xs text-gray-400 py-2">Loading assignments...</div>
+      ) : assignments && assignments.length > 0 ? (
+        <div className="space-y-1.5 mb-3">
+          {assignments.map((a: any) => (
+            <div key={a.id} className="flex items-center justify-between rounded-md bg-gray-50 px-3 py-2">
+              <div>
+                <p className="text-xs font-medium text-gray-800">{getResourceDisplay(a)}</p>
+                {role === 'exhibitor' && a.boothNumber && (
+                  <p className="text-[10px] text-gray-400">Booth: {a.boothNumber}</p>
+                )}
+                {role === 'kiosk_user' && a.kioskIdentifier && (
+                  <p className="text-[10px] text-gray-400">Kiosk: {a.kioskIdentifier}</p>
+                )}
+                <p className="text-[10px] text-gray-400">
+                  Added {new Date(a.createdAt).toLocaleDateString()}
+                </p>
+              </div>
+              <button
+                onClick={() => deleteMutation.mutate(a.id)}
+                disabled={deleteMutation.isPending}
+                className="text-[10px] text-red-500 hover:text-red-700 disabled:opacity-50"
+              >
+                Remove
+              </button>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p className="text-xs text-gray-400 mb-3">No assignments yet.</p>
+      )}
+
+      {/* Add assignment form */}
+      <div className="flex items-end gap-2">
+        {role === 'instructor' ? (
+          <div className="flex-1">
+            <label className="block text-[10px] font-medium text-gray-500 mb-1">Course Section ID</label>
+            <input
+              type="text"
+              value={newSectionId}
+              onChange={(e) => setNewSectionId(e.target.value)}
+              className="w-full rounded-md border border-gray-300 px-2.5 py-1.5 text-xs focus:border-blue-500 focus:outline-none"
+              placeholder="UUID of the course section"
+            />
+          </div>
+        ) : (
+          <>
+            <div className="flex-1">
+              <label className="block text-[10px] font-medium text-gray-500 mb-1">Event ID</label>
+              <input
+                type="text"
+                value={newEventId}
+                onChange={(e) => setNewEventId(e.target.value)}
+                className="w-full rounded-md border border-gray-300 px-2.5 py-1.5 text-xs focus:border-blue-500 focus:outline-none"
+                placeholder="UUID of the event"
+              />
+            </div>
+            {role === 'exhibitor' && (
+              <div className="w-28">
+                <label className="block text-[10px] font-medium text-gray-500 mb-1">Booth #</label>
+                <input
+                  type="text"
+                  value={newBoothNumber}
+                  onChange={(e) => setNewBoothNumber(e.target.value)}
+                  className="w-full rounded-md border border-gray-300 px-2.5 py-1.5 text-xs focus:border-blue-500 focus:outline-none"
+                  placeholder="e.g. A-12"
+                />
+              </div>
+            )}
+            {role === 'kiosk_user' && (
+              <div className="w-36">
+                <label className="block text-[10px] font-medium text-gray-500 mb-1">Kiosk ID</label>
+                <input
+                  type="text"
+                  value={newKioskId}
+                  onChange={(e) => setNewKioskId(e.target.value)}
+                  className="w-full rounded-md border border-gray-300 px-2.5 py-1.5 text-xs focus:border-blue-500 focus:outline-none"
+                  placeholder="e.g. KIOSK-ENTRANCE-A"
+                />
+              </div>
+            )}
+          </>
+        )}
+        <button
+          onClick={handleCreate}
+          disabled={createMutation.isPending}
+          className="rounded-md bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+        >
+          {createMutation.isPending ? 'Adding...' : 'Add'}
+        </button>
+      </div>
+    </div>
+  );
+}
 
 export default function UsersPage() {
   const queryClient = useQueryClient();
@@ -516,6 +731,11 @@ export default function UsersPage() {
                 </button>
               </div>
             </div>
+
+            {/* Scoped Role Assignments */}
+            {detail?.role && SCOPED_ROLES.has(detail.role) && (
+              <ScopedAssignmentsPanel userId={detail.id} role={detail.role} />
+            )}
 
             {/* Author Profile — only for users with authoring roles */}
             {detail?.role && AUTHOR_ROLES.includes(detail.role) && (

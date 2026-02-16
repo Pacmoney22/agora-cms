@@ -196,6 +196,91 @@ export default function PagesListPage() {
 
 // ─── Page SEO Editor ────────────────────────────────────────────────────────
 
+function SeoScorePanel({ pageId }: { pageId: string }) {
+  const [expanded, setExpanded] = useState(false);
+  const { data: analysis, isLoading, refetch } = useQuery({
+    queryKey: ['seo-analysis', pageId],
+    queryFn: () => seoApi.analyze(pageId),
+  });
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-200 animate-pulse">
+        <div className="h-12 w-12 rounded-full bg-gray-200" />
+        <div className="space-y-1.5 flex-1">
+          <div className="h-3 w-24 rounded bg-gray-200" />
+          <div className="h-2 w-40 rounded bg-gray-200" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!analysis) return null;
+
+  const gradeColors: Record<string, string> = {
+    A: 'bg-green-500',
+    B: 'bg-green-400',
+    C: 'bg-yellow-400',
+    D: 'bg-orange-400',
+    F: 'bg-red-500',
+  };
+
+  const statusIcon = (status: string) => {
+    if (status === 'pass') return <span className="text-green-500">&#10003;</span>;
+    if (status === 'warning') return <span className="text-amber-500">&#9888;</span>;
+    return <span className="text-red-500">&#10007;</span>;
+  };
+
+  return (
+    <div className="border-b border-gray-200">
+      <div className="flex items-center gap-4 px-5 py-4">
+        <div className={`flex h-12 w-12 items-center justify-center rounded-full text-white font-bold text-lg ${gradeColors[analysis.grade] || 'bg-gray-400'}`}>
+          {analysis.grade}
+        </div>
+        <div className="flex-1">
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-semibold text-gray-900">SEO Score: {analysis.overallScore}/100</span>
+          </div>
+          <p className="text-[10px] text-gray-400 mt-0.5">
+            {analysis.checks.filter((c) => c.status === 'pass').length} of {analysis.checks.length} checks passed
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => refetch()}
+            className="rounded-md border border-gray-200 px-2.5 py-1 text-[10px] font-medium text-gray-600 hover:bg-gray-50"
+          >
+            Re-analyze
+          </button>
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="rounded-md border border-gray-200 px-2.5 py-1 text-[10px] font-medium text-gray-600 hover:bg-gray-50"
+          >
+            {expanded ? 'Hide Details' : 'Show Details'}
+          </button>
+        </div>
+      </div>
+
+      {expanded && (
+        <div className="px-5 pb-4 space-y-1.5">
+          {analysis.checks.map((check) => (
+            <div key={check.check} className="flex items-start gap-2 rounded-md bg-gray-50 px-3 py-2">
+              <span className="mt-0.5 text-xs shrink-0">{statusIcon(check.status)}</span>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-medium text-gray-800">{check.check}</span>
+                  <span className="text-[10px] text-gray-400">{check.score}/{check.maxScore}</span>
+                </div>
+                <p className="text-[10px] text-gray-500 mt-0.5">{check.message}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function PageSeoEditor({ pageId, onClose }: { pageId: string; onClose: () => void }) {
   const queryClient = useQueryClient();
   const [form, setForm] = useState({
@@ -252,6 +337,7 @@ function PageSeoEditor({ pageId, onClose }: { pageId: string; onClose: () => voi
     mutationFn: (data: typeof form) => seoApi.updatePageSeo(pageId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['page-seo', pageId] });
+      queryClient.invalidateQueries({ queryKey: ['seo-analysis', pageId] });
       toast.success('Page SEO saved');
       setDirty(false);
     },
@@ -277,6 +363,7 @@ function PageSeoEditor({ pageId, onClose }: { pageId: string; onClose: () => voi
 
   return (
     <div className="mb-6 rounded-lg bg-white shadow">
+      <SeoScorePanel pageId={pageId} />
       <div className="flex items-center justify-between border-b border-gray-200 px-5 py-3">
         <h2 className="text-sm font-semibold text-gray-900">Page SEO &amp; Social Card Settings</h2>
         <div className="flex items-center gap-3">

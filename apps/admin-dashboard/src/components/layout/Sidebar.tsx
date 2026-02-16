@@ -84,6 +84,7 @@ const sections: NavSection[] = [
     minRole: 'admin',
     items: [
       { label: 'General', href: '/settings/general', icon: '⚙' },
+      { label: 'Users', href: '/users', icon: '👤' },
       { label: 'Site Status', href: '/settings/site-status', icon: '🚦' },
       { label: 'Appearance', href: '/settings/appearance', icon: '🎨' },
       { label: 'Blog', href: '/settings/blog', icon: '📰' },
