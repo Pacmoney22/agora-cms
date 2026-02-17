@@ -1,0 +1,43 @@
+{
+  "id": "event-card",
+  "name": "Event Card",
+  "category": "Events",
+  "icon": "calendar",
+  "acceptsChildren": false,
+  "properties": {
+    "cardStyle": {
+      "type": "enum",
+      "values": ["standard", "compact", "featured"],
+      "default": "standard",
+      "label": "Card Style"
+    },
+    "showDate": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Date"
+    },
+    "showVenue": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Venue"
+    },
+    "showTicketPrice": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Ticket Price"
+    },
+    "showStatus": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Status Badge"
+    },
+    "showImage": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Image"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

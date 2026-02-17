@@ -37,7 +37,7 @@ export function findParent(
 
 /**
  * Insert a new component as a child of the specified parent.
- * Returns a new tree (immutable operation).
+ * Mutates the tree in place (designed to be called inside Immer's set()).
  */
 export function insertNode(
   tree: ComponentTree,
@@ -45,8 +45,7 @@ export function insertNode(
   component: ComponentInstance,
   index?: number
 ): ComponentTree {
-  const newTree = structuredClone(tree);
-  const parent = findNode(newTree.root, parentId);
+  const parent = findNode(tree.root, parentId);
 
   if (!parent) {
     throw new Error(`Parent node with id "${parentId}" not found`);
@@ -58,12 +57,12 @@ export function insertNode(
     parent.children.push(component);
   }
 
-  return newTree;
+  return tree;
 }
 
 /**
  * Move a component from its current position to a new parent at the specified index.
- * Returns a new tree (immutable operation).
+ * Mutates the tree in place (designed to be called inside Immer's set()).
  */
 export function moveNode(
   tree: ComponentTree,
@@ -71,10 +70,8 @@ export function moveNode(
   newParentId: string,
   newIndex: number
 ): ComponentTree {
-  const newTree = structuredClone(tree);
-
   // Find and remove from current parent
-  const currentParent = findParent(newTree.root, instanceId);
+  const currentParent = findParent(tree.root, instanceId);
   if (!currentParent) {
     throw new Error(`Node with id "${instanceId}" not found in tree`);
   }
@@ -85,7 +82,7 @@ export function moveNode(
   const [movedNode] = currentParent.children.splice(currentIndex, 1) as [ComponentInstance];
 
   // Insert into new parent
-  const newParent = findNode(newTree.root, newParentId);
+  const newParent = findNode(tree.root, newParentId);
   if (!newParent) {
     throw new Error(`New parent node with id "${newParentId}" not found`);
   }
@@ -102,12 +99,12 @@ export function moveNode(
     newParent.children.push(movedNode);
   }
 
-  return newTree;
+  return tree;
 }
 
 /**
  * Remove a component and all its children from the tree.
- * Returns a new tree (immutable operation).
+ * Mutates the tree in place (designed to be called inside Immer's set()).
  */
 export function removeNode(
   tree: ComponentTree,
@@ -117,8 +114,7 @@ export function removeNode(
     throw new Error('Cannot remove the root node');
   }
 
-  const newTree = structuredClone(tree);
-  const parent = findParent(newTree.root, instanceId);
+  const parent = findParent(tree.root, instanceId);
 
   if (!parent) {
     throw new Error(`Node with id "${instanceId}" not found in tree`);
@@ -128,35 +124,34 @@ export function removeNode(
     (child) => child.instanceId !== instanceId
   );
 
-  return newTree;
+  return tree;
 }
 
 /**
  * Update the props of a specific component.
  * Props are merged (shallow) with existing props.
- * Returns a new tree (immutable operation).
+ * Mutates the tree in place (designed to be called inside Immer's set()).
  */
 export function updateNodeProps(
   tree: ComponentTree,
   instanceId: string,
   props: Record<string, unknown>
 ): ComponentTree {
-  const newTree = structuredClone(tree);
-  const node = findNode(newTree.root, instanceId);
+  const node = findNode(tree.root, instanceId);
 
   if (!node) {
     throw new Error(`Node with id "${instanceId}" not found`);
   }
 
-  node.props = { ...node.props, ...props };
+  Object.assign(node.props, props);
 
-  return newTree;
+  return tree;
 }
 
 /**
  * Duplicate a component and insert it after the original in the same parent.
  * All instanceIds in the duplicated subtree are regenerated.
- * Returns a new tree (immutable operation).
+ * Mutates the tree in place (designed to be called inside Immer's set()).
  */
 export function duplicateNode(
   tree: ComponentTree,
@@ -166,8 +161,7 @@ export function duplicateNode(
     throw new Error('Cannot duplicate the root node');
   }
 
-  const newTree = structuredClone(tree);
-  const parent = findParent(newTree.root, instanceId);
+  const parent = findParent(tree.root, instanceId);
 
   if (!parent) {
     throw new Error(`Node with id "${instanceId}" not found in tree`);
@@ -177,7 +171,9 @@ export function duplicateNode(
     (child) => child.instanceId === instanceId
   );
   const original = parent.children[originalIndex]!;
-  const duplicate = structuredClone(original);
+
+  // Deep clone the subtree for duplication (plain data, no proxies)
+  const duplicate = JSON.parse(JSON.stringify(original)) as ComponentInstance;
 
   // Assign new instanceIds recursively
   assignNewInstanceIds(duplicate);
@@ -185,7 +181,7 @@ export function duplicateNode(
   // Insert after the original
   parent.children.splice(originalIndex + 1, 0, duplicate);
 
-  return newTree;
+  return tree;
 }
 
 /**

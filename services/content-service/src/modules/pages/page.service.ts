@@ -27,13 +27,15 @@ export class PageService {
     sortOrder?: 'asc' | 'desc';
   }) {
     const {
-      page = 1,
-      limit = 20,
+      page: rawPage = 1,
+      limit: rawLimit = 20,
       status,
       isTemplate,
       sortBy = 'updatedAt',
       sortOrder = 'desc',
     } = options;
+    const page = Number(rawPage) || 1;
+    const limit = Math.min(Number(rawLimit) || 20, 500);
     const skip = (page - 1) * limit;
 
     const where: Record<string, unknown> = {};

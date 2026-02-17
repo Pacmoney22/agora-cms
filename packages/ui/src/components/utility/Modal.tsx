@@ -211,7 +211,7 @@ export const Modal: React.FC<ModalProps> = ({
 
       {isOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center"
+          className="fixed inset-0 z-50 flex items-center justify-center pointer-events-auto"
           style={{ backgroundColor: backdropColor }}
           onClick={handleBackdropClick}
           role="dialog"

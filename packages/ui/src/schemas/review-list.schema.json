@@ -5,9 +5,22 @@
   "icon": "list",
   "acceptsChildren": false,
   "properties": {
+    "source": {
+      "type": "enum",
+      "values": ["auto", "manual"],
+      "default": "auto",
+      "label": "Review Source"
+    },
+    "reviewSource": {
+      "type": "reviewsource",
+      "default": null,
+      "label": "Product for Reviews",
+      "visibleWhen": { "source": "auto" }
+    },
     "reviews": {
       "type": "array",
-      "label": "Reviews",
+      "label": "Reviews (Manual)",
+      "visibleWhen": { "source": "manual" },
       "items": {
         "type": "object",
         "properties": {

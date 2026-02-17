@@ -89,6 +89,67 @@ export async function getPages(params?: {
 }
 
 /**
+ * Fetch a single page by its UUID.
+ */
+export async function getPageById(id: string): Promise<PageDto | null> {
+  try {
+    const res = await fetch(`${CONTENT_API_BASE_URL}/api/v1/pages/${id}`, {
+      next: { revalidate: 60 },
+    });
+    if (!res.ok) return null;
+    return res.json();
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Fetch articles with optional filters.
+ */
+export async function getArticles(params?: {
+  page?: number;
+  limit?: number;
+  category?: string;
+  sortBy?: string;
+  sortOrder?: string;
+}): Promise<PaginatedResponse<any> | null> {
+  try {
+    const sp = new URLSearchParams();
+    if (params?.page) sp.set('page', String(params.page));
+    if (params?.limit) sp.set('limit', String(params.limit));
+    if (params?.category) sp.set('category', params.category);
+    if (params?.sortBy) sp.set('sortBy', params.sortBy);
+    if (params?.sortOrder) sp.set('sortOrder', params.sortOrder);
+    const qs = sp.toString();
+    const url = qs
+      ? `${CONTENT_API_BASE_URL}/api/v1/articles?${qs}`
+      : `${CONTENT_API_BASE_URL}/api/v1/articles`;
+    const res = await fetch(url, { next: { revalidate: 60 } });
+    if (!res.ok) return null;
+    const json = await res.json();
+    return { data: json.data, total: json.meta?.total ?? 0, page: json.meta?.page ?? 1, limit: json.meta?.limit ?? 20 };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Fetch a single article by slug.
+ */
+export async function getArticleBySlug(slug: string): Promise<Record<string, unknown> | null> {
+  try {
+    const res = await fetch(
+      `${CONTENT_API_BASE_URL}/api/v1/articles/slug/${encodeURIComponent(slug)}`,
+      { next: { revalidate: 60 } },
+    );
+    if (!res.ok) return null;
+    return res.json();
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Fetch site navigation by menu identifier.
  */
 export async function getNavigation(

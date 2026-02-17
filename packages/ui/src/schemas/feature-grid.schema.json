@@ -12,9 +12,9 @@
         "type": "object",
         "properties": {
           "icon": {
-            "type": "string",
-            "label": "Icon Name",
-            "default": "star"
+            "type": "icon",
+            "label": "Icon",
+            "default": "Star"
           },
           "title": {
             "type": "string",

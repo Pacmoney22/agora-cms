@@ -5,6 +5,12 @@
   "icon": "divider",
   "acceptsChildren": false,
   "properties": {
+    "style": {
+      "type": "enum",
+      "values": ["solid", "dashed", "dotted", "double", "gradient"],
+      "default": "solid",
+      "label": "Line Style"
+    },
     "color": {
       "type": "color",
       "default": "#e5e7eb",
@@ -14,6 +20,22 @@
       "type": "string",
       "default": "1px",
       "label": "Thickness"
+    },
+    "width": {
+      "type": "enum",
+      "values": ["full", "3/4", "1/2", "1/4"],
+      "default": "full",
+      "label": "Width"
+    },
+    "shadow": {
+      "type": "boolean",
+      "default": false,
+      "label": "Drop Shadow"
+    },
+    "icon": {
+      "type": "string",
+      "default": null,
+      "label": "Center Icon/Emoji"
     },
     "margin": {
       "type": "string",

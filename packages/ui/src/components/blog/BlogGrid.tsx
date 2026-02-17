@@ -6,13 +6,14 @@ import type { BlogPost } from './BlogPostCard';
 
 export interface BlogGridProps {
   posts?: BlogPost[];
-  source?: 'recent' | 'category' | 'tag' | 'manual' | 'featured';
+  source?: 'recent' | 'category' | 'tag' | 'featured';
   maxPosts?: number;
   columns?: 1 | 2 | 3 | 4;
   layout?: 'grid' | 'list' | 'masonry';
   showFilters?: boolean;
   paginationStyle?: 'load-more' | 'numbered' | 'infinite-scroll';
   featuredFirst?: boolean;
+  detailBasePath?: string;
   className?: string;
 }
 
@@ -23,6 +24,46 @@ const gridColsMap: Record<number, string> = {
   4: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4',
 };
 
+// Sample posts for builder preview
+const samplePosts: BlogPost[] = [
+  {
+    title: 'Getting Started with Our Platform',
+    excerpt: 'Learn the basics of setting up your account and making the most of our features.',
+    category: 'Tutorials',
+    date: 'Jan 15, 2025',
+    readTime: '5 min read',
+    author: { name: 'Jane Smith' },
+    slug: 'getting-started',
+  },
+  {
+    title: 'Top 10 Tips for Better Productivity',
+    excerpt: 'Discover proven strategies to streamline your workflow and accomplish more every day.',
+    category: 'Productivity',
+    date: 'Jan 10, 2025',
+    readTime: '8 min read',
+    author: { name: 'John Doe' },
+    slug: 'productivity-tips',
+  },
+  {
+    title: 'What\'s New in Our Latest Release',
+    excerpt: 'Explore the exciting new features and improvements we shipped this month.',
+    category: 'Updates',
+    date: 'Jan 5, 2025',
+    readTime: '4 min read',
+    author: { name: 'Sarah Johnson' },
+    slug: 'latest-release',
+  },
+  {
+    title: 'Building a Great Team Culture',
+    excerpt: 'How to foster collaboration and create an environment where everyone thrives.',
+    category: 'Culture',
+    date: 'Dec 28, 2024',
+    readTime: '6 min read',
+    author: { name: 'Mike Chen' },
+    slug: 'team-culture',
+  },
+];
+
 export const BlogGrid: React.FC<BlogGridProps> = ({
   posts = [],
   source = 'recent',
@@ -32,19 +73,22 @@ export const BlogGrid: React.FC<BlogGridProps> = ({
   showFilters = false,
   paginationStyle = 'load-more',
   featuredFirst = false,
+  detailBasePath = '/blog',
   className,
 }) => {
+  const allPosts = posts.length > 0 ? posts : samplePosts;
+
   const [currentPage, setCurrentPage] = useState(1);
   const [activeFilter, setActiveFilter] = useState<string>('all');
 
   const categories = Array.from(
-    new Set(posts.map((p) => p.category).filter(Boolean)),
+    new Set(allPosts.map((p) => p.category).filter(Boolean)),
   );
 
   const filteredPosts =
     activeFilter === 'all'
-      ? posts
-      : posts.filter((p) => p.category === activeFilter);
+      ? allPosts
+      : allPosts.filter((p) => p.category === activeFilter);
 
   const totalPages = Math.ceil(filteredPosts.length / maxPosts);
   const paginatedPosts = filteredPosts.slice(0, currentPage * maxPosts);
@@ -89,7 +133,7 @@ export const BlogGrid: React.FC<BlogGridProps> = ({
 
         <div className="flex flex-col gap-4">
           {displayPosts.map((post, i) => (
-            <BlogPostCard key={i} post={post} cardStyle="horizontal" />
+            <BlogPostCard key={i} post={post} cardStyle="horizontal" detailBasePath={detailBasePath} />
           ))}
         </div>
 
@@ -205,6 +249,7 @@ export const BlogGrid: React.FC<BlogGridProps> = ({
               <BlogPostCard
                 post={post}
                 cardStyle={isFeatured ? 'overlay' : 'standard'}
+                detailBasePath={detailBasePath}
               />
             </div>
           );

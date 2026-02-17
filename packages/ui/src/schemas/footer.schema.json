@@ -17,26 +17,16 @@
       "label": "Tagline",
       "maxLength": 200
     },
+    "navigationMenu": {
+      "type": "enum",
+      "values": ["none", "header", "footer", "sidebar", "mobile"],
+      "default": "footer",
+      "label": "Navigation Menu"
+    },
     "columns": {
-      "type": "array",
+      "type": "navitems",
       "label": "Navigation Columns",
-      "items": {
-        "type": "object",
-        "properties": {
-          "heading": { "type": "string", "label": "Column Heading" },
-          "links": {
-            "type": "array",
-            "label": "Links",
-            "items": {
-              "type": "object",
-              "properties": {
-                "label": { "type": "string", "label": "Link Label" },
-                "url": { "type": "url", "label": "Link URL" }
-              }
-            }
-          }
-        }
-      }
+      "default": []
     },
     "showNewsletter": {
       "type": "boolean",
@@ -75,7 +65,7 @@
         "type": "object",
         "properties": {
           "label": { "type": "string", "label": "Link Label" },
-          "url": { "type": "url", "label": "Link URL" }
+          "url": { "type": "pagelink", "label": "Link URL" }
         }
       }
     },

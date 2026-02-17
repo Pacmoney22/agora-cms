@@ -13,7 +13,7 @@
         "properties": {
           "text": { "type": "string", "default": "List item", "label": "Text" },
           "description": { "type": "string", "default": null, "label": "Description" },
-          "icon": { "type": "string", "default": null, "label": "Icon Name" },
+          "icon": { "type": "icon", "default": null, "label": "Icon" },
           "children": {
             "type": "array",
             "label": "Sub-items",
@@ -22,7 +22,7 @@
               "properties": {
                 "text": { "type": "string", "default": "Sub-item", "label": "Text" },
                 "description": { "type": "string", "default": null, "label": "Description" },
-                "icon": { "type": "string", "default": null, "label": "Icon Name" }
+                "icon": { "type": "icon", "default": null, "label": "Icon" }
               }
             },
             "default": []

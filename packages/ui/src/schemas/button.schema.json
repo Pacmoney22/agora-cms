@@ -28,9 +28,9 @@
       "label": "Size"
     },
     "icon": {
-      "type": "string",
+      "type": "icon",
       "default": null,
-      "label": "Icon (Lucide name)"
+      "label": "Icon"
     },
     "iconPosition": {
       "type": "enum",

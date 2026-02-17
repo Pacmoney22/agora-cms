@@ -6,10 +6,9 @@
   "acceptsChildren": false,
   "properties": {
     "text": {
-      "type": "string",
-      "default": "Enter your text here...",
-      "label": "Text",
-      "multiline": true
+      "type": "richtext",
+      "default": "<p>Enter your text here...</p>",
+      "label": "Text"
     },
     "alignment": {
       "type": "enum",

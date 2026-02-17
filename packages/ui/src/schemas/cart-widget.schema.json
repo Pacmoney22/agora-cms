@@ -43,19 +43,10 @@
       "default": "Checkout",
       "label": "Checkout Button Label"
     },
-    "items": {
-      "type": "array",
-      "label": "Cart Items",
-      "items": {
-        "type": "object",
-        "properties": {
-          "name": { "type": "string", "default": "", "label": "Item Name", "required": true },
-          "price": { "type": "number", "default": 0, "label": "Price", "min": 0 },
-          "quantity": { "type": "number", "default": 1, "label": "Quantity", "min": 1 },
-          "image": { "type": "image", "default": null, "label": "Image" }
-        }
-      },
-      "default": []
+    "cartUrl": {
+      "type": "url",
+      "default": "/cart",
+      "label": "Cart Page URL"
     }
   },
   "responsive": {

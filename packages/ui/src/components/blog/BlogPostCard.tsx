@@ -15,6 +15,7 @@ export interface BlogPost {
 
 export interface BlogPostCardProps {
   post?: BlogPost | null;
+  detailBasePath?: string;
   showImage?: boolean;
   imageAspectRatio?: '16:9' | '4:3' | '1:1';
   showExcerpt?: boolean;
@@ -39,7 +40,8 @@ function truncateText(text: string, length: number): string {
 }
 
 export const BlogPostCard: React.FC<BlogPostCardProps> = ({
-  post = null,
+  post: postProp = null,
+  detailBasePath = '/blog',
   showImage = true,
   imageAspectRatio = '16:9',
   showExcerpt = true,
@@ -51,21 +53,18 @@ export const BlogPostCard: React.FC<BlogPostCardProps> = ({
   cardStyle = 'standard',
   className,
 }) => {
-  if (!post) {
-    return (
-      <div
-        className={clsx(
-          'animate-pulse rounded-xl border border-gray-200 bg-white p-4',
-          className,
-        )}
-      >
-        <div className="mb-4 h-48 rounded-lg bg-gray-200" />
-        <div className="mb-2 h-6 w-3/4 rounded bg-gray-200" />
-        <div className="mb-1 h-4 w-full rounded bg-gray-200" />
-        <div className="h-4 w-2/3 rounded bg-gray-200" />
-      </div>
-    );
-  }
+  const samplePost: BlogPost = {
+    title: 'Sample Blog Post',
+    excerpt: 'This card displays the blog post from the current page URL at runtime.',
+    image: '',
+    author: { name: 'Author Name' },
+    date: 'Jan 15, 2026',
+    category: 'Category',
+    readTime: '5 min read',
+    slug: 'sample',
+  };
+
+  const post = postProp ?? samplePost;
 
   const MetaInfo = () => (
     <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500">
@@ -114,7 +113,7 @@ export const BlogPostCard: React.FC<BlogPostCardProps> = ({
           className,
         )}
       >
-        <a href={`/blog/${post.slug}`} className="block">
+        <a href={`${detailBasePath}/${post.slug}`} className="block">
           {post.image && (
             <img
               src={post.image}
@@ -152,7 +151,7 @@ export const BlogPostCard: React.FC<BlogPostCardProps> = ({
         )}
       >
         {showImage && post.image && (
-          <a href={`/blog/${post.slug}`} className="flex-shrink-0">
+          <a href={`${detailBasePath}/${post.slug}`} className="flex-shrink-0">
             <img
               src={post.image}
               alt={post.title}
@@ -162,7 +161,7 @@ export const BlogPostCard: React.FC<BlogPostCardProps> = ({
         )}
         <div className="flex flex-col justify-center py-4 pr-4">
           <MetaInfo />
-          <a href={`/blog/${post.slug}`}>
+          <a href={`${detailBasePath}/${post.slug}`}>
             <h3 className="mt-2 text-lg font-semibold text-gray-900 transition-colors group-hover:text-blue-600">
               {post.title}
             </h3>
@@ -183,7 +182,7 @@ export const BlogPostCard: React.FC<BlogPostCardProps> = ({
   if (cardStyle === 'minimal') {
     return (
       <article className={clsx('group', className)}>
-        <a href={`/blog/${post.slug}`}>
+        <a href={`${detailBasePath}/${post.slug}`}>
           <MetaInfo />
           <h3 className="mt-1 text-lg font-semibold text-gray-900 transition-colors group-hover:text-blue-600">
             {post.title}
@@ -207,7 +206,7 @@ export const BlogPostCard: React.FC<BlogPostCardProps> = ({
       )}
     >
       {showImage && post.image && (
-        <a href={`/blog/${post.slug}`} className="block overflow-hidden">
+        <a href={`${detailBasePath}/${post.slug}`} className="block overflow-hidden">
           <img
             src={post.image}
             alt={post.title}
@@ -220,7 +219,7 @@ export const BlogPostCard: React.FC<BlogPostCardProps> = ({
       )}
       <div className="p-5">
         <MetaInfo />
-        <a href={`/blog/${post.slug}`}>
+        <a href={`${detailBasePath}/${post.slug}`}>
           <h3 className="mt-2 text-lg font-semibold text-gray-900 transition-colors group-hover:text-blue-600">
             {post.title}
           </h3>

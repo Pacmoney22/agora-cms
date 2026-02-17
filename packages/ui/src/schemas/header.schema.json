@@ -12,30 +12,55 @@
       "constraints": { "formats": ["png", "svg", "webp"] }
     },
     "logoLink": {
-      "type": "url",
+      "type": "pagelink",
       "default": "/",
       "label": "Logo Link"
     },
     "navigationMenu": {
-      "type": "string",
-      "default": null,
-      "label": "Navigation Menu ID",
-      "description": "ID of the navigation menu to display"
+      "type": "enum",
+      "values": ["none", "header", "footer", "sidebar", "mobile"],
+      "default": "header",
+      "label": "Navigation Menu"
+    },
+    "navItems": {
+      "type": "navitems",
+      "label": "Navigation Items",
+      "default": []
     },
     "showSearch": {
       "type": "boolean",
       "default": false,
       "label": "Show Search"
     },
+    "searchUrl": {
+      "type": "url",
+      "default": "/search",
+      "label": "Search Page URL"
+    },
     "showCart": {
       "type": "boolean",
       "default": false,
       "label": "Show Cart"
     },
+    "cartUrl": {
+      "type": "url",
+      "default": "/cart",
+      "label": "Cart Page URL"
+    },
     "showAccount": {
       "type": "boolean",
       "default": false,
       "label": "Show Account"
+    },
+    "accountUrl": {
+      "type": "url",
+      "default": "/account",
+      "label": "Account Page URL"
+    },
+    "showCta": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show CTA Button"
     },
     "ctaButton": {
       "type": "object",
@@ -43,7 +68,7 @@
       "label": "CTA Button",
       "properties": {
         "label": { "type": "string", "default": "Get Started", "label": "Button Label" },
-        "url": { "type": "url", "default": "#", "label": "Button URL" },
+        "url": { "type": "pagelink", "default": "#", "label": "Button URL" },
         "style": {
           "type": "enum",
           "values": ["primary", "secondary", "ghost"],

@@ -54,6 +54,11 @@
       "default": null,
       "label": "Address Text"
     },
+    "addressLookup": {
+      "type": "addresslookup",
+      "default": null,
+      "label": "Address Lookup (auto-fills lat/lng)"
+    },
     "showDirectionsLink": {
       "type": "boolean",
       "default": true,

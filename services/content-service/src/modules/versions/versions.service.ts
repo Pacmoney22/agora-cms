@@ -8,7 +8,8 @@ export class VersionsService {
   constructor(@Inject('PRISMA') private readonly prisma: PrismaClient) {}
 
   async findByPageId(pageId: string, options: { page?: number; limit?: number }) {
-    const { page = 1, limit = 20 } = options;
+    const page = Number(options.page) || 1;
+    const limit = Math.min(Number(options.limit) || 20, 500);
     const skip = (page - 1) * limit;
 
     const [data, total] = await Promise.all([

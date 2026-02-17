@@ -13,7 +13,7 @@
         "properties": {
           "platform": {
             "type": "enum",
-            "values": ["facebook", "x", "instagram", "linkedin", "youtube", "github", "tiktok", "discord", "pinterest"],
+            "values": ["facebook", "x", "instagram", "linkedin", "youtube", "github", "tiktok", "discord", "pinterest", "bluesky"],
             "default": "facebook",
             "label": "Platform"
           },

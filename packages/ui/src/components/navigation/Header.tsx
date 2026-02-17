@@ -14,13 +14,24 @@ export interface HeaderCtaButton {
   style: 'primary' | 'secondary' | 'ghost';
 }
 
+export interface NavItem {
+  label: string;
+  url: string;
+  children?: NavItem[];
+}
+
 export interface HeaderProps {
   logo?: string;
   logoLink?: string;
   navigationMenu?: string;
+  navItems?: NavItem[];
   showSearch?: boolean;
+  searchUrl?: string;
   showCart?: boolean;
+  cartUrl?: string;
   showAccount?: boolean;
+  accountUrl?: string;
+  showCta?: boolean;
   ctaButton?: HeaderCtaButton | null;
   sticky?: boolean;
   transparentOnHero?: boolean;
@@ -56,9 +67,14 @@ export const Header: React.FC<HeaderProps> = ({
   logo,
   logoLink = '/',
   navigationMenu,
+  navItems = [],
   showSearch = false,
+  searchUrl = '/search',
   showCart = false,
+  cartUrl = '/cart',
   showAccount = false,
+  accountUrl = '/account',
+  showCta = true,
   ctaButton = null,
   sticky = false,
   transparentOnHero = false,
@@ -72,6 +88,8 @@ export const Header: React.FC<HeaderProps> = ({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const toggleMobileMenu = () => setMobileMenuOpen((prev) => !prev);
+
+  const showCtaButton = showCta && ctaButton?.label;
 
   return (
     <>
@@ -122,41 +140,68 @@ export const Header: React.FC<HeaderProps> = ({
             )}
           </a>
 
-          {/* Desktop Navigation Placeholder */}
+          {/* Desktop Navigation */}
           <div className="hidden items-center gap-6 lg:flex">
-            {children}
+            {navItems.length > 0
+              ? navItems.map((item, i) => (
+                  <div key={i} className="group relative">
+                    <a
+                      href={item.url}
+                      className="inline-flex items-center gap-1 text-sm font-medium transition-colors hover:opacity-75"
+                    >
+                      {item.label}
+                      {item.children && item.children.length > 0 && (
+                        <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                      )}
+                    </a>
+                    {item.children && item.children.length > 0 && (
+                      <div className="invisible absolute left-0 top-full z-50 mt-1 min-w-[180px] rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 group-hover:visible">
+                        {item.children.map((child, j) => (
+                          <a
+                            key={j}
+                            href={child.url}
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          >
+                            {child.label}
+                          </a>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))
+              : children}
           </div>
 
           {/* Desktop Actions */}
           <div className="hidden items-center gap-4 lg:flex">
             {showSearch && (
-              <button
-                type="button"
+              <a
+                href={searchUrl}
                 aria-label="Search"
                 className="rounded-md p-2 transition-colors hover:bg-black/10"
               >
                 <Search className="h-5 w-5" />
-              </button>
+              </a>
             )}
             {showAccount && (
-              <button
-                type="button"
+              <a
+                href={accountUrl}
                 aria-label="Account"
                 className="rounded-md p-2 transition-colors hover:bg-black/10"
               >
                 <User className="h-5 w-5" />
-              </button>
+              </a>
             )}
             {showCart && (
-              <button
-                type="button"
+              <a
+                href={cartUrl}
                 aria-label="Cart"
                 className="rounded-md p-2 transition-colors hover:bg-black/10"
               >
                 <ShoppingCart className="h-5 w-5" />
-              </button>
+              </a>
             )}
-            {ctaButton && (
+            {showCtaButton && (
               <a
                 href={ctaButton.url}
                 className={clsx(
@@ -221,41 +266,65 @@ export const Header: React.FC<HeaderProps> = ({
               </div>
             )}
 
-            {/* Mobile Navigation Placeholder */}
-            {children}
+            {/* Mobile Navigation */}
+            {navItems.length > 0
+              ? navItems.map((item, i) => (
+                  <div key={i}>
+                    <a
+                      href={item.url}
+                      className="block py-2 text-base font-medium transition-colors hover:opacity-75"
+                    >
+                      {item.label}
+                    </a>
+                    {item.children && item.children.length > 0 && (
+                      <div className="ml-4 border-l border-gray-200 pl-3">
+                        {item.children.map((child, j) => (
+                          <a
+                            key={j}
+                            href={child.url}
+                            className="block py-1.5 text-sm transition-colors hover:opacity-75"
+                          >
+                            {child.label}
+                          </a>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))
+              : children}
 
             {/* Mobile Actions */}
             <div className="flex items-center gap-4 border-t border-gray-200 pt-4">
               {showSearch && (
-                <button
-                  type="button"
+                <a
+                  href={searchUrl}
                   aria-label="Search"
                   className="rounded-md p-2 transition-colors hover:bg-black/10"
                 >
                   <Search className="h-5 w-5" />
-                </button>
+                </a>
               )}
               {showAccount && (
-                <button
-                  type="button"
+                <a
+                  href={accountUrl}
                   aria-label="Account"
                   className="rounded-md p-2 transition-colors hover:bg-black/10"
                 >
                   <User className="h-5 w-5" />
-                </button>
+                </a>
               )}
               {showCart && (
-                <button
-                  type="button"
+                <a
+                  href={cartUrl}
                   aria-label="Cart"
                   className="rounded-md p-2 transition-colors hover:bg-black/10"
                 >
                   <ShoppingCart className="h-5 w-5" />
-                </button>
+                </a>
               )}
             </div>
 
-            {ctaButton && (
+            {showCtaButton && (
               <a
                 href={ctaButton.url}
                 className={clsx(

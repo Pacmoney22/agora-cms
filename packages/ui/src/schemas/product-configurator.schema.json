@@ -6,9 +6,9 @@
   "acceptsChildren": false,
   "properties": {
     "productId": {
-      "type": "string",
-      "default": "",
-      "label": "Product ID"
+      "type": "product",
+      "default": null,
+      "label": "Select Product"
     },
     "product": {
       "type": "object",

@@ -140,6 +140,7 @@ model User {
 
   pages           Page[]
   pageVersions    PageVersion[]
+  articles        Article[]
   mediaAssets     Media[]
   orders          Order[]
   serviceBookings ServiceBooking[]
@@ -220,6 +221,34 @@ model PageVersion {
   @@unique([pageId, version])
   @@index([pageId])
   @@map("page_versions")
+}
+
+// ============================================================
+// CONTENT: ARTICLES / BLOG
+// ============================================================
+
+model Article {
+  id              String     @id @default(uuid()) @db.Uuid
+  slug            String     @unique @db.VarChar(500)
+  title           String     @db.VarChar(255)
+  excerpt         String?    @db.Text
+  body            String?    @db.Text
+  featuredImage   String?    @map("featured_image") @db.Text
+  category        String?    @db.VarChar(100)
+  tags            String[]   @default([])
+  status          PageStatus @default(draft)
+  publishedAt     DateTime?  @map("published_at")
+  createdBy       String     @map("created_by") @db.Uuid
+  createdAt       DateTime   @default(now()) @map("created_at")
+  updatedAt       DateTime   @updatedAt @map("updated_at")
+
+  author          User       @relation(fields: [createdBy], references: [id])
+
+  @@index([slug, status])
+  @@index([status])
+  @@index([category])
+  @@index([publishedAt])
+  @@map("articles")
 }
 
 // ============================================================

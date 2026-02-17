@@ -21,8 +21,11 @@ import type { ComponentInstance } from '@agora-cms/shared';
 export const CanvasRenderer: React.FC = () => {
   const { componentTree, selectedInstanceId, selectComponent, insertComponent, moveComponent } =
     useBuilderStore();
+  const [mounted, setMounted] = React.useState(false);
   const [activeId, setActiveId] = React.useState<string | null>(null);
   const [activeDragData, setActiveDragData] = React.useState<any>(null);
+
+  React.useEffect(() => setMounted(true), []);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -141,6 +144,16 @@ export const CanvasRenderer: React.FC = () => {
       </div>
     );
   };
+
+  if (!mounted) {
+    return (
+      <div className="mx-auto min-h-full max-w-4xl rounded-lg border border-gray-200 bg-white shadow-sm">
+        <div className="flex min-h-[400px] items-center justify-center">
+          <p className="text-gray-400">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <DndContext

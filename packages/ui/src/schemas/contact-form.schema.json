@@ -79,10 +79,40 @@
       "default": null,
       "label": "Recipient Email"
     },
+    "submitEndpoint": {
+      "type": "url",
+      "default": null,
+      "label": "Submission Endpoint URL"
+    },
     "honeypot": {
       "type": "boolean",
       "default": true,
       "label": "Enable Honeypot Spam Protection"
+    },
+    "salesforceEnabled": {
+      "type": "boolean",
+      "default": false,
+      "label": "Enable Salesforce Integration"
+    },
+    "salesforceObjectType": {
+      "type": "enum",
+      "values": ["Lead", "Contact", "Case"],
+      "default": "Lead",
+      "label": "Salesforce Object Type",
+      "visibleWhen": { "salesforceEnabled": true }
+    },
+    "salesforceFieldMapping": {
+      "type": "array",
+      "label": "Salesforce Field Mapping",
+      "visibleWhen": { "salesforceEnabled": true },
+      "items": {
+        "type": "object",
+        "properties": {
+          "formField": { "type": "string", "default": "", "label": "Form Field" },
+          "sfField": { "type": "string", "default": "", "label": "Salesforce Field API Name" }
+        }
+      },
+      "default": []
     },
     "consentCheckbox": {
       "type": "object",

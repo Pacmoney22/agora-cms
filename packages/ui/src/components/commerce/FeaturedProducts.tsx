@@ -6,29 +6,64 @@ import { ProductCard, ProductData } from './ProductCard';
 
 export interface FeaturedProductsProps {
   heading?: string;
-  source?: 'manual' | 'best-sellers' | 'new-arrivals' | 'on-sale' | 'recently-viewed' | 'recommended';
+  source?: 'best-sellers' | 'new-arrivals' | 'on-sale' | 'recently-viewed' | 'recommended';
   products?: ProductData[];
   maxProducts?: number;
   layout?: 'row' | 'carousel';
   viewAllLink?: string | null;
+  detailBasePath?: string;
   onQuickAdd?: (product: ProductData) => void;
   onQuickView?: (product: ProductData) => void;
   className?: string;
 }
 
+// Sample products for builder preview
+const sampleFeaturedProducts: ProductData[] = [
+  {
+    name: 'Premium Wireless Earbuds',
+    price: 129.99,
+    salePrice: 99.99,
+    slug: 'premium-wireless-earbuds',
+    rating: 4.8,
+    badge: 'Sale',
+  },
+  {
+    name: 'Minimalist Watch',
+    price: 199.99,
+    slug: 'minimalist-watch',
+    rating: 4.7,
+    badge: 'Best Seller',
+  },
+  {
+    name: 'Canvas Backpack',
+    price: 79.99,
+    slug: 'canvas-backpack',
+    rating: 4.5,
+  },
+  {
+    name: 'Stainless Steel Water Bottle',
+    price: 34.99,
+    slug: 'stainless-steel-water-bottle',
+    rating: 4.9,
+    badge: 'New',
+  },
+];
+
 export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
   heading = 'Featured Products',
-  source = 'manual',
+  source = 'best-sellers',
   products = [],
   maxProducts = 4,
   layout = 'row',
   viewAllLink = null,
+  detailBasePath = '/products',
   onQuickAdd,
   onQuickView,
   className,
 }) => {
+  const allProducts = products.length > 0 ? products : sampleFeaturedProducts;
   const clampedMax = Math.max(2, Math.min(8, maxProducts));
-  const displayProducts = products.slice(0, clampedMax);
+  const displayProducts = allProducts.slice(0, clampedMax);
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: 'start',
@@ -85,6 +120,7 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
           key={`${product.slug}-${index}`}
           product={product}
           showQuickAdd
+          detailBasePath={detailBasePath}
           onQuickAdd={onQuickAdd}
           onQuickView={onQuickView}
         />
@@ -103,6 +139,7 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
             <ProductCard
               product={product}
               showQuickAdd
+              detailBasePath={detailBasePath}
               onQuickAdd={onQuickAdd}
               onQuickView={onQuickView}
             />

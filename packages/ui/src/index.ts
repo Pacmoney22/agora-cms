@@ -30,6 +30,7 @@ export { Gallery } from './components/media/Gallery';
 export { Carousel } from './components/media/Carousel';
 export { BackgroundVideo } from './components/media/BackgroundVideo';
 export { AudioPlayer } from './components/media/AudioPlayer';
+export { EnhancedSlider } from './components/media/EnhancedSlider';
 
 // Marketing Components
 export { HeroBanner } from './components/marketing/HeroBanner';
@@ -104,6 +105,14 @@ export { ReviewAggregate } from './components/trust/ReviewAggregate';
 export { ReviewList } from './components/trust/ReviewList';
 export { CaseStudiesGrid } from './components/trust/CaseStudiesGrid';
 export { Awards } from './components/trust/Awards';
+
+// Event Components
+export { EventCard } from './components/events/EventCard';
+export { EventGrid } from './components/events/EventGrid';
+
+// Course Components
+export { CourseCard } from './components/courses/CourseCard';
+export { CourseGrid } from './components/courses/CourseGrid';
 
 // Interactive & Engagement Components
 export { Toast } from './components/interactive/Toast';

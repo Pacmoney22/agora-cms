@@ -1,0 +1,74 @@
+{
+  "id": "event-grid",
+  "name": "Event Grid",
+  "category": "Events",
+  "icon": "calendar",
+  "acceptsChildren": false,
+  "properties": {
+    "source": {
+      "type": "enum",
+      "values": ["all", "upcoming", "past", "featured"],
+      "default": "upcoming",
+      "label": "Event Source"
+    },
+    "maxEvents": {
+      "type": "number",
+      "default": 6,
+      "min": 1,
+      "max": 24,
+      "label": "Max Events"
+    },
+    "columns": {
+      "type": "number",
+      "default": 3,
+      "min": 1,
+      "max": 4,
+      "label": "Columns"
+    },
+    "layout": {
+      "type": "enum",
+      "values": ["grid", "list", "calendar"],
+      "default": "grid",
+      "label": "Layout"
+    },
+    "showFilters": {
+      "type": "boolean",
+      "default": false,
+      "label": "Show Filters"
+    },
+    "cardStyle": {
+      "type": "enum",
+      "values": ["standard", "compact", "featured"],
+      "default": "standard",
+      "label": "Card Style"
+    },
+    "showDate": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Date"
+    },
+    "showVenue": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Venue"
+    },
+    "showTicketPrice": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Ticket Price"
+    },
+    "emptyMessage": {
+      "type": "string",
+      "default": "No events found",
+      "label": "Empty State Message"
+    },
+    "viewAllLink": {
+      "type": "pagelink",
+      "default": null,
+      "label": "View All Link"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

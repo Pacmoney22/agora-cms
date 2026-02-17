@@ -5,9 +5,17 @@
   "icon": "message-circle",
   "acceptsChildren": false,
   "properties": {
+    "source": {
+      "type": "enum",
+      "values": ["settings", "manual"],
+      "default": "settings",
+      "label": "Configuration Source",
+      "description": "Use 'settings' to inherit from Blog Settings in Admin Dashboard, or 'manual' to configure here"
+    },
     "comments": {
       "type": "array",
-      "label": "Comments",
+      "label": "Comments (Preview)",
+      "visibleWhen": { "source": "manual" },
       "items": {
         "type": "object",
         "properties": {
@@ -41,48 +49,56 @@
       "type": "enum",
       "values": ["native", "disqus"],
       "default": "native",
-      "label": "Comment Provider"
+      "label": "Comment Provider",
+      "visibleWhen": { "source": "manual" }
     },
     "allowNested": {
       "type": "boolean",
       "default": true,
-      "label": "Allow Nested Replies"
+      "label": "Allow Nested Replies",
+      "visibleWhen": { "source": "manual" }
     },
     "maxDepth": {
       "type": "number",
       "default": 3,
       "label": "Max Reply Depth",
       "min": 1,
-      "max": 5
+      "max": 5,
+      "visibleWhen": { "source": "manual" }
     },
     "sortDefault": {
       "type": "enum",
       "values": ["newest", "oldest", "most-liked"],
       "default": "newest",
-      "label": "Default Sort"
+      "label": "Default Sort",
+      "visibleWhen": { "source": "manual" }
     },
     "requireAuth": {
       "type": "boolean",
       "default": false,
-      "label": "Require Authentication"
+      "label": "Require Authentication",
+      "visibleWhen": { "source": "manual" }
     },
     "moderation": {
       "type": "enum",
       "values": ["none", "pre-moderation", "post-moderation"],
       "default": "none",
-      "label": "Moderation"
+      "label": "Moderation",
+      "visibleWhen": { "source": "manual" }
     },
     "showAvatars": {
       "type": "boolean",
       "default": true,
-      "label": "Show Avatars"
+      "label": "Show Avatars",
+      "visibleWhen": { "source": "manual" }
     },
     "perPage": {
       "type": "number",
       "default": 10,
       "label": "Comments Per Page",
       "min": 5,
-      "max": 50
+      "max": 50,
+      "visibleWhen": { "source": "manual" }
     }
   },
   "responsive": {

@@ -9,6 +9,30 @@ interface FetchOptions extends RequestInit {
   params?: Record<string, string | number | undefined>;
 }
 
+/** Try to refresh the access token using the stored refresh token. */
+async function tryRefreshToken(): Promise<string | null> {
+  if (typeof window === 'undefined') return null;
+  const refreshToken = localStorage.getItem('refresh_token');
+  if (!refreshToken) return null;
+
+  try {
+    const res = await fetch(`${CONTENT_API}/api/v1/auth/refresh`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refreshToken }),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    const newAccess = data.accessToken ?? data.access_token;
+    const newRefresh = data.refreshToken ?? data.refresh_token;
+    if (newAccess) localStorage.setItem('auth_token', newAccess);
+    if (newRefresh) localStorage.setItem('refresh_token', newRefresh);
+    return newAccess ?? null;
+  } catch {
+    return null;
+  }
+}
+
 async function apiFetch<T>(
   baseUrl: string,
   path: string,
@@ -28,14 +52,39 @@ async function apiFetch<T>(
 
   const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
 
+  const buildHeaders = (authToken: string | null) => ({
+    'Content-Type': 'application/json',
+    ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+    ...(fetchOptions.headers as Record<string, string>),
+  });
+
   const res = await fetch(url, {
     ...fetchOptions,
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...fetchOptions.headers,
-    },
+    headers: buildHeaders(token),
   });
+
+  // On 401, attempt token refresh and retry once
+  if (res.status === 401) {
+    const freshToken = await tryRefreshToken();
+    if (freshToken) {
+      const retry = await fetch(url, {
+        ...fetchOptions,
+        headers: buildHeaders(freshToken),
+      });
+      if (!retry.ok) {
+        const body = await retry.json().catch(() => ({}));
+        throw new Error(body.message || `API error: ${retry.status}`);
+      }
+      if (retry.status === 204) return undefined as T;
+      return retry.json();
+    }
+    // Refresh failed — clear stale tokens and throw
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('refresh_token');
+    }
+    throw new Error('Session expired. Please log in again.');
+  }
 
   if (!res.ok) {
     const body = await res.json().catch(() => ({}));

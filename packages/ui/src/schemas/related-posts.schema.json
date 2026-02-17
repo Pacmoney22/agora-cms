@@ -6,19 +6,8 @@
   "acceptsChildren": false,
   "properties": {
     "posts": {
-      "type": "array",
+      "type": "blogposts",
       "label": "Posts",
-      "items": {
-        "type": "object",
-        "properties": {
-          "title": { "type": "string", "default": "", "label": "Title", "required": true },
-          "excerpt": { "type": "string", "default": "", "label": "Excerpt" },
-          "image": { "type": "image", "default": null, "label": "Image" },
-          "date": { "type": "string", "default": "", "label": "Date" },
-          "category": { "type": "string", "default": "", "label": "Category" },
-          "slug": { "type": "string", "default": "", "label": "Slug", "required": true }
-        }
-      },
       "default": []
     },
     "source": {

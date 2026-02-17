@@ -14,9 +14,8 @@ export interface ProductData {
 }
 
 export interface ProductCardProps {
-  productSource?: 'manual' | 'dynamic';
-  productId?: string | null;
   product?: ProductData | null;
+  detailBasePath?: string;
   showImage?: boolean;
   imageAspectRatio?: '1:1' | '4:3' | '3:4' | '16:9';
   showPrice?: boolean;
@@ -47,9 +46,8 @@ const hoverEffectMap: Record<string, string> = {
 };
 
 export const ProductCard: React.FC<ProductCardProps> = ({
-  productSource = 'manual',
-  productId = null,
-  product = null,
+  product: productProp = null,
+  detailBasePath = '/products',
   showImage = true,
   imageAspectRatio = '1:1',
   showPrice = true,
@@ -67,20 +65,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const [isHovered, setIsHovered] = useState(false);
   const [isFavorited, setIsFavorited] = useState(false);
 
-  if (!product) {
-    return (
-      <div
-        className={clsx(
-          'animate-pulse rounded-lg border border-gray-200 bg-gray-50 p-4',
-          className,
-        )}
-      >
-        <div className={clsx('mb-3 rounded bg-gray-200', aspectRatioMap[imageAspectRatio])} />
-        <div className="mb-2 h-4 w-3/4 rounded bg-gray-200" />
-        <div className="h-4 w-1/2 rounded bg-gray-200" />
-      </div>
-    );
-  }
+  const sampleProduct: ProductData = {
+    name: 'Sample Product',
+    price: 29.99,
+    slug: 'sample-product',
+    image: '',
+    rating: 4.5,
+  };
+
+  const product = productProp ?? sampleProduct;
 
   const hasDiscount = product.salePrice != null && product.salePrice < product.price;
   const discountPercent = hasDiscount
@@ -261,7 +254,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   if (cardStyle === 'horizontal') {
     return (
       <a
-        href={`/products/${product.slug}`}
+        href={`${detailBasePath}/${product.slug}`}
         className={clsx(
           'group flex overflow-hidden rounded-lg border border-gray-200 bg-white transition-shadow hover:shadow-md',
           hoverEffect === 'shadow' && 'hover:shadow-lg',
@@ -327,7 +320,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
   return (
     <a
-      href={`/products/${product.slug}`}
+      href={`${detailBasePath}/${product.slug}`}
       className={clsx(
         'group relative block overflow-hidden rounded-lg transition-shadow',
         cardStyle !== 'minimal' && 'border border-gray-200 bg-white',

@@ -21,6 +21,8 @@ export interface CountdownProps {
   expiredMessage?: string;
   expiredRedirectUrl?: string | null;
   size?: 'small' | 'medium' | 'large';
+  fontColor?: string;
+  backgroundColor?: string;
   className?: string;
 }
 
@@ -82,11 +84,13 @@ function CircularUnit({
   max,
   label,
   sizeConfig,
+  fontColor,
 }: {
   value: number;
   max: number;
   label: string;
   sizeConfig: (typeof sizeMap)['medium'];
+  fontColor?: string;
 }) {
   const radius = (sizeConfig.circleSize - sizeConfig.circleStroke * 2) / 2;
   const circumference = 2 * Math.PI * radius;
@@ -121,18 +125,26 @@ function CircularUnit({
           className="transition-all duration-1000"
         />
       </svg>
-      <span className={clsx('font-bold text-gray-900 -mt-[calc(50%+0.75rem)] mb-auto', sizeConfig.number)}>
+      <span
+        className={clsx('font-bold -mt-[calc(50%+0.75rem)] mb-auto', !fontColor && 'text-gray-900', sizeConfig.number)}
+        style={fontColor ? { color: fontColor } : undefined}
+      >
         {String(value).padStart(2, '0')}
       </span>
-      <span className={clsx('uppercase tracking-wider text-gray-500', sizeConfig.label)}>
+      <span
+        className={clsx('uppercase tracking-wider', !fontColor && 'text-gray-500', sizeConfig.label)}
+        style={fontColor ? { color: fontColor, opacity: 0.7 } : undefined}
+      >
         {label}
       </span>
     </div>
   );
 }
 
+const INITIAL_TIME: TimeRemaining = { days: 0, hours: 0, minutes: 0, seconds: 0, isExpired: false };
+
 export const Countdown: React.FC<CountdownProps> = ({
-  targetDate = new Date(Date.now() + 86400000 * 7).toISOString(),
+  targetDate,
   timezone = 'UTC',
   showDays = true,
   showHours = true,
@@ -144,9 +156,16 @@ export const Countdown: React.FC<CountdownProps> = ({
   expiredMessage = 'This offer has expired.',
   expiredRedirectUrl = null,
   size = 'medium',
+  fontColor,
+  backgroundColor,
   className,
 }) => {
-  const [time, setTime] = useState<TimeRemaining>(() => calculateTimeRemaining(targetDate));
+  // Resolve default target date inside an effect to avoid SSR/client mismatch
+  const resolvedTarget = targetDate ?? new Date(Date.now() + 86400000 * 7).toISOString();
+
+  // Initialize with static zeros so server and client render identically;
+  // the useEffect below will calculate the real values after mount.
+  const [time, setTime] = useState<TimeRemaining>(INITIAL_TIME);
   const [hasRedirected, setHasRedirected] = useState(false);
 
   const effectiveLabels = {
@@ -159,8 +178,8 @@ export const Countdown: React.FC<CountdownProps> = ({
   const sizeConfig = sizeMap[size];
 
   const tick = useCallback(() => {
-    setTime(calculateTimeRemaining(targetDate));
-  }, [targetDate]);
+    setTime(calculateTimeRemaining(resolvedTarget));
+  }, [resolvedTarget]);
 
   useEffect(() => {
     tick();
@@ -203,19 +222,27 @@ export const Countdown: React.FC<CountdownProps> = ({
           max={unit.max}
           label={unit.label}
           sizeConfig={sizeConfig}
+          fontColor={fontColor}
         />
       );
     }
+
+    const boxBg = backgroundColor || undefined;
+    const textColor = fontColor || undefined;
 
     return (
       <div key={unit.label} className="flex items-center gap-2">
         <div
           className={clsx(
             'flex flex-col items-center',
-            style === 'boxed' && clsx('rounded-lg bg-gray-900 text-white', sizeConfig.pad),
-            style === 'flip' && clsx('rounded-lg bg-gray-900 text-white relative overflow-hidden', sizeConfig.pad),
-            style === 'minimal' && 'text-gray-900',
+            style === 'boxed' && clsx('rounded-lg', !backgroundColor && 'bg-gray-900', !fontColor && 'text-white', sizeConfig.pad),
+            style === 'flip' && clsx('rounded-lg relative overflow-hidden', !backgroundColor && 'bg-gray-900', !fontColor && 'text-white', sizeConfig.pad),
+            style === 'minimal' && (!fontColor && 'text-gray-900'),
           )}
+          style={{
+            ...((['boxed', 'flip'].includes(style) && boxBg) ? { backgroundColor: boxBg } : {}),
+            ...(textColor ? { color: textColor } : {}),
+          }}
         >
           <span className={clsx('font-bold tabular-nums leading-none', sizeConfig.number)}>
             {String(unit.value).padStart(2, '0')}
@@ -224,19 +251,28 @@ export const Countdown: React.FC<CountdownProps> = ({
             <div className="absolute inset-x-0 top-1/2 h-px bg-white/20" />
           )}
         </div>
-        <span className={clsx('uppercase tracking-wider text-gray-500', sizeConfig.label)}>
+        <span
+          className={clsx('uppercase tracking-wider', !fontColor && 'text-gray-500', sizeConfig.label)}
+          style={textColor ? { color: textColor, opacity: 0.7 } : undefined}
+        >
           {unit.label}
         </span>
         {style === 'minimal' && index < units.length - 1 && (
-          <span className={clsx('font-bold text-gray-400 mx-1', sizeConfig.number)}>:</span>
+          <span
+            className={clsx('font-bold mx-1', !fontColor && 'text-gray-400', sizeConfig.number)}
+            style={textColor ? { color: textColor, opacity: 0.5 } : undefined}
+          >:</span>
         )}
       </div>
     );
   };
 
+  const wrapperBg = (['minimal', 'circular'].includes(style) && backgroundColor) ? backgroundColor : undefined;
+
   return (
     <div
-      className={clsx('flex flex-wrap justify-center', sizeConfig.gap, className)}
+      className={clsx('flex flex-wrap justify-center', sizeConfig.gap, wrapperBg && 'rounded-lg px-6 py-4', className)}
+      style={wrapperBg ? { backgroundColor: wrapperBg } : undefined}
       aria-live="polite"
       aria-atomic="true"
       aria-label="Countdown timer"

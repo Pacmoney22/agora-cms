@@ -44,10 +44,26 @@ const columnMap = {
 const getIconComponent = (iconName: string): React.FC<{ className?: string; style?: React.CSSProperties }> | null => {
   const icons = LucideIcons as Record<string, unknown>;
   const component = icons[iconName];
-  if (component && typeof component === 'function') {
+  // Lucide icons are forwardRef objects (typeof 'object'), not plain functions
+  if (component && (typeof component === 'function' || typeof component === 'object')) {
     return component as React.FC<{ className?: string; style?: React.CSSProperties }>;
   }
   return null;
+};
+
+const ICON_CLASSES = 'mt-0.5 h-4 w-4 flex-shrink-0';
+
+/** Resolve an icon value (Lucide name or image URL) to a React element. */
+const resolveIcon = (icon: string, iconColor?: string): React.ReactNode => {
+  if (icon.startsWith('http') || icon.startsWith('/')) {
+    return <img src={icon} alt="" className={`${ICON_CLASSES} rounded object-cover`} />;
+  }
+  const IconComp = getIconComponent(icon);
+  const colorStyle = iconColor ? { color: iconColor } : undefined;
+  if (IconComp) {
+    return <IconComp className={ICON_CLASSES} style={colorStyle} />;
+  }
+  return <Circle className={ICON_CLASSES} style={colorStyle} />;
 };
 
 const ListItemContent: React.FC<{
@@ -61,28 +77,14 @@ const ListItemContent: React.FC<{
     if (listType === 'checklist') {
       return (
         <Check
-          className="mt-0.5 h-4 w-4 flex-shrink-0"
+          className={ICON_CLASSES}
           style={iconColor ? { color: iconColor } : { color: '#10b981' }}
         />
       );
     }
 
     if (listType === 'icon' && item.icon) {
-      const IconComponent = getIconComponent(item.icon);
-      if (IconComponent) {
-        return (
-          <IconComponent
-            className="mt-0.5 h-4 w-4 flex-shrink-0"
-            style={iconColor ? { color: iconColor } : undefined}
-          />
-        );
-      }
-      return (
-        <Circle
-          className="mt-0.5 h-4 w-4 flex-shrink-0"
-          style={iconColor ? { color: iconColor } : undefined}
-        />
-      );
+      return resolveIcon(item.icon, iconColor);
     }
 
     if (bulletStyle === 'dash' && listType === 'unordered') {

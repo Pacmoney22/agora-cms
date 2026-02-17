@@ -283,6 +283,14 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
     </div>
   );
 
+  if (!src) {
+    return (
+      <div className={clsx('flex items-center justify-center rounded-lg border border-gray-200 bg-gray-50 p-6 text-sm text-gray-400', className)}>
+        No audio source selected
+      </div>
+    );
+  }
+
   if (style === 'minimal') {
     return (
       <div className={clsx('w-full', className)}>

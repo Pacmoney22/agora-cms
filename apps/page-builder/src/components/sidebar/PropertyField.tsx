@@ -5,6 +5,20 @@ import type { PropertySchema } from '@/lib/component-registry';
 import { BooleanField } from './BooleanField';
 import { ObjectField } from './ObjectField';
 import { ArrayField } from './ArrayField';
+import { TipTapEditor } from './TipTapEditor';
+import { MediaField } from './MediaField';
+import { IconField } from './IconField';
+import { TimezoneField } from './TimezoneField';
+import { PageLinkField } from './PageLinkField';
+import { ProductField } from './ProductField';
+import { CategoryField } from './CategoryField';
+import { NavItemsField } from './NavItemsField';
+import { BlogPostsField } from './BlogPostsField';
+import { AddressLookupField } from './AddressLookupField';
+import { MultiProductField } from './MultiProductField';
+import { MultiCategoryField } from './MultiCategoryField';
+import { ReviewSourceField } from './ReviewSourceField';
+import { ArticleField } from './ArticleField';
 
 export interface PropertyFieldProps {
   name: string;
@@ -20,6 +34,20 @@ function getTypeDefault(type: string): unknown {
     case 'array': return [];
     case 'object': return {};
     default: return '';
+  }
+}
+
+/** Convert an ISO 8601 string to the `YYYY-MM-DDThh:mm` format expected by datetime-local inputs. */
+function toDatetimeLocal(iso: string): string {
+  if (!iso) return '';
+  try {
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return '';
+    // Format as local datetime: YYYY-MM-DDThh:mm
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  } catch {
+    return '';
   }
 }
 
@@ -119,15 +147,140 @@ export function renderInput(
         />
       );
 
-    case 'url':
     case 'image':
       return (
-        <input
-          type="text"
+        <MediaField
           value={String(value ?? '')}
-          onChange={(e) => onChange(e.target.value || null)}
-          placeholder={schema.type === 'image' ? 'Image URL...' : 'https://...'}
+          onChange={(v) => onChange(v)}
+          placeholder="Image URL..."
+          mimeTypeFilter="image"
+        />
+      );
+
+    case 'url':
+      return (
+        <MediaField
+          value={String(value ?? '')}
+          onChange={(v) => onChange(v)}
+          placeholder="https://..."
+        />
+      );
+
+    case 'icon':
+      return (
+        <IconField
+          value={String(value ?? '')}
+          onChange={(v) => onChange(v || null)}
+        />
+      );
+
+    case 'richtext':
+      return (
+        <TipTapEditor
+          value={String(value ?? '')}
+          onChange={(html) => onChange(html)}
+          placeholder={schema.label}
+        />
+      );
+
+    case 'datetime':
+      return (
+        <input
+          type="datetime-local"
+          value={toDatetimeLocal(String(value ?? ''))}
+          onChange={(e) => {
+            const local = e.target.value;
+            onChange(local ? new Date(local).toISOString() : '');
+          }}
           className="w-full rounded-md border border-gray-200 px-2 py-1.5 text-sm text-gray-700 focus:border-blue-400 focus:outline-none"
+        />
+      );
+
+    case 'timezone':
+      return (
+        <TimezoneField
+          value={String(value ?? '')}
+          onChange={(v) => onChange(v)}
+        />
+      );
+
+    case 'pagelink':
+      return (
+        <PageLinkField
+          value={String(value ?? '')}
+          onChange={(v) => onChange(v)}
+        />
+      );
+
+    case 'product':
+      return (
+        <ProductField
+          value={String(value ?? '')}
+          onChange={(v) => onChange(v || null)}
+        />
+      );
+
+    case 'article':
+      return (
+        <ArticleField
+          value={String(value ?? '')}
+          onChange={(v) => onChange(v || null)}
+        />
+      );
+
+    case 'category':
+      return (
+        <CategoryField
+          value={String(value ?? '')}
+          onChange={(v) => onChange(v || null)}
+        />
+      );
+
+    case 'navitems':
+      return (
+        <NavItemsField
+          value={Array.isArray(value) ? value : []}
+          onChange={(v) => onChange(v)}
+        />
+      );
+
+    case 'blogposts':
+      return (
+        <BlogPostsField
+          value={Array.isArray(value) ? value : []}
+          onChange={(v) => onChange(v)}
+        />
+      );
+
+    case 'addresslookup':
+      return (
+        <AddressLookupField
+          value={typeof value === 'string' ? value : ''}
+          onChange={(v) => onChange(v)}
+        />
+      );
+
+    case 'products':
+      return (
+        <MultiProductField
+          value={Array.isArray(value) ? value : []}
+          onChange={(v) => onChange(v)}
+        />
+      );
+
+    case 'categories':
+      return (
+        <MultiCategoryField
+          value={Array.isArray(value) ? value : []}
+          onChange={(v) => onChange(v)}
+        />
+      );
+
+    case 'reviewsource':
+      return (
+        <ReviewSourceField
+          value={value && typeof value === 'object' ? value as { productId: string; productName?: string } : null}
+          onChange={(v) => onChange(v)}
         />
       );
 

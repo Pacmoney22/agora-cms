@@ -1,0 +1,355 @@
+{
+  "id": "enhanced-slider",
+  "name": "Enhanced Slider",
+  "category": "Media",
+  "icon": "slider",
+  "acceptsChildren": false,
+  "properties": {
+    "layout": {
+      "type": "enum",
+      "values": ["auto", "full-width", "full-screen"],
+      "default": "full-width",
+      "label": "Layout"
+    },
+    "height": {
+      "type": "number",
+      "default": 500,
+      "min": 100,
+      "max": 1200,
+      "label": "Height (px)"
+    },
+    "autoplay": {
+      "type": "boolean",
+      "default": true,
+      "label": "Autoplay"
+    },
+    "autoplayInterval": {
+      "type": "number",
+      "default": 5000,
+      "min": 1000,
+      "max": 30000,
+      "label": "Autoplay Interval (ms)"
+    },
+    "pauseOnHover": {
+      "type": "boolean",
+      "default": true,
+      "label": "Pause on Hover"
+    },
+    "loop": {
+      "type": "boolean",
+      "default": true,
+      "label": "Loop"
+    },
+    "transition": {
+      "type": "enum",
+      "values": ["fade", "slide-h", "slide-v", "curtain"],
+      "default": "fade",
+      "label": "Slide Transition"
+    },
+    "transitionDuration": {
+      "type": "number",
+      "default": 800,
+      "min": 200,
+      "max": 3000,
+      "label": "Transition Duration (ms)"
+    },
+    "showArrows": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Arrows"
+    },
+    "showBullets": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Bullets"
+    },
+    "showProgressBar": {
+      "type": "boolean",
+      "default": false,
+      "label": "Show Progress Bar"
+    },
+    "slides": {
+      "type": "array",
+      "label": "Slides",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "default": "Slide",
+            "label": "Slide Title"
+          },
+          "backgroundType": {
+            "type": "enum",
+            "values": ["color", "image", "gradient", "video"],
+            "default": "color",
+            "label": "Background Type"
+          },
+          "backgroundValue": {
+            "type": "string",
+            "default": "#1a1a2e",
+            "label": "Background Value"
+          },
+          "backgroundImage": {
+            "type": "image",
+            "default": null,
+            "label": "Background Image"
+          },
+          "kenBurns": {
+            "type": "boolean",
+            "default": false,
+            "label": "Ken Burns Effect"
+          },
+          "overlay": {
+            "type": "enum",
+            "values": ["none", "dark", "light", "gradient"],
+            "default": "none",
+            "label": "Overlay"
+          },
+          "duration": {
+            "type": "number",
+            "default": 5000,
+            "min": 1000,
+            "max": 30000,
+            "label": "Slide Duration (ms)"
+          },
+          "layers": {
+            "type": "array",
+            "label": "Layers",
+            "items": {
+              "type": "object",
+              "properties": {
+                "layerType": {
+                  "type": "enum",
+                  "values": ["text", "image", "button", "shape", "icon"],
+                  "default": "text",
+                  "label": "Layer Type"
+                },
+                "content": {
+                  "type": "string",
+                  "default": "Layer text",
+                  "label": "Content"
+                },
+                "imageSrc": {
+                  "type": "image",
+                  "default": null,
+                  "label": "Image Source"
+                },
+                "x": {
+                  "type": "number",
+                  "default": 50,
+                  "label": "X Position (%)"
+                },
+                "y": {
+                  "type": "number",
+                  "default": 50,
+                  "label": "Y Position (%)"
+                },
+                "width": {
+                  "type": "string",
+                  "default": "auto",
+                  "label": "Width"
+                },
+                "height": {
+                  "type": "string",
+                  "default": "auto",
+                  "label": "Height"
+                },
+                "fontSize": {
+                  "type": "number",
+                  "default": 24,
+                  "min": 8,
+                  "max": 200,
+                  "label": "Font Size (px)"
+                },
+                "fontWeight": {
+                  "type": "enum",
+                  "values": ["300", "400", "500", "600", "700", "800", "900"],
+                  "default": "600",
+                  "label": "Font Weight"
+                },
+                "color": {
+                  "type": "color",
+                  "default": "#ffffff",
+                  "label": "Color"
+                },
+                "backgroundColor": {
+                  "type": "color",
+                  "default": null,
+                  "label": "Background Color"
+                },
+                "borderRadius": {
+                  "type": "string",
+                  "default": "0",
+                  "label": "Border Radius"
+                },
+                "padding": {
+                  "type": "string",
+                  "default": "0",
+                  "label": "Padding"
+                },
+                "zIndex": {
+                  "type": "number",
+                  "default": 1,
+                  "label": "Z-Index"
+                },
+                "animationIn": {
+                  "type": "enum",
+                  "values": ["none", "fade", "slide-left", "slide-right", "slide-up", "slide-down", "zoom-in", "zoom-out", "rotate"],
+                  "default": "fade",
+                  "label": "Entrance Animation"
+                },
+                "animationOut": {
+                  "type": "enum",
+                  "values": ["none", "fade", "slide-left", "slide-right", "slide-up", "slide-down", "zoom-in", "zoom-out", "rotate"],
+                  "default": "fade",
+                  "label": "Exit Animation"
+                },
+                "animationInDuration": {
+                  "type": "number",
+                  "default": 600,
+                  "min": 100,
+                  "max": 3000,
+                  "label": "In Duration (ms)"
+                },
+                "animationOutDuration": {
+                  "type": "number",
+                  "default": 400,
+                  "min": 100,
+                  "max": 3000,
+                  "label": "Out Duration (ms)"
+                },
+                "animationInDelay": {
+                  "type": "number",
+                  "default": 0,
+                  "min": 0,
+                  "max": 5000,
+                  "label": "In Delay (ms)"
+                },
+                "loopAnimation": {
+                  "type": "enum",
+                  "values": ["none", "pulse", "bounce", "rotate", "float"],
+                  "default": "none",
+                  "label": "Loop Animation"
+                },
+                "clickAction": {
+                  "type": "enum",
+                  "values": ["none", "url", "next-slide", "prev-slide", "scroll-down"],
+                  "default": "none",
+                  "label": "Click Action"
+                },
+                "clickUrl": {
+                  "type": "url",
+                  "default": null,
+                  "label": "Click URL"
+                },
+                "hideOnMobile": {
+                  "type": "boolean",
+                  "default": false,
+                  "label": "Hide on Mobile"
+                },
+                "hideOnTablet": {
+                  "type": "boolean",
+                  "default": false,
+                  "label": "Hide on Tablet"
+                }
+              }
+            },
+            "default": []
+          }
+        }
+      },
+      "default": [
+        {
+          "title": "Slide 1",
+          "backgroundType": "gradient",
+          "backgroundValue": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+          "backgroundImage": null,
+          "kenBurns": false,
+          "overlay": "none",
+          "duration": 5000,
+          "layers": [
+            {
+              "layerType": "text",
+              "content": "Welcome to Your Slider",
+              "imageSrc": null,
+              "x": 50,
+              "y": 35,
+              "width": "auto",
+              "height": "auto",
+              "fontSize": 48,
+              "fontWeight": "700",
+              "color": "#ffffff",
+              "backgroundColor": null,
+              "borderRadius": "0",
+              "padding": "0",
+              "zIndex": 2,
+              "animationIn": "slide-up",
+              "animationOut": "fade",
+              "animationInDuration": 800,
+              "animationOutDuration": 400,
+              "animationInDelay": 200,
+              "loopAnimation": "none",
+              "clickAction": "none",
+              "clickUrl": null,
+              "hideOnMobile": false,
+              "hideOnTablet": false
+            },
+            {
+              "layerType": "text",
+              "content": "Create stunning animated presentations",
+              "imageSrc": null,
+              "x": 50,
+              "y": 50,
+              "width": "auto",
+              "height": "auto",
+              "fontSize": 20,
+              "fontWeight": "400",
+              "color": "#ffffffcc",
+              "backgroundColor": null,
+              "borderRadius": "0",
+              "padding": "0",
+              "zIndex": 2,
+              "animationIn": "fade",
+              "animationOut": "fade",
+              "animationInDuration": 600,
+              "animationOutDuration": 400,
+              "animationInDelay": 600,
+              "loopAnimation": "none",
+              "clickAction": "none",
+              "clickUrl": null,
+              "hideOnMobile": false,
+              "hideOnTablet": false
+            },
+            {
+              "layerType": "button",
+              "content": "Get Started",
+              "imageSrc": null,
+              "x": 50,
+              "y": 65,
+              "width": "auto",
+              "height": "auto",
+              "fontSize": 16,
+              "fontWeight": "600",
+              "color": "#ffffff",
+              "backgroundColor": "#3b82f6",
+              "borderRadius": "8px",
+              "padding": "12px 32px",
+              "zIndex": 2,
+              "animationIn": "zoom-in",
+              "animationOut": "fade",
+              "animationInDuration": 600,
+              "animationOutDuration": 400,
+              "animationInDelay": 1000,
+              "loopAnimation": "none",
+              "clickAction": "url",
+              "clickUrl": "#",
+              "hideOnMobile": false,
+              "hideOnTablet": false
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -59,9 +59,12 @@ export class SeoController {
     @Body() seo: {
       metaTitle?: string;
       metaDescription?: string;
+      ogTitle?: string;
+      ogDescription?: string;
       ogImage?: string;
       canonicalUrl?: string;
       noIndex?: boolean;
+      twitterCardType?: string;
     },
   ) {
     return this.seoService.updatePageSeo(pageId, seo);

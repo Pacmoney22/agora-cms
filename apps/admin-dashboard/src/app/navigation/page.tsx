@@ -26,9 +26,10 @@ export default function NavigationPage() {
   });
 
   // Fetch pages for the page picker
-  const { data: pagesData } = useQuery({
+  const { data: pagesData, isLoading: pagesLoading, isError: pagesError, error: pagesErrorObj, refetch: refetchPages } = useQuery({
     queryKey: ['pages', 'nav-picker'],
     queryFn: () => pagesApi.list({ limit: 200 }),
+    refetchOnMount: 'always',
   });
 
   const pages: PageOption[] = (pagesData?.data || []).map((p: any) => ({
@@ -148,6 +149,10 @@ export default function NavigationPage() {
               onChange={handleChange}
               maxDepth={3}
               pages={pages}
+              pagesLoading={pagesLoading}
+              pagesError={pagesError}
+              pagesErrorMessage={pagesErrorObj instanceof Error ? pagesErrorObj.message : undefined}
+              onRetryPages={() => refetchPages()}
             />
           )}
         </div>

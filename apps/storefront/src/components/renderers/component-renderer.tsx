@@ -232,6 +232,92 @@ const componentRegistry: Record<string, ComponentRendererFn> = {
 };
 
 /**
+ * Data context passed from the catch-all route to inject API data into
+ * grid and card components at render time.
+ */
+export interface DataContext {
+  contentType?: string;
+  mode?: 'listing' | 'detail';
+  basePath?: string;
+  items?: unknown[];
+  item?: Record<string, unknown>;
+}
+
+/** Component IDs that represent grid/listing components. */
+const GRID_COMPONENT_IDS = new Set([
+  'blog-grid',
+  'product-grid',
+  'featured-products',
+  'category-list',
+  'event-grid',
+  'course-grid',
+]);
+
+/** Component IDs that represent card/detail components. */
+const CARD_COMPONENT_IDS = new Set([
+  'blog-post-card',
+  'product-card',
+  'event-card',
+  'course-card',
+  'product-quick-view',
+]);
+
+/**
+ * Merge data context into component props when appropriate.
+ * - Grid components receive `items` as their data prop (posts, products, etc.)
+ * - Card components receive the single `item` as their data prop
+ * - All content-routed components receive `detailBasePath`
+ */
+function mergeDataContext(
+  componentId: string,
+  props: Record<string, unknown>,
+  dataContext?: DataContext,
+): Record<string, unknown> {
+  if (!dataContext) return props;
+
+  const merged = { ...props };
+
+  // Inject basePath for link construction
+  if (dataContext.basePath) {
+    merged.detailBasePath = dataContext.basePath;
+  }
+
+  // Inject items into grid components (listing mode)
+  if (dataContext.mode === 'listing' && GRID_COMPONENT_IDS.has(componentId) && dataContext.items) {
+    // Each grid type uses a different prop name for its data array
+    const dataPropMap: Record<string, string> = {
+      'blog-grid': 'posts',
+      'product-grid': 'products',
+      'featured-products': 'products',
+      'category-list': 'categories',
+      'event-grid': 'events',
+      'course-grid': 'courses',
+    };
+    const dataProp = dataPropMap[componentId];
+    if (dataProp) {
+      merged[dataProp] = dataContext.items;
+    }
+  }
+
+  // Inject single item into card components (detail mode)
+  if (dataContext.mode === 'detail' && CARD_COMPONENT_IDS.has(componentId) && dataContext.item) {
+    const itemPropMap: Record<string, string> = {
+      'blog-post-card': 'post',
+      'product-card': 'product',
+      'event-card': 'eventData',
+      'course-card': 'courseData',
+      'product-quick-view': 'product',
+    };
+    const itemProp = itemPropMap[componentId];
+    if (itemProp) {
+      merged[itemProp] = dataContext.item;
+    }
+  }
+
+  return merged;
+}
+
+/**
  * Placeholder component for unknown/unregistered componentIds.
  */
 function UnknownComponent({ componentId }: { componentId: string }) {
@@ -245,24 +331,31 @@ function UnknownComponent({ componentId }: { componentId: string }) {
 /**
  * Recursively renders a ComponentInstance tree.
  * Looks up each component in the registry and renders its children recursively.
+ *
+ * When `dataContext` is provided (from the catch-all content route),
+ * it injects API data into matching grid and card components.
  */
 export function ComponentRenderer({
   instance,
+  dataContext,
 }: {
   instance: ComponentInstance;
+  dataContext?: DataContext;
 }) {
   const Renderer = componentRegistry[instance.componentId];
 
   const renderedChildren = instance.children.map((child) => (
-    <ComponentRenderer key={child.instanceId} instance={child} />
+    <ComponentRenderer key={child.instanceId} instance={child} dataContext={dataContext} />
   ));
 
   if (!Renderer) {
     return <UnknownComponent componentId={instance.componentId} />;
   }
 
+  const mergedProps = mergeDataContext(instance.componentId, instance.props, dataContext);
+
   return (
-    <Renderer props={instance.props}>
+    <Renderer props={mergedProps}>
       {renderedChildren.length > 0 ? renderedChildren : null}
     </Renderer>
   );

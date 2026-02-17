@@ -6,13 +6,12 @@
   "acceptsChildren": false,
   "properties": {
     "targetDate": {
-      "type": "string",
+      "type": "datetime",
       "default": "",
-      "label": "Target Date (ISO 8601)",
-      "format": "datetime"
+      "label": "Target Date & Time"
     },
     "timezone": {
-      "type": "string",
+      "type": "timezone",
       "default": "UTC",
       "label": "Timezone"
     },
@@ -89,6 +88,16 @@
       "values": ["small", "medium", "large"],
       "default": "medium",
       "label": "Size"
+    },
+    "fontColor": {
+      "type": "color",
+      "default": "",
+      "label": "Font Color"
+    },
+    "backgroundColor": {
+      "type": "color",
+      "default": "",
+      "label": "Background Color"
     }
   },
   "responsive": {

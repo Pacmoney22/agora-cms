@@ -23,6 +23,7 @@ import {
   Carousel,
   BackgroundVideo,
   AudioPlayer,
+  EnhancedSlider,
   // Marketing
   HeroBanner,
   CTABlock,
@@ -88,9 +89,14 @@ import {
   ReviewList,
   CaseStudiesGrid,
   Awards,
+  // Events
+  EventCard,
+  EventGrid,
+  // Courses
+  CourseCard,
+  CourseGrid,
   // Interactive
   Toast,
-  AnimatedTabs,
   Calculator,
   SearchableFAQ,
   Lightbox,
@@ -125,6 +131,7 @@ import gallerySchema from '@agora-cms/ui/src/schemas/gallery.schema.json';
 import carouselSchema from '@agora-cms/ui/src/schemas/carousel.schema.json';
 import backgroundVideoSchema from '@agora-cms/ui/src/schemas/background-video.schema.json';
 import audioPlayerSchema from '@agora-cms/ui/src/schemas/audio-player.schema.json';
+import enhancedSliderSchema from '@agora-cms/ui/src/schemas/enhanced-slider.schema.json';
 
 // Marketing schemas
 import heroBannerSchema from '@agora-cms/ui/src/schemas/hero-banner.schema.json';
@@ -200,9 +207,16 @@ import reviewListSchema from '@agora-cms/ui/src/schemas/review-list.schema.json'
 import caseStudiesGridSchema from '@agora-cms/ui/src/schemas/case-studies-grid.schema.json';
 import awardsSchema from '@agora-cms/ui/src/schemas/awards.schema.json';
 
+// Event schemas
+import eventCardSchema from '@agora-cms/ui/src/schemas/event-card.schema.json';
+import eventGridSchema from '@agora-cms/ui/src/schemas/event-grid.schema.json';
+
+// Course schemas
+import courseCardSchema from '@agora-cms/ui/src/schemas/course-card.schema.json';
+import courseGridSchema from '@agora-cms/ui/src/schemas/course-grid.schema.json';
+
 // Interactive schemas
 import toastSchema from '@agora-cms/ui/src/schemas/toast.schema.json';
-import animatedTabsSchema from '@agora-cms/ui/src/schemas/animated-tabs.schema.json';
 import calculatorSchema from '@agora-cms/ui/src/schemas/calculator.schema.json';
 import searchableFaqSchema from '@agora-cms/ui/src/schemas/faq-searchable.schema.json';
 import lightboxSchema from '@agora-cms/ui/src/schemas/lightbox.schema.json';
@@ -211,6 +225,9 @@ import lightboxSchema from '@agora-cms/ui/src/schemas/lightbox.schema.json';
 import siteMetaSchema from '@agora-cms/ui/src/schemas/site-meta.schema.json';
 import errorPageSchema from '@agora-cms/ui/src/schemas/error-page.schema.json';
 import maintenancePageSchema from '@agora-cms/ui/src/schemas/maintenance-page.schema.json';
+
+// Shared props (merged into all component schemas)
+import sharedPropsSchema from '@agora-cms/ui/src/schemas/_shared-props.schema.json';
 
 export interface ComponentSchema {
   id: string;
@@ -244,8 +261,26 @@ export interface RegisteredComponent {
 
 const registry = new globalThis.Map<string, RegisteredComponent>();
 
+const sharedProps = (sharedPropsSchema as any).properties as Record<string, PropertySchema>;
+
+/**
+ * Shared prop keys grouped by section for the PropertiesPanel.
+ */
+export const SHARED_PROP_GROUPS: Record<string, string[]> = {
+  Spacing: ['marginTop', 'marginBottom', 'paddingTop', 'paddingBottom', 'paddingLeft', 'paddingRight'],
+  Visibility: ['hideOnDesktop', 'hideOnTablet', 'hideOnMobile', 'visibilityCondition'],
+  Styling: ['opacity', 'overflow', 'customCssClass', 'customId'],
+  Animation: ['entranceAnimation', 'animationDuration', 'animationDelay', 'animationEasing'],
+  Accessibility: ['ariaLabel', 'ariaHidden', 'role'],
+};
+
 function register(schema: ComponentSchema, component: React.ComponentType<any>) {
-  registry.set(schema.id, { component, schema });
+  // Merge shared props into every component schema
+  const merged: ComponentSchema = {
+    ...schema,
+    properties: { ...schema.properties, ...sharedProps },
+  };
+  registry.set(merged.id, { component, schema: merged });
 }
 
 // Register all components — JSON schemas are cast through unknown since their
@@ -276,6 +311,7 @@ register(gallerySchema as unknown as ComponentSchema, Gallery);
 register(carouselSchema as unknown as ComponentSchema, Carousel);
 register(backgroundVideoSchema as unknown as ComponentSchema, BackgroundVideo);
 register(audioPlayerSchema as unknown as ComponentSchema, AudioPlayer);
+register(enhancedSliderSchema as unknown as ComponentSchema, EnhancedSlider);
 
 // Marketing
 register(heroBannerSchema as unknown as ComponentSchema, HeroBanner);
@@ -351,9 +387,16 @@ register(reviewListSchema as unknown as ComponentSchema, ReviewList);
 register(caseStudiesGridSchema as unknown as ComponentSchema, CaseStudiesGrid);
 register(awardsSchema as unknown as ComponentSchema, Awards);
 
+// Events
+register(eventCardSchema as unknown as ComponentSchema, EventCard);
+register(eventGridSchema as unknown as ComponentSchema, EventGrid);
+
+// Courses
+register(courseCardSchema as unknown as ComponentSchema, CourseCard);
+register(courseGridSchema as unknown as ComponentSchema, CourseGrid);
+
 // Interactive
 register(toastSchema as unknown as ComponentSchema, Toast);
-register(animatedTabsSchema as unknown as ComponentSchema, AnimatedTabs);
 register(calculatorSchema as unknown as ComponentSchema, Calculator);
 register(searchableFaqSchema as unknown as ComponentSchema, SearchableFAQ);
 register(lightboxSchema as unknown as ComponentSchema, Lightbox);

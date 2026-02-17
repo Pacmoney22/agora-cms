@@ -12,16 +12,16 @@
         "type": "object",
         "properties": {
           "label": { "type": "string", "label": "Label" },
-          "url": { "type": "url", "label": "URL" }
+          "url": { "type": "pagelink", "label": "URL" }
         }
       }
     },
     "source": {
       "type": "enum",
       "values": ["auto", "manual"],
-      "default": "manual",
+      "default": "auto",
       "label": "Source",
-      "description": "Auto generates breadcrumbs from page hierarchy; manual uses provided items"
+      "description": "Auto generates breadcrumbs from page hierarchy (parent pages); manual uses provided items below"
     },
     "separator": {
       "type": "enum",

@@ -11,9 +11,9 @@
       "label": "Show After Scroll (px)"
     },
     "icon": {
-      "type": "string",
+      "type": "icon",
       "default": "ArrowUp",
-      "label": "Icon (Lucide name)"
+      "label": "Icon"
     },
     "position": {
       "type": "enum",

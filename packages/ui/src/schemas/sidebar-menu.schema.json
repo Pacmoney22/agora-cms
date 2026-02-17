@@ -5,47 +5,16 @@
   "icon": "sidebar-menu",
   "acceptsChildren": false,
   "properties": {
-    "menuSource": {
-      "type": "string",
-      "default": null,
-      "label": "Menu Source ID",
-      "description": "ID of the menu data source to populate items"
+    "navigationMenu": {
+      "type": "enum",
+      "values": ["none", "header", "footer", "sidebar", "mobile"],
+      "default": "sidebar",
+      "label": "Navigation Menu"
     },
     "items": {
-      "type": "array",
+      "type": "navitems",
       "label": "Menu Items",
-      "items": {
-        "type": "object",
-        "properties": {
-          "label": { "type": "string", "label": "Label" },
-          "url": { "type": "url", "label": "URL" },
-          "icon": { "type": "string", "default": null, "label": "Icon" },
-          "children": {
-            "type": "array",
-            "label": "Sub-items",
-            "items": {
-              "type": "object",
-              "properties": {
-                "label": { "type": "string", "label": "Label" },
-                "url": { "type": "url", "label": "URL" },
-                "icon": { "type": "string", "default": null, "label": "Icon" },
-                "children": {
-                  "type": "array",
-                  "label": "Sub-items",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "label": { "type": "string", "label": "Label" },
-                      "url": { "type": "url", "label": "URL" },
-                      "icon": { "type": "string", "default": null, "label": "Icon" }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+      "default": []
     },
     "showIcons": {
       "type": "boolean",

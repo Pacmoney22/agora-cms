@@ -59,9 +59,21 @@
     },
     "dataSource": {
       "type": "enum",
-      "values": ["manual", "csv"],
+      "values": ["manual", "csv", "api"],
       "default": "manual",
       "label": "Data Source"
+    },
+    "csvUrl": {
+      "type": "url",
+      "default": null,
+      "label": "CSV File URL",
+      "visibleWhen": { "dataSource": "csv" }
+    },
+    "apiUrl": {
+      "type": "url",
+      "default": null,
+      "label": "API Endpoint URL",
+      "visibleWhen": { "dataSource": "api" }
     },
     "showLegend": {
       "type": "boolean",

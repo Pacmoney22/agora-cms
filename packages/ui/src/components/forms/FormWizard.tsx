@@ -26,6 +26,7 @@ export interface FormWizardProps {
   submitLabel?: string;
   successAction?: 'show-message' | 'redirect';
   successMessage?: string;
+  submitEndpoint?: string | null;
   saveDraft?: boolean;
   className?: string;
 }
@@ -67,6 +68,7 @@ export const FormWizard: React.FC<FormWizardProps> = ({
   submitLabel = 'Submit',
   successAction = 'show-message',
   successMessage = 'Your submission has been received. Thank you!',
+  submitEndpoint = null,
   saveDraft = false,
   className,
 }) => {
@@ -135,23 +137,40 @@ export const FormWizard: React.FC<FormWizardProps> = ({
     setCurrentStep((prev) => Math.max(prev - 1, 0));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (validatePerStep && !validateStep(currentStep)) return;
 
     setSubmitting(true);
-    setTimeout(() => {
-      setSubmitting(false);
 
-      if (successAction === 'redirect') {
-        // In a real app, this would redirect
-        setSubmitted(true);
-        return;
+    try {
+      if (submitEndpoint) {
+        // Build payload from all steps
+        const payload: Record<string, string> = {};
+        steps.forEach((s) => {
+          s.fields.forEach((field) => {
+            const key = fieldId(field.label);
+            payload[field.label] = values[key] ?? '';
+          });
+        });
+
+        const res = await fetch(submitEndpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) {
+          throw new Error(`Submission failed (${res.status})`);
+        }
       }
 
       setSubmitted(true);
-    }, 800);
+    } catch {
+      setErrors({ _form: 'Something went wrong. Please try again.' });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleSaveDraft = () => {
@@ -455,6 +474,13 @@ export const FormWizard: React.FC<FormWizardProps> = ({
             </div>
           </fieldset>
         ))}
+
+        {errors['_form'] && (
+          <p className="mt-4 flex items-center gap-1 text-sm text-red-600">
+            <X size={14} />
+            {errors['_form']}
+          </p>
+        )}
 
         <div className="mt-6 flex items-center justify-between">
           <div className="flex items-center gap-2">

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { clsx } from 'clsx';
 import { X } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
@@ -40,13 +40,18 @@ export const AnnouncementBar: React.FC<AnnouncementBarProps> = ({
   className,
 }) => {
   const [dismissed, setDismissed] = useState(false);
+  // Default to visible so server and client render identically;
+  // check the schedule after mount to avoid hydration mismatch from Date.now().
+  const [isWithinSchedule, setIsWithinSchedule] = useState(true);
 
-  const isWithinSchedule = useMemo(() => {
-    if (!schedule) return true;
+  useEffect(() => {
+    if (!schedule) return;
     const now = Date.now();
-    if (schedule.startDate && new Date(schedule.startDate).getTime() > now) return false;
-    if (schedule.endDate && new Date(schedule.endDate).getTime() < now) return false;
-    return true;
+    const beforeStart = schedule.startDate && new Date(schedule.startDate).getTime() > now;
+    const afterEnd = schedule.endDate && new Date(schedule.endDate).getTime() < now;
+    if (beforeStart || afterEnd) {
+      setIsWithinSchedule(false);
+    }
   }, [schedule]);
 
   if (dismissed || !isWithinSchedule) return null;

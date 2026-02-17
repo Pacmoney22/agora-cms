@@ -130,10 +130,40 @@
       "default": "Your submission has been received. Thank you!",
       "label": "Success Message"
     },
+    "submitEndpoint": {
+      "type": "url",
+      "default": null,
+      "label": "Submission Endpoint URL"
+    },
     "saveDraft": {
       "type": "boolean",
       "default": false,
       "label": "Show Save Draft Button"
+    },
+    "salesforceEnabled": {
+      "type": "boolean",
+      "default": false,
+      "label": "Enable Salesforce Integration"
+    },
+    "salesforceObjectType": {
+      "type": "enum",
+      "values": ["Lead", "Contact", "Case"],
+      "default": "Lead",
+      "label": "Salesforce Object Type",
+      "visibleWhen": { "salesforceEnabled": true }
+    },
+    "salesforceFieldMapping": {
+      "type": "array",
+      "label": "Salesforce Field Mapping",
+      "visibleWhen": { "salesforceEnabled": true },
+      "items": {
+        "type": "object",
+        "properties": {
+          "formField": { "type": "string", "default": "", "label": "Form Field" },
+          "sfField": { "type": "string", "default": "", "label": "Salesforce Field API Name" }
+        }
+      },
+      "default": []
     }
   },
   "responsive": {

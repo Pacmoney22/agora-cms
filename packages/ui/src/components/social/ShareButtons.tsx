@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { clsx } from 'clsx';
 import { Copy, Check, Mail } from 'lucide-react';
 
@@ -126,13 +126,16 @@ export const ShareButtons: React.FC<ShareButtonsProps> = ({
   className,
 }) => {
   const [copied, setCopied] = useState(false);
+  // Resolve current-page URL after mount to avoid SSR/client hydration mismatch.
+  const [currentPageUrl, setCurrentPageUrl] = useState('');
 
-  const rawUrl =
-    shareUrl === 'custom' && customUrl
-      ? customUrl
-      : typeof window !== 'undefined'
-        ? window.location.href
-        : '';
+  useEffect(() => {
+    if (shareUrl !== 'custom') {
+      setCurrentPageUrl(globalThis.location.href);
+    }
+  }, [shareUrl]);
+
+  const rawUrl = shareUrl === 'custom' && customUrl ? customUrl : currentPageUrl;
 
   // Validate URL to prevent open redirect vulnerabilities
   const url = validateUrl(rawUrl);

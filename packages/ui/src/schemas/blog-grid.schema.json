@@ -5,36 +5,17 @@
   "icon": "layout-grid",
   "acceptsChildren": false,
   "properties": {
-    "posts": {
-      "type": "array",
-      "label": "Posts",
-      "items": {
-        "type": "object",
-        "properties": {
-          "title": { "type": "string", "default": "", "label": "Title", "required": true },
-          "excerpt": { "type": "string", "default": "", "label": "Excerpt" },
-          "image": { "type": "image", "default": null, "label": "Image" },
-          "author": {
-            "type": "object",
-            "label": "Author",
-            "properties": {
-              "name": { "type": "string", "default": "", "label": "Name" },
-              "avatar": { "type": "image", "default": null, "label": "Avatar" }
-            }
-          },
-          "date": { "type": "string", "default": "", "label": "Date" },
-          "category": { "type": "string", "default": "", "label": "Category" },
-          "readTime": { "type": "string", "default": "", "label": "Read Time" },
-          "slug": { "type": "string", "default": "", "label": "Slug", "required": true }
-        }
-      },
-      "default": []
-    },
     "source": {
       "type": "enum",
-      "values": ["recent", "category", "tag", "manual", "featured"],
+      "values": ["recent", "category", "tag", "featured"],
       "default": "recent",
       "label": "Post Source"
+    },
+    "sortBy": {
+      "type": "enum",
+      "values": ["newest", "oldest", "title"],
+      "default": "newest",
+      "label": "Sort By"
     },
     "maxPosts": {
       "type": "number",

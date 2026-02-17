@@ -1,0 +1,79 @@
+{
+  "id": "course-grid",
+  "name": "Course Grid",
+  "category": "Courses",
+  "icon": "book-open",
+  "acceptsChildren": false,
+  "properties": {
+    "source": {
+      "type": "enum",
+      "values": ["all", "featured", "newest", "popular"],
+      "default": "all",
+      "label": "Course Source"
+    },
+    "maxCourses": {
+      "type": "number",
+      "default": 6,
+      "min": 1,
+      "max": 24,
+      "label": "Max Courses"
+    },
+    "columns": {
+      "type": "number",
+      "default": 3,
+      "min": 1,
+      "max": 4,
+      "label": "Columns"
+    },
+    "layout": {
+      "type": "enum",
+      "values": ["grid", "list"],
+      "default": "grid",
+      "label": "Layout"
+    },
+    "showFilters": {
+      "type": "boolean",
+      "default": false,
+      "label": "Show Filters"
+    },
+    "cardStyle": {
+      "type": "enum",
+      "values": ["standard", "compact", "featured"],
+      "default": "standard",
+      "label": "Card Style"
+    },
+    "showThumbnail": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Thumbnail"
+    },
+    "showInstructor": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Instructor"
+    },
+    "showPrice": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Price"
+    },
+    "showLevel": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Level Badge"
+    },
+    "emptyMessage": {
+      "type": "string",
+      "default": "No courses available",
+      "label": "Empty State Message"
+    },
+    "viewAllLink": {
+      "type": "pagelink",
+      "default": null,
+      "label": "View All Link"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

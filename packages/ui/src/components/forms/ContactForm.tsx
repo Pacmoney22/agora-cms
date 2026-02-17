@@ -18,6 +18,7 @@ export interface ContactFormProps {
   successAction?: 'show-message' | 'redirect';
   redirectUrl?: string | null;
   recipientEmail?: string | null;
+  submitEndpoint?: string | null;
   honeypot?: boolean;
   consentCheckbox?: { label: string; required: boolean } | null;
   className?: string;
@@ -37,6 +38,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({
   successAction = 'show-message',
   redirectUrl = null,
   recipientEmail = null,
+  submitEndpoint = null,
   honeypot = true,
   consentCheckbox = null,
   className,
@@ -96,16 +98,37 @@ export const ContactForm: React.FC<ContactFormProps> = ({
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validate()) return;
 
+    // Check honeypot
+    if (honeypot && values['_hp']) return;
+
     setSubmitting(true);
 
-    // Simulate async submission
-    setTimeout(() => {
-      setSubmitting(false);
+    try {
+      // Build form data payload
+      const payload: Record<string, unknown> = {};
+      fields.forEach((field) => {
+        const key = fieldId(field.label);
+        payload[field.label] = values[key] ?? '';
+      });
+      if (recipientEmail) {
+        payload._recipientEmail = recipientEmail;
+      }
+
+      if (submitEndpoint) {
+        const res = await fetch(submitEndpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) {
+          throw new Error(`Submission failed (${res.status})`);
+        }
+      }
 
       if (successAction === 'redirect' && redirectUrl) {
         window.location.href = redirectUrl;
@@ -113,7 +136,11 @@ export const ContactForm: React.FC<ContactFormProps> = ({
       }
 
       setSubmitted(true);
-    }, 800);
+    } catch {
+      setErrors({ _form: 'Something went wrong. Please try again.' });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (submitted) {
@@ -337,6 +364,13 @@ export const ContactForm: React.FC<ContactFormProps> = ({
 
       {/* Hidden recipient email for form handler */}
       {recipientEmail && <input type="hidden" name="_to" value={recipientEmail} />}
+
+      {errors['_form'] && (
+        <p className="mt-4 flex items-center gap-1 text-sm text-red-600">
+          <X size={14} />
+          {errors['_form']}
+        </p>
+      )}
 
       <div className="mt-6">
         <button

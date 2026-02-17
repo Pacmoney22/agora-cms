@@ -5,6 +5,18 @@
   "icon": "star",
   "acceptsChildren": false,
   "properties": {
+    "source": {
+      "type": "enum",
+      "values": ["auto", "manual"],
+      "default": "auto",
+      "label": "Data Source"
+    },
+    "reviewSource": {
+      "type": "reviewsource",
+      "default": null,
+      "label": "Product for Reviews",
+      "visibleWhen": { "source": "auto" }
+    },
     "averageRating": {
       "type": "number",
       "default": 4.5,

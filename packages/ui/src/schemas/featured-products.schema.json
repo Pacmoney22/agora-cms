@@ -14,28 +14,9 @@
     },
     "source": {
       "type": "enum",
-      "values": ["manual", "best-sellers", "new-arrivals", "on-sale", "recently-viewed", "recommended"],
-      "default": "manual",
+      "values": ["best-sellers", "new-arrivals", "on-sale", "recently-viewed", "recommended"],
+      "default": "best-sellers",
       "label": "Product Source"
-    },
-    "products": {
-      "type": "array",
-      "label": "Products",
-      "visibleWhen": { "source": "manual" },
-      "items": {
-        "type": "object",
-        "properties": {
-          "name": { "type": "string", "default": "", "label": "Product Name", "required": true },
-          "price": { "type": "number", "default": 0, "label": "Price", "min": 0 },
-          "salePrice": { "type": "number", "default": null, "label": "Sale Price", "min": 0 },
-          "image": { "type": "image", "default": null, "label": "Image" },
-          "rating": { "type": "number", "default": null, "label": "Rating", "min": 0, "max": 5 },
-          "badge": { "type": "string", "default": null, "label": "Badge" },
-          "slug": { "type": "string", "default": "", "label": "Slug", "required": true },
-          "type": { "type": "string", "default": null, "label": "Type" }
-        }
-      },
-      "default": []
     },
     "maxProducts": {
       "type": "number",

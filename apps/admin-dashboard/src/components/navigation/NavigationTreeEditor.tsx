@@ -41,6 +41,10 @@ interface NavigationTreeEditorProps {
   onChange: (items: NavItem[]) => void;
   maxDepth?: number;
   pages?: PageOption[];
+  pagesLoading?: boolean;
+  pagesError?: boolean;
+  pagesErrorMessage?: string;
+  onRetryPages?: () => void;
 }
 
 // ── Utilities ──────────────────────────────────────────────────────────
@@ -152,6 +156,10 @@ export function NavigationTreeEditor({
   onChange,
   maxDepth = 3,
   pages = [],
+  pagesLoading = false,
+  pagesError = false,
+  pagesErrorMessage,
+  onRetryPages,
 }: NavigationTreeEditorProps) {
   const [items, setItems] = useState<NavItem[]>(() => ensureIds(externalItems));
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -478,6 +486,10 @@ export function NavigationTreeEditor({
                 <EditingPanel
                   item={flat}
                   pages={pages}
+                  pagesLoading={pagesLoading}
+                  pagesError={pagesError}
+                  pagesErrorMessage={pagesErrorMessage}
+                  onRetryPages={onRetryPages}
                   onSave={(updates) => {
                     updateItemFields(flat.id, updates);
                     setEditingId(null);
@@ -514,11 +526,15 @@ export function NavigationTreeEditor({
 interface EditingPanelProps {
   item: FlatItem;
   pages: PageOption[];
+  pagesLoading?: boolean;
+  pagesError?: boolean;
+  pagesErrorMessage?: string;
+  onRetryPages?: () => void;
   onSave: (updates: Partial<NavItem>) => void;
   onCancel: () => void;
 }
 
-function EditingPanel({ item, pages, onSave, onCancel }: EditingPanelProps) {
+function EditingPanel({ item, pages, pagesLoading, pagesError, pagesErrorMessage, onRetryPages, onSave, onCancel }: EditingPanelProps) {
   const [label, setLabel] = useState(item.label);
   const [linkType, setLinkType] = useState<'page' | 'url' | 'none'>(item.linkType);
   const [url, setUrl] = useState(item.url);
@@ -617,7 +633,28 @@ function EditingPanel({ item, pages, onSave, onCancel }: EditingPanelProps) {
       {linkType === 'page' && (
         <div>
           <label className="block text-[10px] font-medium text-gray-500 mb-1">Select Page</label>
-          {pages.length === 0 ? (
+          {pagesLoading ? (
+            <div className="flex items-center gap-2 py-2">
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-blue-500" />
+              <span className="text-xs text-gray-400">Loading pages...</span>
+            </div>
+          ) : pagesError ? (
+            <div className="rounded-md border border-red-200 bg-red-50 px-3 py-2">
+              <p className="text-xs text-red-600">Failed to load pages.</p>
+              {pagesErrorMessage && (
+                <p className="mt-0.5 text-[10px] text-red-500">{pagesErrorMessage}</p>
+              )}
+              {onRetryPages && (
+                <button
+                  type="button"
+                  onClick={onRetryPages}
+                  className="mt-1 text-xs font-medium text-blue-600 hover:underline"
+                >
+                  Retry
+                </button>
+              )}
+            </div>
+          ) : pages.length === 0 ? (
             <p className="text-xs text-gray-400 italic">No pages available. Create pages first.</p>
           ) : (
             <select
@@ -628,7 +665,7 @@ function EditingPanel({ item, pages, onSave, onCancel }: EditingPanelProps) {
               <option value="">-- Select a page --</option>
               {pages.map((page) => (
                 <option key={page.id} value={page.id}>
-                  {page.title} ({page.slug}){page.status === 'draft' ? ' [Draft]' : ''}
+                  {page.title} (/{page.slug}){page.status === 'draft' ? ' [Draft]' : ''}
                 </option>
               ))}
             </select>

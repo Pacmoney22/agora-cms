@@ -300,35 +300,20 @@ function PageSeoEditor({ pageId, onClose }: { pageId: string; onClose: () => voi
     queryFn: () => seoApi.getPageSeo(pageId),
   });
 
-  // Load data into form when fetched
-  useState(() => {
-    if (seoData) {
-      setForm({
-        metaTitle: seoData.metaTitle || '',
-        metaDescription: seoData.metaDescription || '',
-        ogTitle: seoData.ogTitle || '',
-        ogDescription: seoData.ogDescription || '',
-        ogImage: seoData.ogImage || '',
-        canonicalUrl: seoData.canonicalUrl || '',
-        noIndex: seoData.noIndex ?? false,
-        twitterCardType: seoData.twitterCardType || '',
-      });
-    }
-  });
-
-  // Re-sync when seoData changes
+  // Re-sync form when seoData arrives or changes
   const [prevData, setPrevData] = useState<any>(null);
   if (seoData && seoData !== prevData) {
     setPrevData(seoData);
+    const seo = seoData.seo as Record<string, any> | null;
     setForm({
-      metaTitle: seoData.metaTitle || '',
-      metaDescription: seoData.metaDescription || '',
-      ogTitle: seoData.ogTitle || '',
-      ogDescription: seoData.ogDescription || '',
-      ogImage: seoData.ogImage || '',
-      canonicalUrl: seoData.canonicalUrl || '',
-      noIndex: seoData.noIndex ?? false,
-      twitterCardType: seoData.twitterCardType || '',
+      metaTitle: seo?.metaTitle || '',
+      metaDescription: seo?.metaDescription || '',
+      ogTitle: seo?.ogTitle || '',
+      ogDescription: seo?.ogDescription || '',
+      ogImage: seo?.ogImage || '',
+      canonicalUrl: seo?.canonicalUrl || '',
+      noIndex: seo?.noIndex ?? false,
+      twitterCardType: seo?.twitterCardType || '',
     });
     setDirty(false);
   }

@@ -32,9 +32,9 @@
       "label": "Link URL"
     },
     "icon": {
-      "type": "string",
+      "type": "icon",
       "default": null,
-      "label": "Icon Name"
+      "label": "Icon"
     },
     "position": {
       "type": "enum",

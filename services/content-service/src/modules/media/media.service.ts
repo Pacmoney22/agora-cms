@@ -145,7 +145,9 @@ export class MediaService {
   }
 
   async findAll(options: { page?: number; limit?: number; mimeType?: string }) {
-    const { page = 1, limit = 20, mimeType } = options;
+    const page = Number(options.page) || 1;
+    const limit = Math.min(Number(options.limit) || 20, 500);
+    const mimeType = options.mimeType;
     const skip = (page - 1) * limit;
 
     const where: Record<string, unknown> = {};
@@ -163,8 +165,22 @@ export class MediaService {
       this.prisma.media.count({ where }),
     ]);
 
+    // Resolve display URLs for frontend consumption
+    const dataWithUrls = await Promise.all(
+      data.map(async (item) => {
+        const variants = item.variants as Record<string, string> | null;
+        return {
+          ...item,
+          url: await this.getPublicUrl(item.s3Key),
+          thumbnailUrl: variants?.thumbnail
+            ? await this.getPublicUrl(variants.thumbnail)
+            : await this.getPublicUrl(item.s3Key),
+        };
+      }),
+    );
+
     return {
-      data,
+      data: dataWithUrls,
       meta: { page, limit, total, totalPages: Math.ceil(total / limit) },
     };
   }

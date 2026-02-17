@@ -9,11 +9,15 @@ interface ToolbarProps {
   onSave?: () => void;
   onPreview?: () => void;
   onPublish?: () => void;
+  onSaveAsTemplate?: () => void;
   isSaving?: boolean;
+  isPublishing?: boolean;
+  pageStatus?: string;
+  pageTitle?: string;
 }
 
-export const Toolbar: React.FC<ToolbarProps> = ({ onSave, onPreview, onPublish, isSaving }) => {
-  const { responsiveMode, setResponsiveMode, isDirty } = useBuilderStore();
+export const Toolbar: React.FC<ToolbarProps> = ({ onSave, onPreview, onPublish, onSaveAsTemplate, isSaving, isPublishing, pageStatus, pageTitle }) => {
+  const { responsiveMode, setResponsiveMode, isDirty, isPreviewMode } = useBuilderStore();
   const { canUndo, canRedo, undo, redo } = useHistoryStore();
 
   const devices: { mode: ResponsiveMode; label: string; symbol: string; width: string }[] = [
@@ -22,11 +26,58 @@ export const Toolbar: React.FC<ToolbarProps> = ({ onSave, onPreview, onPublish, 
     { mode: 'mobile', label: 'Mobile', symbol: '\u{1F4F1}', width: '375px' },
   ];
 
+  if (isPreviewMode) {
+    return (
+      <header className="flex h-12 items-center justify-between border-b border-gray-200 bg-white px-4">
+        <div className="flex items-center gap-3">
+          <h1 className="text-sm font-semibold text-gray-900">Preview</h1>
+        </div>
+
+        <div className="flex items-center gap-1 rounded-md bg-gray-100 p-0.5">
+          {devices.map(({ mode, label, symbol }) => (
+            <button
+              key={mode}
+              onClick={() => setResponsiveMode(mode)}
+              className={clsx(
+                'rounded px-2 py-1 text-xs transition-colors',
+                responsiveMode === mode
+                  ? 'bg-white text-gray-900 shadow-sm'
+                  : 'text-gray-500 hover:text-gray-700',
+              )}
+              title={label}
+            >
+              {symbol}
+            </button>
+          ))}
+        </div>
+
+        <button
+          onClick={onPreview}
+          className="rounded-md bg-gray-800 px-3 py-1.5 text-xs font-medium text-white hover:bg-gray-900 transition-colors"
+        >
+          Exit Preview
+        </button>
+      </header>
+    );
+  }
+
   return (
     <header className="flex h-12 items-center justify-between border-b border-gray-200 bg-white px-4">
       {/* Left: Title + Status */}
       <div className="flex items-center gap-3">
-        <h1 className="text-sm font-semibold text-gray-900">Page Builder</h1>
+        <h1 className="text-sm font-semibold text-gray-900">
+          {pageTitle || 'Page Builder'}
+        </h1>
+        {pageStatus === 'published' && !isDirty && (
+          <span className="rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-medium text-green-700">
+            Published
+          </span>
+        )}
+        {pageStatus === 'draft' && !isDirty && (
+          <span className="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-medium text-gray-500">
+            Draft
+          </span>
+        )}
         {isDirty && (
           <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-medium text-amber-700">
             Unsaved
@@ -94,6 +145,15 @@ export const Toolbar: React.FC<ToolbarProps> = ({ onSave, onPreview, onPublish, 
         >
           Preview
         </button>
+        {onSaveAsTemplate && (
+          <button
+            onClick={onSaveAsTemplate}
+            className="rounded-md bg-purple-100 px-3 py-1.5 text-xs font-medium text-purple-700 hover:bg-purple-200 transition-colors"
+            title="Save current page as a reusable template"
+          >
+            Save as Template
+          </button>
+        )}
         <button
           onClick={onSave}
           disabled={isSaving || !isDirty}
@@ -108,9 +168,15 @@ export const Toolbar: React.FC<ToolbarProps> = ({ onSave, onPreview, onPublish, 
         </button>
         <button
           onClick={onPublish}
-          className="rounded-md bg-green-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-green-700 transition-colors"
+          disabled={isPublishing}
+          className={clsx(
+            'rounded-md px-3 py-1.5 text-xs font-medium transition-colors',
+            isPublishing
+              ? 'bg-green-400 text-green-100 cursor-not-allowed'
+              : 'bg-green-600 text-white hover:bg-green-700',
+          )}
         >
-          Publish
+          {isPublishing ? 'Publishing...' : 'Publish'}
         </button>
       </div>
     </header>

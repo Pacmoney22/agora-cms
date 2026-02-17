@@ -5,44 +5,6 @@
   "icon": "eye",
   "acceptsChildren": false,
   "properties": {
-    "product": {
-      "type": "object",
-      "label": "Product Data",
-      "properties": {
-        "name": { "type": "string", "default": "", "label": "Product Name", "required": true },
-        "price": { "type": "number", "default": 0, "label": "Price", "min": 0 },
-        "salePrice": { "type": "number", "default": null, "label": "Sale Price", "min": 0 },
-        "images": {
-          "type": "array",
-          "label": "Product Images",
-          "items": {
-            "type": "image",
-            "constraints": { "formats": ["jpg", "jpeg", "png", "webp"] }
-          },
-          "default": []
-        },
-        "description": { "type": "string", "default": "", "label": "Description" },
-        "rating": { "type": "number", "default": null, "label": "Rating", "min": 0, "max": 5 },
-        "variants": {
-          "type": "array",
-          "label": "Variants",
-          "items": {
-            "type": "object",
-            "properties": {
-              "label": { "type": "string", "default": "", "label": "Variant Label" },
-              "options": {
-                "type": "array",
-                "items": { "type": "string" },
-                "default": [],
-                "label": "Options"
-              }
-            }
-          },
-          "default": []
-        },
-        "slug": { "type": "string", "default": "", "label": "Product Slug", "required": true }
-      }
-    },
     "showGallery": {
       "type": "boolean",
       "default": true,

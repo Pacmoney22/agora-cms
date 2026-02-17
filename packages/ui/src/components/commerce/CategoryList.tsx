@@ -11,7 +11,7 @@ export interface CategoryItem {
 }
 
 export interface CategoryListProps {
-  categories?: CategoryItem[] | 'auto';
+  categories?: CategoryItem[];
   layout?: 'grid' | 'list' | 'carousel' | 'masonry';
   columns?: number;
   showImage?: boolean;
@@ -36,6 +36,30 @@ const masonryColsMap: Record<number, string> = {
   6: 'columns-2 lg:columns-3 xl:columns-6',
 };
 
+// Sample categories for builder preview
+const sampleCategories: CategoryItem[] = [
+  {
+    name: 'Clothing',
+    url: '/categories/clothing',
+    productCount: 124,
+  },
+  {
+    name: 'Electronics',
+    url: '/categories/electronics',
+    productCount: 86,
+  },
+  {
+    name: 'Home & Garden',
+    url: '/categories/home-garden',
+    productCount: 203,
+  },
+  {
+    name: 'Sports & Outdoors',
+    url: '/categories/sports-outdoors',
+    productCount: 67,
+  },
+];
+
 export const CategoryList: React.FC<CategoryListProps> = ({
   categories = [],
   layout = 'grid',
@@ -46,7 +70,7 @@ export const CategoryList: React.FC<CategoryListProps> = ({
   className,
 }) => {
   const clampedCols = Math.max(2, Math.min(6, columns));
-  const resolvedCategories = categories === 'auto' ? [] : categories;
+  const resolvedCategories = categories.length > 0 ? categories : sampleCategories;
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: 'start',
@@ -173,11 +197,7 @@ export const CategoryList: React.FC<CategoryListProps> = ({
   if (resolvedCategories.length === 0) {
     return (
       <div className={clsx('rounded-lg border-2 border-dashed border-gray-200 py-12 text-center', className)}>
-        <p className="text-gray-500">
-          {categories === 'auto'
-            ? 'Categories will be loaded automatically.'
-            : 'No categories to display.'}
-        </p>
+        <p className="text-gray-500">No categories to display.</p>
       </div>
     );
   }

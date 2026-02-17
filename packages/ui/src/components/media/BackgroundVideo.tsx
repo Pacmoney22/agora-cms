@@ -64,11 +64,13 @@ export const BackgroundVideo: React.FC<BackgroundVideoProps> = ({
       )}
     >
       {/* Fallback image for mobile / reduced motion */}
-      <div
-        className="absolute inset-0 bg-cover bg-center md:hidden"
-        style={{ backgroundImage: `url(${fallbackImage})` }}
-        aria-hidden="true"
-      />
+      {fallbackImage && (
+        <div
+          className="absolute inset-0 bg-cover bg-center md:hidden"
+          style={{ backgroundImage: `url(${fallbackImage})` }}
+          aria-hidden="true"
+        />
+      )}
 
       {/* Fallback for prefers-reduced-motion */}
       <style>
@@ -77,24 +79,32 @@ export const BackgroundVideo: React.FC<BackgroundVideoProps> = ({
           .bg-video-fallback-motion { display: block !important; }
         }`}
       </style>
-      <div
-        className="bg-video-fallback-motion absolute inset-0 hidden bg-cover bg-center"
-        style={{ backgroundImage: `url(${fallbackImage})` }}
-        aria-hidden="true"
-      />
+      {fallbackImage && (
+        <div
+          className="bg-video-fallback-motion absolute inset-0 hidden bg-cover bg-center"
+          style={{ backgroundImage: `url(${fallbackImage})` }}
+          aria-hidden="true"
+        />
+      )}
 
       {/* Video element */}
-      <video
-        ref={videoRef}
-        autoPlay
-        muted
-        loop
-        playsInline
-        className="bg-video-element absolute inset-0 hidden h-full w-full object-cover md:block"
-        aria-hidden="true"
-      >
-        <source src={videoUrl} />
-      </video>
+      {videoUrl ? (
+        <video
+          ref={videoRef}
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="bg-video-element absolute inset-0 hidden h-full w-full object-cover md:block"
+          aria-hidden="true"
+        >
+          <source src={videoUrl} />
+        </video>
+      ) : (
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-800 text-gray-400">
+          No video selected
+        </div>
+      )}
 
       {/* Overlay */}
       <div

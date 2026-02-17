@@ -12,8 +12,8 @@ export class UsersService {
     role?: string;
     isActive?: string;
   }) {
-    const page = params.page || 1;
-    const limit = Math.min(params.limit || 20, 100);
+    const page = Number(params.page) || 1;
+    const limit = Math.min(Number(params.limit) || 20, 100);
     const skip = (page - 1) * limit;
 
     const where: any = {};

@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 
+import { ArticlesModule } from './modules/articles/articles.module';
 import { AssignmentsModule } from './modules/assignments/assignments.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { MediaModule } from './modules/media/media.module';
@@ -22,6 +23,7 @@ import { VersionsModule } from './modules/versions/versions.module';
       envFilePath: ['.env.local', '.env', '../../.env'],
     }),
     ScheduleModule.forRoot(),
+    ArticlesModule,
     AssignmentsModule,
     AuthModule,
     PagesModule,

@@ -1,0 +1,48 @@
+{
+  "id": "course-card",
+  "name": "Course Card",
+  "category": "Courses",
+  "icon": "book-open",
+  "acceptsChildren": false,
+  "properties": {
+    "cardStyle": {
+      "type": "enum",
+      "values": ["standard", "compact", "featured"],
+      "default": "standard",
+      "label": "Card Style"
+    },
+    "showThumbnail": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Thumbnail"
+    },
+    "showInstructor": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Instructor"
+    },
+    "showDuration": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Duration"
+    },
+    "showPrice": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Price"
+    },
+    "showLevel": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Level Badge"
+    },
+    "showRating": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Rating"
+    }
+  },
+  "responsive": {
+    "breakpoints": ["desktop", "tablet", "mobile"]
+  }
+}

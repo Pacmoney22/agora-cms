@@ -88,6 +88,7 @@ const sections: NavSection[] = [
       { label: 'Site Status', href: '/settings/site-status', icon: '🚦' },
       { label: 'Appearance', href: '/settings/appearance', icon: '🎨' },
       { label: 'Blog', href: '/settings/blog', icon: '📰' },
+      { label: 'Content Routing', href: '/settings/content-routing', icon: '🔗' },
       { label: 'SEO', href: '/settings/seo', icon: '⌘' },
       { label: 'Analytics', href: '/settings/analytics', icon: '📈' },
       { label: 'Payments', href: '/settings/payments', icon: '💳' },
@@ -134,7 +135,7 @@ function canAccessSection(section: NavSection, userRole: UserRole | undefined): 
 
 export function Sidebar() {
   const pathname = usePathname();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const userRole = user?.role;
 
   const isActive = (href: string) => {
@@ -190,10 +191,25 @@ export function Sidebar() {
 
       {user && (
         <div className="border-t border-gray-800 px-5 py-3">
-          <div className="text-sm text-gray-300 truncate">{user.name}</div>
-          <div className="text-[10px] text-gray-500 truncate">{user.email}</div>
-          <div className="mt-1 text-[10px] text-gray-400">
-            {getRoleDisplayName(user.role)}
+          <div className="flex items-center justify-between">
+            <div className="min-w-0 flex-1">
+              <div className="text-sm text-gray-300 truncate">{user.name}</div>
+              <div className="text-[10px] text-gray-500 truncate">{user.email}</div>
+              <div className="mt-1 text-[10px] text-gray-400">
+                {getRoleDisplayName(user.role)}
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={logout}
+              title="Sign out"
+              className="ml-2 rounded p-1.5 text-gray-500 hover:bg-gray-800 hover:text-gray-300 transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+                <path fillRule="evenodd" d="M3 4.25A2.25 2.25 0 015.25 2h5.5A2.25 2.25 0 0113 4.25v2a.75.75 0 01-1.5 0v-2a.75.75 0 00-.75-.75h-5.5a.75.75 0 00-.75.75v11.5c0 .414.336.75.75.75h5.5a.75.75 0 00.75-.75v-2a.75.75 0 011.5 0v2A2.25 2.25 0 0110.75 18h-5.5A2.25 2.25 0 013 15.75V4.25z" clipRule="evenodd" />
+                <path fillRule="evenodd" d="M19 10a.75.75 0 00-.75-.75H8.704l1.048-.943a.75.75 0 10-1.004-1.114l-2.5 2.25a.75.75 0 000 1.114l2.5 2.25a.75.75 0 101.004-1.114l-1.048-.943h9.546A.75.75 0 0019 10z" clipRule="evenodd" />
+              </svg>
+            </button>
           </div>
         </div>
       )}

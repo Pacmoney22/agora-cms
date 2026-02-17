@@ -97,6 +97,13 @@ export const Video: React.FC<VideoProps> = ({
 
   const renderPlayer = () => {
     if (source === 'self-hosted') {
+      if (!url) {
+        return (
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-100 text-gray-400">
+            No video selected
+          </div>
+        );
+      }
       return (
         <video
           src={url}
@@ -114,7 +121,7 @@ export const Video: React.FC<VideoProps> = ({
     if (!iframeSrc) {
       return (
         <div className="absolute inset-0 flex items-center justify-center bg-gray-100 text-gray-500">
-          Invalid video URL
+          {url ? 'Invalid video URL' : 'No video URL provided'}
         </div>
       );
     }

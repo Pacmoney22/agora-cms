@@ -6,9 +6,9 @@
   "acceptsChildren": false,
   "properties": {
     "icon": {
-      "type": "string",
+      "type": "icon",
       "default": "Star",
-      "label": "Icon (Lucide name)"
+      "label": "Icon"
     },
     "size": {
       "type": "enum",

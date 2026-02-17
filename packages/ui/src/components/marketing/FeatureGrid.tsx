@@ -40,11 +40,22 @@ const columnsMap = {
 };
 
 function getLucideIcon(name: string): React.ElementType | null {
+  const icons = LucideIcons as unknown as Record<string, unknown>;
+  // Try exact name first (PascalCase from icon picker)
+  const exact = icons[name];
+  if (exact && (typeof exact === 'function' || typeof exact === 'object')) {
+    return exact as React.ElementType;
+  }
+  // Try converting dash-case to PascalCase
   const formatted = name
     .split('-')
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join('');
-  return (LucideIcons as unknown as Record<string, React.ElementType>)[formatted] ?? null;
+  const converted = icons[formatted];
+  if (converted && (typeof converted === 'function' || typeof converted === 'object')) {
+    return converted as React.ElementType;
+  }
+  return null;
 }
 
 export const FeatureGrid: React.FC<FeatureGridProps> = ({
@@ -75,9 +86,17 @@ export const FeatureGrid: React.FC<FeatureGridProps> = ({
       )}
     >
       {features.map((feature, index) => {
-        const IconComponent = getLucideIcon(feature.icon);
+        const isImageIcon = feature.icon && (feature.icon.startsWith('http') || feature.icon.startsWith('/'));
+        const IconComponent = !isImageIcon ? getLucideIcon(feature.icon) : null;
 
-        const iconElement = IconComponent ? (
+        const iconElement = isImageIcon ? (
+          <img
+            src={feature.icon}
+            alt=""
+            className="rounded object-cover"
+            style={{ width: iconSizeMap[iconSize], height: iconSizeMap[iconSize] }}
+          />
+        ) : IconComponent ? (
           <IconComponent
             size={iconSizeMap[iconSize]}
             style={{ color: iconColor }}

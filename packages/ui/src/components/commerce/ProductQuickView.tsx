@@ -15,6 +15,7 @@ export interface QuickViewProduct {
 
 export interface ProductQuickViewProps {
   product?: QuickViewProduct | null;
+  detailBasePath?: string;
   showGallery?: boolean;
   showVariants?: boolean;
   showDescription?: boolean;
@@ -28,6 +29,7 @@ export interface ProductQuickViewProps {
 
 export const ProductQuickView: React.FC<ProductQuickViewProps> = ({
   product = null,
+  detailBasePath = '/products',
   showGallery = true,
   showVariants = true,
   showDescription = true,
@@ -317,7 +319,7 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({
               {/* View full page link */}
               {showViewFullPage && (
                 <a
-                  href={`/products/${product.slug}`}
+                  href={`${detailBasePath}/${product.slug}`}
                   className="mt-3 block text-center text-sm text-blue-600 transition-colors hover:text-blue-800"
                 >
                   View Full Product Page

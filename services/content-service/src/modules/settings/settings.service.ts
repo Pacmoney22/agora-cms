@@ -101,6 +101,12 @@ const SETTING_DEFAULTS: Record<string, unknown> = {
       cache: 'memory',
     },
   },
+  content_routing: {
+    blog:    { basePath: '/blog',     listingPageId: null, detailPageId: null },
+    product: { basePath: '/products', listingPageId: null, detailPageId: null },
+    event:   { basePath: '/events',   listingPageId: null, detailPageId: null },
+    course:  { basePath: '/courses',  listingPageId: null, detailPageId: null },
+  },
 };
 
 // Fields that should be masked when returned to the client
@@ -275,6 +281,7 @@ export class SettingsService {
     const seo = (await this.getRaw('seo')) as any;
     const analytics = (await this.getRaw('analytics')) as any;
     const payments = (await this.getRaw('payments')) as any;
+    const contentRouting = (await this.getRaw('content_routing')) as any;
 
     return {
       general: {
@@ -302,6 +309,7 @@ export class SettingsService {
             ? payments?.livePublishableKey
             : payments?.testPublishableKey,
       },
+      contentRouting,
     };
   }
 }

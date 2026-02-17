@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { ProductCard, ProductData } from './ProductCard';
 
 export interface ProductGridProps {
-  source?: 'category' | 'tag' | 'manual' | 'best-sellers' | 'new-arrivals' | 'on-sale' | 'related';
+  source?: 'category' | 'tag' | 'best-sellers' | 'new-arrivals' | 'on-sale' | 'related';
   categoryId?: string | null;
   productTypes?: string[];
   products?: ProductData[];
@@ -14,6 +14,7 @@ export interface ProductGridProps {
   showSort?: boolean;
   paginationStyle?: 'load-more' | 'numbered' | 'infinite-scroll';
   emptyStateMessage?: string;
+  detailBasePath?: string;
   onQuickAdd?: (product: ProductData) => void;
   onQuickView?: (product: ProductData) => void;
   className?: string;
@@ -30,8 +31,44 @@ const gridColsMap: Record<number, string> = {
 
 const ITEMS_PER_PAGE = 12;
 
+// Sample products for builder preview
+const sampleProducts: ProductData[] = [
+  {
+    name: 'Classic Cotton T-Shirt',
+    price: 29.99,
+    slug: 'classic-cotton-tshirt',
+    rating: 4.5,
+    badge: 'Best Seller',
+    type: 'Clothing',
+  },
+  {
+    name: 'Wireless Bluetooth Headphones',
+    price: 89.99,
+    salePrice: 69.99,
+    slug: 'wireless-bluetooth-headphones',
+    rating: 4.8,
+    badge: 'Sale',
+    type: 'Electronics',
+  },
+  {
+    name: 'Leather Crossbody Bag',
+    price: 149.99,
+    slug: 'leather-crossbody-bag',
+    rating: 4.6,
+    type: 'Accessories',
+  },
+  {
+    name: 'Organic Coffee Blend',
+    price: 18.99,
+    slug: 'organic-coffee-blend',
+    rating: 4.9,
+    badge: 'New',
+    type: 'Food & Drink',
+  },
+];
+
 export const ProductGrid: React.FC<ProductGridProps> = ({
-  source = 'manual',
+  source = 'new-arrivals',
   categoryId = null,
   productTypes = [],
   products = [],
@@ -41,10 +78,12 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
   showSort = true,
   paginationStyle = 'load-more',
   emptyStateMessage = 'No products found matching your criteria.',
+  detailBasePath = '/products',
   onQuickAdd,
   onQuickView,
   className,
 }) => {
+  const allProducts = products.length > 0 ? products : sampleProducts;
   const [sortBy, setSortBy] = useState<SortOption>('newest');
   const [currentPage, setCurrentPage] = useState(1);
   const [filterCategory, setFilterCategory] = useState<string | null>(null);
@@ -55,22 +94,22 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
   // Derive available types from products
   const availableTypes = useMemo(() => {
     const types = new Set<string>();
-    products.forEach((p) => {
+    allProducts.forEach((p) => {
       if (p.type) types.add(p.type);
     });
     return Array.from(types);
-  }, [products]);
+  }, [allProducts]);
 
   // Derive price range from products
   const priceExtent = useMemo(() => {
-    if (products.length === 0) return [0, 100] as [number, number];
-    const prices = products.map((p) => p.salePrice ?? p.price);
+    if (allProducts.length === 0) return [0, 100] as [number, number];
+    const prices = allProducts.map((p) => p.salePrice ?? p.price);
     return [Math.floor(Math.min(...prices)), Math.ceil(Math.max(...prices))] as [number, number];
-  }, [products]);
+  }, [allProducts]);
 
   // Filter products
   const filteredProducts = useMemo(() => {
-    let result = [...products];
+    let result = [...allProducts];
 
     if (filterType) {
       result = result.filter((p) => p.type === filterType);
@@ -84,7 +123,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
     }
 
     return result.slice(0, maxProducts);
-  }, [products, filterType, filterPriceRange, maxProducts]);
+  }, [allProducts, filterType, filterPriceRange, maxProducts]);
 
   // Sort products
   const sortedProducts = useMemo(() => {
@@ -381,6 +420,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
                 key={`${product.slug}-${index}`}
                 product={product}
                 showQuickAdd
+                detailBasePath={detailBasePath}
                 onQuickAdd={onQuickAdd}
                 onQuickView={onQuickView}
               />

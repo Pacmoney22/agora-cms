@@ -53,8 +53,8 @@ export class UpdatePageDto {
   @IsOptional()
   @IsString()
   @MaxLength(255)
-  @Matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
-    message: 'Slug must be lowercase alphanumeric with hyphens only',
+  @Matches(/^\/(?:[a-z0-9-]+(?:\/[a-z0-9-]+)*)?$/, {
+    message: 'Slug must start with / and contain only lowercase alphanumeric characters and hyphens',
   })
   slug?: string;
 

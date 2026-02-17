@@ -5,28 +5,16 @@
   "icon": "mega-menu",
   "acceptsChildren": false,
   "properties": {
+    "navigationMenu": {
+      "type": "enum",
+      "values": ["none", "header", "footer", "sidebar", "mobile"],
+      "default": "header",
+      "label": "Navigation Menu"
+    },
     "columns": {
-      "type": "array",
-      "label": "Menu Columns",
-      "items": {
-        "type": "object",
-        "properties": {
-          "heading": { "type": "string", "label": "Column Heading" },
-          "links": {
-            "type": "array",
-            "label": "Links",
-            "items": {
-              "type": "object",
-              "properties": {
-                "label": { "type": "string", "label": "Link Label" },
-                "url": { "type": "url", "label": "Link URL" },
-                "description": { "type": "string", "default": null, "label": "Description" },
-                "icon": { "type": "string", "default": null, "label": "Icon" }
-              }
-            }
-          }
-        }
-      }
+      "type": "navitems",
+      "label": "Menu Items",
+      "default": []
     },
     "featuredContent": {
       "type": "object",
@@ -41,7 +29,7 @@
         "heading": { "type": "string", "label": "Heading" },
         "description": { "type": "string", "default": null, "label": "Description" },
         "ctaLabel": { "type": "string", "default": "Learn More", "label": "CTA Label" },
-        "ctaUrl": { "type": "url", "default": "#", "label": "CTA URL" }
+        "ctaUrl": { "type": "pagelink", "default": "#", "label": "CTA URL" }
       }
     },
     "showFeatured": {

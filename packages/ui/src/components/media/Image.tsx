@@ -20,6 +20,25 @@ export const Image: React.FC<ImageProps> = ({
   borderRadius,
   className,
 }) => {
+  if (!src) {
+    return (
+      <div
+        className={clsx(
+          'flex max-w-full items-center justify-center bg-gray-100 text-sm text-gray-400',
+          className,
+        )}
+        style={{
+          width: width ?? '100%',
+          height: height ?? 200,
+          borderRadius,
+        }}
+        aria-label={alt || 'No image selected'}
+      >
+        No image selected
+      </div>
+    );
+  }
+
   return (
     <img
       src={src}
