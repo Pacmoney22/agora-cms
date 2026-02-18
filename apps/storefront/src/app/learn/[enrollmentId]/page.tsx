@@ -3,8 +3,8 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import type { EnrollmentDto, CourseLessonDto, CourseSectionDto } from '@/lib/api';
-import { getEnrollment, updateLessonProgress } from '@/lib/api';
+import type { EnrollmentDto, CourseLessonDto, AssignmentSubmissionDto } from '@/lib/api';
+import { getEnrollment, updateLessonProgress, submitAssignment, getAssignmentSubmissions } from '@/lib/api';
 
 // ---------------------------------------------------------------------------
 // Helper functions
@@ -54,6 +54,13 @@ export default function CoursePlayerPage() {
   const [saving, setSaving] = useState(false);
   const videoProgressIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Assignment submission state
+  const [submissionContent, setSubmissionContent] = useState('');
+  const [submissionLinks, setSubmissionLinks] = useState<Array<{ url: string; label: string }>>([]);
+  const [existingSubmissions, setExistingSubmissions] = useState<AssignmentSubmissionDto[]>([]);
+  const [submissionLoading, setSubmissionLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
   // Fetch enrollment
   useEffect(() => {
     setLoading(true);
@@ -73,6 +80,55 @@ export default function CoursePlayerPage() {
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   }, [enrollmentId]);
+
+  // Load existing submissions when switching to an assignment lesson
+  useEffect(() => {
+    if (!currentLesson || !enrollment || currentLesson.lessonType !== 'assignment') {
+      setExistingSubmissions([]);
+      return;
+    }
+    setSubmissionLoading(true);
+    getAssignmentSubmissions(currentLesson.id, enrollment.id)
+      .then((subs) => setExistingSubmissions(subs))
+      .catch(() => setExistingSubmissions([]))
+      .finally(() => setSubmissionLoading(false));
+  }, [currentLesson, enrollment]);
+
+  const handleSubmitAssignment = async () => {
+    if (!currentLesson || !enrollment || !submissionContent.trim()) return;
+    setSubmitting(true);
+    try {
+      const linksToSend = submissionLinks.filter((l) => l.url.trim());
+      await submitAssignment(currentLesson.id, {
+        enrollmentId: enrollment.id,
+        content: submissionContent.trim(),
+        links: linksToSend.length > 0 ? linksToSend : undefined,
+      });
+      // Refresh submissions
+      const updated = await getAssignmentSubmissions(currentLesson.id, enrollment.id);
+      setExistingSubmissions(updated);
+      setSubmissionContent('');
+      setSubmissionLinks([]);
+    } catch (err: any) {
+      alert(err.message || 'Failed to submit assignment');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const addLink = () => {
+    setSubmissionLinks((prev) => [...prev, { url: '', label: '' }]);
+  };
+
+  const removeLink = (index: number) => {
+    setSubmissionLinks((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const updateLink = (index: number, field: 'url' | 'label', value: string) => {
+    setSubmissionLinks((prev) =>
+      prev.map((link, i) => (i === index ? { ...link, [field]: value } : link)),
+    );
+  };
 
   // Save video progress every 30 seconds
   useEffect(() => {
@@ -243,24 +299,164 @@ export default function CoursePlayerPage() {
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           {/* Video player and lesson content - 70% */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Video player */}
-            <div className="rounded-lg bg-white shadow-sm overflow-hidden">
-              {embedUrl ? (
-                <div className="aspect-video bg-black">
-                  <iframe
-                    src={embedUrl}
-                    className="h-full w-full"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    title={currentLesson?.title || 'Video'}
-                  />
+            {/* Lesson content area — varies by type */}
+            {currentLesson?.lessonType === 'assignment' ? (
+              /* Assignment submission UI */
+              <div className="rounded-lg bg-white shadow-sm overflow-hidden p-6">
+                <div className="mb-4 flex items-center gap-2">
+                  <svg className="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                  <h3 className="text-lg font-semibold text-gray-900">Assignment Submission</h3>
                 </div>
-              ) : (
-                <div className="aspect-video bg-gray-900 flex items-center justify-center">
-                  <p className="text-gray-400">No video available for this lesson</p>
-                </div>
-              )}
-            </div>
+
+                {/* Existing submissions history */}
+                {submissionLoading ? (
+                  <p className="mb-4 text-sm text-gray-500">Loading submissions...</p>
+                ) : existingSubmissions.length > 0 ? (
+                  <div className="mb-6">
+                    <h4 className="mb-2 text-sm font-medium text-gray-700">Your Submissions</h4>
+                    <div className="space-y-3">
+                      {existingSubmissions.map((sub) => (
+                        <div key={sub.id} className="rounded-md border border-gray-200 p-3">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm font-medium text-gray-900">
+                              Submission #{sub.submissionNumber}
+                            </span>
+                            <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${
+                              sub.gradingStatus === 'graded'
+                                ? sub.passed ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                                : sub.gradingStatus === 'returned'
+                                  ? 'bg-amber-100 text-amber-700'
+                                  : 'bg-yellow-100 text-yellow-700'
+                            }`}>
+                              {sub.gradingStatus === 'graded' && sub.score !== null
+                                ? `${sub.score}/${sub.totalPoints}`
+                                : sub.gradingStatus === 'returned'
+                                  ? 'Returned for Revision'
+                                  : 'Pending'}
+                            </span>
+                          </div>
+                          <p className="mt-1 text-xs text-gray-500">
+                            Submitted {new Date(sub.submittedAt).toLocaleString()}
+                          </p>
+                          {sub.feedback && (
+                            <div className="mt-2 rounded-md bg-blue-50 p-2">
+                              <p className="text-xs font-medium text-blue-900">Instructor Feedback:</p>
+                              <p className="mt-1 whitespace-pre-wrap text-xs text-blue-800">{sub.feedback}</p>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+
+                {/* Show submission form if no graded/passing submission, or if returned */}
+                {(() => {
+                  const latestSub = existingSubmissions[0];
+                  const canSubmit = !latestSub || latestSub.gradingStatus === 'returned' || latestSub.gradingStatus === 'graded' && !latestSub.passed;
+                  if (!canSubmit && latestSub?.passed) {
+                    return (
+                      <div className="rounded-md bg-green-50 p-4 text-center">
+                        <p className="text-sm font-medium text-green-800">Assignment completed and passed!</p>
+                      </div>
+                    );
+                  }
+                  return (
+                    <div>
+                      {latestSub?.gradingStatus === 'returned' && (
+                        <div className="mb-4 rounded-md bg-amber-50 border border-amber-200 p-3">
+                          <p className="text-sm font-medium text-amber-800">
+                            Your submission was returned for revision. Please review the feedback and resubmit.
+                          </p>
+                        </div>
+                      )}
+                      <div className="space-y-4">
+                        <div>
+                          <label className="mb-1 block text-sm font-medium text-gray-700">Your Submission</label>
+                          <textarea
+                            rows={8}
+                            value={submissionContent}
+                            onChange={(e) => setSubmissionContent(e.target.value)}
+                            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none"
+                            placeholder="Write your assignment submission here..."
+                          />
+                        </div>
+
+                        {/* Links */}
+                        <div>
+                          <div className="mb-2 flex items-center justify-between">
+                            <label className="text-sm font-medium text-gray-700">Links (optional)</label>
+                            <button
+                              type="button"
+                              onClick={addLink}
+                              className="text-sm text-indigo-600 hover:text-indigo-800"
+                            >
+                              + Add Link
+                            </button>
+                          </div>
+                          {submissionLinks.map((link, i) => (
+                            <div key={i} className="mb-2 flex gap-2">
+                              <input
+                                type="url"
+                                value={link.url}
+                                onChange={(e) => updateLink(i, 'url', e.target.value)}
+                                placeholder="https://..."
+                                className="flex-1 rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-indigo-500 focus:outline-none"
+                              />
+                              <input
+                                type="text"
+                                value={link.label}
+                                onChange={(e) => updateLink(i, 'label', e.target.value)}
+                                placeholder="Label (optional)"
+                                className="w-40 rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-indigo-500 focus:outline-none"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => removeLink(i)}
+                                className="text-red-500 hover:text-red-700"
+                              >
+                                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+
+                        <button
+                          onClick={handleSubmitAssignment}
+                          disabled={submitting || !submissionContent.trim()}
+                          className="rounded-md bg-indigo-600 px-6 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                          {submitting ? 'Submitting...' : 'Submit Assignment'}
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
+            ) : (
+              /* Video player (default) */
+              <div className="rounded-lg bg-white shadow-sm overflow-hidden">
+                {embedUrl ? (
+                  <div className="aspect-video bg-black">
+                    <iframe
+                      src={embedUrl}
+                      className="h-full w-full"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      title={currentLesson?.title || 'Video'}
+                    />
+                  </div>
+                ) : (
+                  <div className="aspect-video bg-gray-900 flex items-center justify-center">
+                    <p className="text-gray-400">No video available for this lesson</p>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Lesson info */}
             {currentLesson && (
@@ -428,15 +624,29 @@ export default function CoursePlayerPage() {
                                   )}
                                 </div>
 
-                                {/* Play icon */}
+                                {/* Lesson type icon */}
                                 {isCurrent && (
-                                  <svg
-                                    className="h-5 w-5 flex-shrink-0 text-indigo-600"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                  >
-                                    <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
-                                  </svg>
+                                  lesson.lessonType === 'assignment' ? (
+                                    <svg className="h-5 w-5 flex-shrink-0 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                    </svg>
+                                  ) : lesson.lessonType === 'quiz' ? (
+                                    <svg className="h-5 w-5 flex-shrink-0 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                    </svg>
+                                  ) : lesson.lessonType === 'text' ? (
+                                    <svg className="h-5 w-5 flex-shrink-0 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                  ) : (
+                                    <svg
+                                      className="h-5 w-5 flex-shrink-0 text-indigo-600"
+                                      fill="currentColor"
+                                      viewBox="0 0 20 20"
+                                    >
+                                      <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+                                    </svg>
+                                  )
                                 )}
                               </button>
                             );

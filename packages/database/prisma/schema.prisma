@@ -153,6 +153,7 @@ model User {
   lessonVersions  CourseLessonVersion[] @relation("CourseLessonVersionAuthor")
   enrollments     CourseEnrollment[] @relation("StudentEnrollments")
   gradedQuizzes   QuizAttempt[]    @relation("QuizGrader")
+  gradedSubmissions AssignmentSubmission[] @relation("SubmissionGrader")
 
   // Scoped role assignments
   instructorAssignments    InstructorAssignment[]  @relation("InstructorAssignments")
@@ -841,6 +842,8 @@ model CourseLesson {
   title           String     @db.VarChar(255)
   version         Int        @default(1)  // Versionable like Page
 
+  lessonType      String     @default("video") @map("lesson_type") @db.VarChar(50)
+
   // Content fields
   content         String     @db.Text  // Markdown or HTML content
   videoUrl        String?    @map("video_url")  // External (Vimeo/YouTube) embed URL
@@ -855,16 +858,17 @@ model CourseLesson {
   position        Int        @default(0)
   isFree          Boolean    @default(false) @map("is_free")  // Preview lessons
 
-  createdBy       String     @map("created_by") @db.Uuid
+  createdBy       String?    @map("created_by") @db.Uuid
   createdAt       DateTime   @default(now()) @map("created_at")
   updatedAt       DateTime   @updatedAt @map("updated_at")
 
   section         CourseSection @relation(fields: [courseSectionId], references: [id], onDelete: Cascade)
-  author          User       @relation(fields: [createdBy], references: [id], name: "CourseLessonAuthor")
+  author          User?      @relation(fields: [createdBy], references: [id], name: "CourseLessonAuthor")
   videoMedia      Media?     @relation(fields: [videoMediaId], references: [id], name: "LessonVideo")
   versions        CourseLessonVersion[]
   quizzes         Quiz[]
   progress        CourseProgress[]
+  submissions     AssignmentSubmission[]
 
   @@index([courseSectionId, position])
   @@map("course_lessons")
@@ -913,6 +917,7 @@ model CourseEnrollment {
   progress        CourseProgress[]
   quizAttempts    QuizAttempt[]
   certificates    Certificate[]
+  assignmentSubmissions AssignmentSubmission[]
 
   @@unique([courseId, userId])  // One enrollment per user per course
   @@index([userId, status])
@@ -1021,6 +1026,40 @@ model QuizAttempt {
   @@index([enrollmentId])
   @@index([gradingStatus])  // Filter pending grading
   @@map("quiz_attempts")
+}
+
+// Assignment submissions (mirrors QuizAttempt grading pattern)
+model AssignmentSubmission {
+  id                String     @id @default(uuid()) @db.Uuid
+  lessonId          String     @map("lesson_id") @db.Uuid
+  enrollmentId      String     @map("enrollment_id") @db.Uuid
+  submissionNumber  Int        @map("submission_number")  // 1, 2, 3... for resubmissions
+
+  content           String     @db.Text  // Student's written submission
+  links             Json?      @db.JsonB  // [{ url: '', label?: '' }]
+
+  score             Int?       // null until graded
+  totalPoints       Int        @default(100) @map("total_points")
+  passed            Boolean?   // null until graded
+
+  gradingStatus     String     @default("pending") @map("grading_status") @db.VarChar(50)
+  // 'pending' | 'graded' | 'returned'
+  feedback          String?    @db.Text  // Instructor feedback
+  gradedBy          String?    @map("graded_by") @db.Uuid
+  gradedAt          DateTime?  @map("graded_at")
+
+  submittedAt       DateTime   @default(now()) @map("submitted_at")
+  updatedAt         DateTime   @updatedAt @map("updated_at")
+
+  lesson            CourseLesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  enrollment        CourseEnrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  grader            User?           @relation(fields: [gradedBy], references: [id], name: "SubmissionGrader")
+
+  @@unique([lessonId, enrollmentId, submissionNumber])
+  @@index([enrollmentId])
+  @@index([gradingStatus])
+  @@index([lessonId])
+  @@map("assignment_submissions")
 }
 
 // Generated certificates

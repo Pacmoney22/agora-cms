@@ -1,5 +1,5 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException, BadRequestException } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
 
 jest.mock('@agora-cms/shared', () => ({
   generateSlug: jest.fn((name: string) => name.toLowerCase().replace(/\s+/g, '-')),

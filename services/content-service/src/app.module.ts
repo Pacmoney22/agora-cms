@@ -5,6 +5,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { ArticlesModule } from './modules/articles/articles.module';
 import { AssignmentsModule } from './modules/assignments/assignments.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { EventsModule } from './modules/events/events.module';
 import { MediaModule } from './modules/media/media.module';
 import { NavigationModule } from './modules/navigation/navigation.module';
 import { PagesModule } from './modules/pages/page.module';
@@ -14,6 +15,7 @@ import { SeoModule } from './modules/seo/seo.module';
 import { SettingsModule } from './modules/settings/settings.module';
 import { TemplatesModule } from './modules/templates/templates.module';
 import { UsersModule } from './modules/users/users.module';
+import { VenuesModule } from './modules/venues/venues.module';
 import { VersionsModule } from './modules/versions/versions.module';
 
 @Module({
@@ -26,6 +28,7 @@ import { VersionsModule } from './modules/versions/versions.module';
     ArticlesModule,
     AssignmentsModule,
     AuthModule,
+    EventsModule,
     PagesModule,
     MediaModule,
     TemplatesModule,
@@ -35,6 +38,7 @@ import { VersionsModule } from './modules/versions/versions.module';
     SeoModule,
     SettingsModule,
     UsersModule,
+    VenuesModule,
     PassesModule,
   ],
 })

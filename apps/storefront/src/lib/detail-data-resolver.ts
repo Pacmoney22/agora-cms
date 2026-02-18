@@ -4,6 +4,8 @@ import { getCourseBySlug } from './api';
 
 const COMMERCE_API =
   process.env.NEXT_PUBLIC_COMMERCE_API_URL || 'http://localhost:3002';
+const CONTENT_API =
+  process.env.NEXT_PUBLIC_CONTENT_API_URL || 'http://localhost:3001';
 
 /**
  * Fetch a single item by slug for a detail/card page.
@@ -60,8 +62,16 @@ async function resolveCourseDetail(
 }
 
 async function resolveEventDetail(
-  _slug: string,
+  slug: string,
 ): Promise<Record<string, unknown> | null> {
-  // Events API not yet implemented — return null for now.
-  return null;
+  try {
+    const res = await fetch(
+      `${CONTENT_API}/api/v1/events/slug/${encodeURIComponent(slug)}`,
+      { next: { revalidate: 60 } },
+    );
+    if (!res.ok) return null;
+    return res.json();
+  } catch {
+    return null;
+  }
 }

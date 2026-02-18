@@ -5,6 +5,12 @@
   "icon": "shopping-bag",
   "acceptsChildren": false,
   "properties": {
+    "mode": {
+      "type": "enum",
+      "values": ["card", "detail"],
+      "default": "card",
+      "label": "Display Mode"
+    },
     "showImage": {
       "type": "boolean",
       "default": true,
@@ -57,6 +63,48 @@
       "values": ["none", "zoom", "swap-image", "shadow"],
       "default": "zoom",
       "label": "Hover Effect"
+    },
+    "showDescription": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Description",
+      "visibleWhen": { "mode": "detail" }
+    },
+    "showShippingDetails": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Shipping / Delivery Details",
+      "visibleWhen": { "mode": "detail" }
+    },
+    "showConfiguration": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Configuration Options",
+      "visibleWhen": { "mode": "detail" }
+    },
+    "showVariants": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Variant Selector (Detail)",
+      "visibleWhen": { "mode": "detail" }
+    },
+    "showTags": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Tags",
+      "visibleWhen": { "mode": "detail" }
+    },
+    "showRelatedProducts": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Related Products",
+      "visibleWhen": { "mode": "detail" }
+    },
+    "showQuantitySelector": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Quantity Selector",
+      "visibleWhen": { "mode": "detail" }
     }
   },
   "responsive": {

@@ -37,12 +37,12 @@ export default function CategoriesPage() {
 
   const { data: tree, isLoading } = useQuery({
     queryKey: ['categories', 'tree'],
-    queryFn: () => categoriesApi.tree(),
+    queryFn: () => categoriesApi.tree().catch(() => [] as any[]),
   });
 
   const { data: flatList } = useQuery({
     queryKey: ['categories', 'flat'],
-    queryFn: () => categoriesApi.list({ limit: 200 }),
+    queryFn: () => categoriesApi.list({ limit: 200 }).catch(() => ({ data: [], meta: { page: 1, limit: 200, total: 0, totalPages: 0 } })),
   });
 
   const createMutation = useMutation({

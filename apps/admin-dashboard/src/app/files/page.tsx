@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import { settingsApi, mediaApi } from '@/lib/api-client';
+import { settingsApi, mediaApi, coursesApi, productsApi } from '@/lib/api-client';
 
 // Gated files are stored as settings key: `gated_files`
 // Each file references a media asset but adds gating rules
@@ -16,7 +16,7 @@ interface GatedFile {
   fileName: string;        // display filename
   fileSize: string;
   mimeType: string;
-  category: 'course_content' | 'whitepaper' | 'downloadable_product' | 'resource' | 'other';
+  category: string;
   accessType: 'public' | 'authenticated' | 'purchased' | 'enrolled' | 'form_gated';
   linkedCourseId: string;  // if accessType is 'enrolled'
   linkedProductId: string; // if accessType is 'purchased'
@@ -36,7 +36,7 @@ function genId() {
   return `gf-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
 }
 
-const CATEGORIES = [
+const DEFAULT_CATEGORIES = [
   { value: 'course_content', label: 'Course Content' },
   { value: 'whitepaper', label: 'Whitepaper' },
   { value: 'downloadable_product', label: 'Downloadable Product' },
@@ -66,6 +66,11 @@ export default function GatedFilesPage() {
   const [categoryFilter, setCategoryFilter] = useState<string>('');
   const [accessFilter, setAccessFilter] = useState<string>('');
   const [uploadingFile, setUploadingFile] = useState(false);
+  const [showCategoryManager, setShowCategoryManager] = useState(false);
+  const [showMediaPicker, setShowMediaPicker] = useState(false);
+  const [showEditorMediaPicker, setShowEditorMediaPicker] = useState(false);
+  const [newCategoryValue, setNewCategoryValue] = useState('');
+  const [newCategoryLabel, setNewCategoryLabel] = useState('');
 
   const { data: store, isLoading } = useQuery({
     queryKey: ['settings', 'gated_files'],
@@ -77,6 +82,31 @@ export default function GatedFilesPage() {
     queryKey: ['media', 'gated-picker'],
     queryFn: () => mediaApi.list({ limit: 200 }),
   });
+
+  // Load configurable categories from settings (fallback to defaults)
+  const { data: catRegistry } = useQuery({
+    queryKey: ['settings', 'gated_files_categories'],
+    queryFn: () => settingsApi.get('gated_files_categories').catch(() => null),
+  });
+  const CATEGORIES: { value: string; label: string }[] = catRegistry?.categories || DEFAULT_CATEGORIES;
+
+  // Load courses, products, and forms for picker dropdowns
+  const { data: coursesData } = useQuery({
+    queryKey: ['courses', 'picker'],
+    queryFn: () => coursesApi.list({ limit: 200 }).catch(() => ({ data: [] })),
+  });
+  const { data: productsData } = useQuery({
+    queryKey: ['products', 'picker'],
+    queryFn: () => productsApi.list({ limit: 200 }).catch(() => ({ data: [] })),
+  });
+  const { data: formsRegistry } = useQuery({
+    queryKey: ['settings', 'forms_registry'],
+    queryFn: () => settingsApi.get('forms_registry').catch(() => ({ forms: [] })),
+  });
+
+  const courseOptions: { id: string; title: string }[] = coursesData?.data || [];
+  const productOptions: { id: string; name: string }[] = productsData?.data || [];
+  const formOptions: { id: string; name: string }[] = formsRegistry?.forms || [];
 
   const files: GatedFile[] = store?.files || [];
   const mediaItems = mediaData?.data || [];
@@ -178,6 +208,48 @@ export default function GatedFilesPage() {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
   }
 
+  const renderMediaPickerModal = (
+    isOpen: boolean,
+    onClose: () => void,
+    onSelect: (media: any) => void,
+  ) => {
+    if (!isOpen) return null;
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+        <div className="w-full max-w-2xl rounded-lg bg-white p-6 shadow-xl">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-gray-900">Select from Media Library</h2>
+            <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+          </div>
+          {mediaItems.length === 0 ? (
+            <p className="py-8 text-center text-sm text-gray-400">No media found. Upload files to the Media Library first.</p>
+          ) : (
+            <div className="max-h-96 overflow-y-auto space-y-1">
+              {mediaItems.map((item: any) => (
+                <button
+                  key={item.id}
+                  onClick={() => onSelect(item)}
+                  className="w-full flex items-center gap-3 rounded-md px-3 py-2 text-left hover:bg-gray-50 border border-transparent hover:border-gray-200"
+                >
+                  <span className="flex-shrink-0 text-lg">
+                    {item.mimeType?.startsWith('image/') ? '\uD83D\uDDBC' : '\uD83D\uDCC4'}
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-gray-900 truncate">{item.originalName || item.filename}</p>
+                    <p className="text-xs text-gray-400">{formatBytes(item.size || 0)} &middot; {item.mimeType || 'unknown'}</p>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+          <div className="mt-4 flex justify-end">
+            <button onClick={onClose} className="rounded-md border px-4 py-2 text-sm text-gray-600 hover:bg-gray-50">Cancel</button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   // ─── File Detail Editor ───
   if (editingFile) {
     return (
@@ -235,6 +307,39 @@ export default function GatedFilesPage() {
                   <p className="mt-1 text-xs text-gray-700">{editingFile.mimeType}</p>
                 </div>
               </div>
+              <div className="flex gap-2">
+                <label className="rounded-md bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-200 cursor-pointer">
+                  Replace File
+                  <input
+                    type="file"
+                    className="hidden"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      try {
+                        const uploaded = await mediaApi.upload(file);
+                        setEditingFile({
+                          ...editingFile,
+                          mediaId: uploaded.id,
+                          fileName: file.name,
+                          fileSize: formatBytes(file.size),
+                          mimeType: file.type,
+                        });
+                      } catch (err: any) {
+                        toast.error(err.message || 'Upload failed');
+                      }
+                      e.target.value = '';
+                    }}
+                  />
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setShowEditorMediaPicker(true)}
+                  className="rounded-md bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-200"
+                >
+                  Link Different File
+                </button>
+              </div>
               <div>
                 <label className="block text-xs font-medium text-gray-700 mb-1">Category</label>
                 <select
@@ -275,42 +380,51 @@ export default function GatedFilesPage() {
 
               {editingFile.accessType === 'enrolled' && (
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Linked Course ID</label>
-                  <input
-                    type="text"
+                  <label className="block text-xs font-medium text-gray-700 mb-1">Linked Course</label>
+                  <select
                     value={editingFile.linkedCourseId}
                     onChange={(e) => setEditingFile({ ...editingFile, linkedCourseId: e.target.value })}
                     className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                    placeholder="Course UUID"
-                  />
+                  >
+                    <option value="">Select a course...</option>
+                    {courseOptions.map((c) => (
+                      <option key={c.id} value={c.id}>{c.title}</option>
+                    ))}
+                  </select>
                   <p className="mt-1 text-[10px] text-gray-400">Only enrolled students can download</p>
                 </div>
               )}
 
               {editingFile.accessType === 'purchased' && (
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Linked Product ID</label>
-                  <input
-                    type="text"
+                  <label className="block text-xs font-medium text-gray-700 mb-1">Linked Product</label>
+                  <select
                     value={editingFile.linkedProductId}
                     onChange={(e) => setEditingFile({ ...editingFile, linkedProductId: e.target.value })}
                     className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                    placeholder="Product UUID"
-                  />
+                  >
+                    <option value="">Select a product...</option>
+                    {productOptions.map((p) => (
+                      <option key={p.id} value={p.id}>{p.name}</option>
+                    ))}
+                  </select>
                   <p className="mt-1 text-[10px] text-gray-400">Only customers who purchased this product can download</p>
                 </div>
               )}
 
               {editingFile.accessType === 'form_gated' && (
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Linked Form ID</label>
-                  <input
-                    type="text"
+                  <label className="block text-xs font-medium text-gray-700 mb-1">Linked Form</label>
+                  <select
                     value={editingFile.linkedFormId}
                     onChange={(e) => setEditingFile({ ...editingFile, linkedFormId: e.target.value })}
                     className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                    placeholder="Form ID from Form Builder"
-                  />
+                  >
+                    <option value="">Select a form...</option>
+                    {formOptions.map((f) => (
+                      <option key={f.id} value={f.id}>{f.name}</option>
+                    ))}
+                  </select>
                   <p className="mt-1 text-[10px] text-gray-400">Users must submit this form to get access</p>
                 </div>
               )}
@@ -360,6 +474,17 @@ export default function GatedFilesPage() {
             </div>
           </div>
         </div>
+
+        {renderMediaPickerModal(showEditorMediaPicker, () => setShowEditorMediaPicker(false), (media) => {
+          setEditingFile({
+            ...editingFile,
+            mediaId: media.id,
+            fileName: media.originalName || media.filename,
+            fileSize: formatBytes(media.size || 0),
+            mimeType: media.mimeType || '',
+          });
+          setShowEditorMediaPicker(false);
+        })}
       </div>
     );
   }
@@ -375,7 +500,19 @@ export default function GatedFilesPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <label className="rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 cursor-pointer">
+          <button
+            onClick={() => setShowCategoryManager(!showCategoryManager)}
+            className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+          >
+            Manage Categories
+          </button>
+          <button
+            onClick={() => setShowMediaPicker(true)}
+            className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+          >
+            Link from Media Library
+          </button>
+          <label className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 cursor-pointer">
             {uploadingFile ? 'Uploading...' : 'Upload File'}
             <input
               type="file"
@@ -390,6 +527,60 @@ export default function GatedFilesPage() {
           </label>
         </div>
       </div>
+
+      {/* Category Manager */}
+      {showCategoryManager && (
+        <div className="mb-4 rounded-lg border border-blue-200 bg-blue-50 p-4">
+          <h3 className="text-sm font-semibold text-gray-900 mb-3">File Categories</h3>
+          <div className="flex flex-wrap gap-2 mb-3">
+            {CATEGORIES.map((c) => (
+              <span key={c.value} className="inline-flex items-center gap-1 rounded-full bg-white px-3 py-1 text-xs border">
+                {c.label}
+                <button
+                  onClick={() => {
+                    const updated = CATEGORIES.filter((cat) => cat.value !== c.value);
+                    settingsApi.update('gated_files_categories', { categories: updated } as any).then(() => {
+                      queryClient.invalidateQueries({ queryKey: ['settings', 'gated_files_categories'] });
+                      toast.success('Category removed');
+                    });
+                  }}
+                  className="ml-1 text-gray-400 hover:text-red-500"
+                >
+                  &times;
+                </button>
+              </span>
+            ))}
+          </div>
+          <div className="flex items-center gap-2">
+            <input
+              type="text"
+              value={newCategoryLabel}
+              onChange={(e) => {
+                setNewCategoryLabel(e.target.value);
+                setNewCategoryValue(e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/(^_|_$)/g, ''));
+              }}
+              placeholder="New category name"
+              className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-blue-500 focus:outline-none"
+            />
+            <button
+              onClick={() => {
+                if (!newCategoryLabel.trim() || !newCategoryValue.trim()) return;
+                const updated = [...CATEGORIES, { value: newCategoryValue, label: newCategoryLabel.trim() }];
+                settingsApi.update('gated_files_categories', { categories: updated } as any).then(() => {
+                  queryClient.invalidateQueries({ queryKey: ['settings', 'gated_files_categories'] });
+                  setNewCategoryLabel('');
+                  setNewCategoryValue('');
+                  toast.success('Category added');
+                });
+              }}
+              disabled={!newCategoryLabel.trim()}
+              className="rounded-md bg-blue-600 px-3 py-1.5 text-sm text-white hover:bg-blue-700 disabled:opacity-50"
+            >
+              Add
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Filters */}
       <div className="mb-4 flex items-center gap-3">
@@ -494,6 +685,11 @@ export default function GatedFilesPage() {
           </table>
         </div>
       )}
+
+      {renderMediaPickerModal(showMediaPicker, () => setShowMediaPicker(false), (media) => {
+        createFromMedia(media);
+        setShowMediaPicker(false);
+      })}
     </div>
   );
 }

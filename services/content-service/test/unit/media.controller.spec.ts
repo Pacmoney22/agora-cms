@@ -1,10 +1,10 @@
 import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { MediaController } from '../../src/modules/media/media.controller';
-import { MediaService } from '../../src/modules/media/media.service';
 import { JwtAuthGuard } from '../../src/common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../src/common/guards/roles.guard';
+import { MediaController } from '../../src/modules/media/media.controller';
+import { MediaService } from '../../src/modules/media/media.service';
 
 describe('MediaController', () => {
   let controller: MediaController;

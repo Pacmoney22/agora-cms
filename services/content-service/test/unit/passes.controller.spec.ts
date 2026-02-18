@@ -1,9 +1,9 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { JwtAuthGuard } from '../../src/common/guards/jwt-auth.guard';
 import { PassesController } from '../../src/modules/passes/passes.controller';
 import { PassesService } from '../../src/modules/passes/passes.service';
-import { JwtAuthGuard } from '../../src/common/guards/jwt-auth.guard';
 
 describe('PassesController', () => {
   let controller: PassesController;

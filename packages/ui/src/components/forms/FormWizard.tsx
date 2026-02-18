@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { clsx } from 'clsx';
 import { ChevronLeft, ChevronRight, Check, X } from 'lucide-react';
 
@@ -18,6 +18,8 @@ export interface FormWizardStep {
 }
 
 export interface FormWizardProps {
+  /** ID of admin-built form to load (preferred). */
+  formId?: string;
   steps?: FormWizardStep[];
   progressStyle?: 'bar' | 'steps' | 'dots' | 'numbered';
   showStepLabels?: boolean;
@@ -28,6 +30,8 @@ export interface FormWizardProps {
   successMessage?: string;
   submitEndpoint?: string | null;
   saveDraft?: boolean;
+  /** Base URL for the content API (used to fetch form definitions). */
+  contentApiUrl?: string;
   className?: string;
 }
 
@@ -59,7 +63,10 @@ const defaultSteps: FormWizardStep[] = [
   },
 ];
 
+const DEFAULT_CONTENT_API = 'http://localhost:3001';
+
 export const FormWizard: React.FC<FormWizardProps> = ({
+  formId,
   steps = defaultSteps,
   progressStyle = 'steps',
   showStepLabels = true,
@@ -70,23 +77,83 @@ export const FormWizard: React.FC<FormWizardProps> = ({
   successMessage = 'Your submission has been received. Thank you!',
   submitEndpoint = null,
   saveDraft = false,
+  contentApiUrl = DEFAULT_CONTENT_API,
   className,
 }) => {
+  const [loadedSteps, setLoadedSteps] = useState<FormWizardStep[] | null>(null);
+  const [formMeta, setFormMeta] = useState<Record<string, unknown> | null>(null);
+  const [loadError, setLoadError] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [values, setValues] = useState<Record<string, string>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const totalSteps = steps.length;
+  useEffect(() => {
+    if (!formId) return;
+    fetch(`${contentApiUrl}/api/v1/settings/forms/${formId}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data) {
+          setFormMeta(data);
+          // Convert form fields into wizard steps.
+          // If the form defines explicit steps, use those.
+          // Otherwise, group all fields into a single step.
+          if (Array.isArray(data.steps) && data.steps.length > 0) {
+            setLoadedSteps(data.steps);
+          } else if (Array.isArray(data.fields) && data.fields.length > 0) {
+            setLoadedSteps([
+              {
+                title: data.name || 'Form',
+                description: data.description || '',
+                fields: data.fields,
+              },
+            ]);
+          } else {
+            setLoadError(true);
+          }
+        } else {
+          setLoadError(true);
+        }
+      })
+      .catch(() => setLoadError(true));
+  }, [formId, contentApiUrl]);
+
+  // Resolve active steps: formId-loaded > inline steps > defaults
+  const activeSteps = loadedSteps || steps;
+
+  // Resolve settings from form meta
+  const resolvedSubmitEndpoint = (formMeta?.submitEndpoint as string) || submitEndpoint;
+  const resolvedSuccessMessage = (formMeta?.successMessage as string) || successMessage;
+  const resolvedSubmitLabel = (formMeta?.submitLabel as string) || submitLabel;
+
+  // Loading state
+  if (formId && !loadedSteps && !loadError) {
+    return (
+      <div className={clsx('animate-pulse rounded-lg border border-gray-200 bg-gray-50 p-8', className)}>
+        <div className="flex items-center justify-center gap-4 mb-6">
+          <div className="h-9 w-9 rounded-full bg-gray-200" />
+          <div className="h-0.5 w-16 bg-gray-200" />
+          <div className="h-9 w-9 rounded-full bg-gray-200" />
+          <div className="h-0.5 w-16 bg-gray-200" />
+          <div className="h-9 w-9 rounded-full bg-gray-200" />
+        </div>
+        <div className="h-4 w-32 rounded bg-gray-200 mb-4" />
+        <div className="h-10 rounded bg-gray-200 mb-3" />
+        <div className="h-10 rounded bg-gray-200 mb-3" />
+        <div className="h-10 w-28 rounded bg-gray-200" />
+      </div>
+    );
+  }
+
+  const totalSteps = activeSteps.length;
   const isLastStep = currentStep === totalSteps - 1;
-  const step = steps[currentStep];
 
   const fieldId = (label: string) => `wizard-${label.toLowerCase().replace(/\s+/g, '-')}`;
 
   const validateStep = (stepIndex: number): boolean => {
     const newErrors: Record<string, string> = {};
-    const stepFields = steps[stepIndex]!.fields;
+    const stepFields = activeSteps[stepIndex]!.fields;
 
     stepFields.forEach((field) => {
       if (field.type === 'hidden') return;
@@ -145,17 +212,21 @@ export const FormWizard: React.FC<FormWizardProps> = ({
     setSubmitting(true);
 
     try {
-      if (submitEndpoint) {
+      const endpoint = resolvedSubmitEndpoint;
+      if (endpoint) {
         // Build payload from all steps
         const payload: Record<string, string> = {};
-        steps.forEach((s) => {
+        activeSteps.forEach((s) => {
           s.fields.forEach((field) => {
             const key = fieldId(field.label);
             payload[field.label] = values[key] ?? '';
           });
         });
+        if (formId) {
+          payload._formId = formId;
+        }
 
-        const res = await fetch(submitEndpoint, {
+        const res = await fetch(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
@@ -201,7 +272,7 @@ export const FormWizard: React.FC<FormWizardProps> = ({
     if (progressStyle === 'dots') {
       return (
         <div className="mb-6 flex items-center justify-center gap-2">
-          {steps.map((_, i) => (
+          {activeSteps.map((_, i) => (
             <div
               key={i}
               className={clsx(
@@ -217,7 +288,7 @@ export const FormWizard: React.FC<FormWizardProps> = ({
     if (progressStyle === 'numbered') {
       return (
         <div className="mb-6 flex items-center justify-center gap-1">
-          {steps.map((s, i) => (
+          {activeSteps.map((s, i) => (
             <React.Fragment key={i}>
               <div className="flex flex-col items-center">
                 <div
@@ -256,7 +327,7 @@ export const FormWizard: React.FC<FormWizardProps> = ({
     // Default: steps style
     return (
       <div className="mb-6 flex items-center justify-center">
-        {steps.map((s, i) => (
+        {activeSteps.map((s, i) => (
           <React.Fragment key={i}>
             <div className="flex flex-col items-center">
               <div
@@ -446,7 +517,7 @@ export const FormWizard: React.FC<FormWizardProps> = ({
         <span className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
           <Check size={24} className="text-green-600" />
         </span>
-        <p className="text-lg font-medium text-green-800">{successMessage}</p>
+        <p className="text-lg font-medium text-green-800">{resolvedSuccessMessage}</p>
       </div>
     );
   }
@@ -456,7 +527,7 @@ export const FormWizard: React.FC<FormWizardProps> = ({
       {renderProgress()}
 
       <form onSubmit={handleSubmit} noValidate>
-        {steps.map((s, stepIndex) => (
+        {activeSteps.map((s, stepIndex) => (
           <fieldset
             key={stepIndex}
             className={clsx(stepIndex === currentStep ? 'block' : 'hidden')}
@@ -525,7 +596,7 @@ export const FormWizard: React.FC<FormWizardProps> = ({
                   </>
                 ) : (
                   <>
-                    {submitLabel}
+                    {resolvedSubmitLabel}
                     <Check size={16} />
                   </>
                 )}

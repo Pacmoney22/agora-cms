@@ -1,8 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException, BadRequestException } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
 
-import { ServiceBookingService } from '../../src/modules/service-bookings/service-booking.service';
 import { ProductService } from '../../src/modules/products/product.service';
+import { ServiceBookingService } from '../../src/modules/service-bookings/service-booking.service';
 
 describe('ServiceBookingService', () => {
   let service: ServiceBookingService;

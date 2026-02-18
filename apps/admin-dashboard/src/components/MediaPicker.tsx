@@ -6,10 +6,12 @@ import { mediaApi } from '@/lib/api-client';
 
 interface MediaPickerProps {
   value: string;
-  onChange: (url: string) => void;
+  onChange: (url: string, meta?: { id: string; originalName: string; mimeType: string; size: number }) => void;
   label: string;
   accept?: string;
   helpText?: string;
+  /** Filter media library by MIME type prefix (e.g. 'image', 'application/pdf'). Empty string = all types. Default: 'image' */
+  mimeTypeFilter?: string;
 }
 
 const CONTENT_API = process.env.NEXT_PUBLIC_CONTENT_API_URL || 'http://localhost:3001';
@@ -28,6 +30,7 @@ export function MediaPicker({
   label,
   accept = 'image/*',
   helpText,
+  mimeTypeFilter = 'image',
 }: MediaPickerProps) {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
@@ -35,8 +38,8 @@ export function MediaPicker({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { data: mediaData, isLoading: mediaLoading } = useQuery({
-    queryKey: ['media-picker', { page: libraryPage, mimeType: 'image' }],
-    queryFn: () => mediaApi.list({ page: libraryPage, limit: 12, mimeType: 'image' }),
+    queryKey: ['media-picker', { page: libraryPage, mimeType: mimeTypeFilter || undefined }],
+    queryFn: () => mediaApi.list({ page: libraryPage, limit: 12, ...(mimeTypeFilter ? { mimeType: mimeTypeFilter } : {}) }),
     enabled: open,
   });
 
@@ -60,7 +63,12 @@ export function MediaPicker({
   };
 
   const selectFromLibrary = (item: any) => {
-    onChange(`/api/v1/media/${item.id}/url`);
+    onChange(`/api/v1/media/${item.id}/url`, {
+      id: item.id,
+      originalName: item.originalName,
+      mimeType: item.mimeType,
+      size: item.size,
+    });
     setOpen(false);
   };
 
@@ -189,12 +197,12 @@ export function MediaPicker({
                 </div>
               ) : (
                 <div className="py-12 text-center">
-                  <p className="text-sm text-gray-400">No images in media library</p>
+                  <p className="text-sm text-gray-400">No files in media library</p>
                   <button
                     onClick={() => fileInputRef.current?.click()}
                     className="mt-2 rounded-md bg-blue-600 px-3 py-1.5 text-xs text-white hover:bg-blue-700"
                   >
-                    Upload an Image
+                    Upload a File
                   </button>
                 </div>
               )}

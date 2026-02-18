@@ -5,6 +5,12 @@
   "icon": "calendar",
   "acceptsChildren": false,
   "properties": {
+    "mode": {
+      "type": "enum",
+      "values": ["card", "detail"],
+      "default": "card",
+      "label": "Display Mode"
+    },
     "cardStyle": {
       "type": "enum",
       "values": ["standard", "compact", "featured"],
@@ -35,6 +41,36 @@
       "type": "boolean",
       "default": true,
       "label": "Show Image"
+    },
+    "showFullDescription": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Full Description",
+      "visibleWhen": { "mode": "detail" }
+    },
+    "showTickets": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Ticket Tiers",
+      "visibleWhen": { "mode": "detail" }
+    },
+    "showSchedule": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Schedule / Agenda",
+      "visibleWhen": { "mode": "detail" }
+    },
+    "showSpeakers": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Speakers",
+      "visibleWhen": { "mode": "detail" }
+    },
+    "showRegistrationForm": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Registration Form",
+      "visibleWhen": { "mode": "detail" }
     }
   },
   "responsive": {

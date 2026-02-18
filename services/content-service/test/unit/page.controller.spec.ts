@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { PageController } from '../../src/modules/pages/page.controller';
-import { PageService } from '../../src/modules/pages/page.service';
 import { JwtAuthGuard } from '../../src/common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../src/common/guards/roles.guard';
+import { PageController } from '../../src/modules/pages/page.controller';
+import { PageService } from '../../src/modules/pages/page.service';
 
 describe('PageController', () => {
   let controller: PageController;

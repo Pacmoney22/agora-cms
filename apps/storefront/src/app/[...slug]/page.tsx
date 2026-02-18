@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { getPage, getPageById } from '@/lib/content-client';
+import { getPage, getPageById, getPublicSettings } from '@/lib/content-client';
 import { resolveContentRoute } from '@/lib/content-routing';
 import { resolveGridData } from '@/lib/grid-data-resolver';
 import { resolveDetailData } from '@/lib/detail-data-resolver';
@@ -31,6 +31,9 @@ export default async function CatchAllPage({ params }: PageProps) {
   const { slug } = await params;
   const path = '/' + slug.join('/');
 
+  // Fetch site settings for component rendering (e.g. blog social sharing limits)
+  const siteSettings = await getPublicSettings() ?? undefined;
+
   // --- Try content routing first ---
   const contentRoute = await resolveContentRoute(path);
 
@@ -50,6 +53,7 @@ export default async function CatchAllPage({ params }: PageProps) {
       contentType: contentRoute.contentType,
       mode: contentRoute.mode,
       basePath: contentRoute.basePath,
+      siteSettings: siteSettings ?? undefined,
     };
 
     if (contentRoute.mode === 'listing') {
@@ -99,7 +103,7 @@ export default async function CatchAllPage({ params }: PageProps) {
 
   return (
     <div className="cms-page">
-      <ComponentRenderer instance={rootInstance} />
+      <ComponentRenderer instance={rootInstance} dataContext={{ siteSettings: siteSettings ?? undefined }} />
     </div>
   );
 }

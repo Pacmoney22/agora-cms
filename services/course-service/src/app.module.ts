@@ -11,6 +11,7 @@ import { LessonsModule } from './modules/lessons/lessons.module';
 import { ProgressModule } from './modules/progress/progress.module';
 import { QuizzesModule } from './modules/quizzes/quizzes.module';
 import { SectionsModule } from './modules/sections/sections.module';
+import { SubmissionsModule } from './modules/submissions/submissions.module';
 
 @Global()
 @Module({
@@ -27,6 +28,7 @@ import { SectionsModule } from './modules/sections/sections.module';
     QuizzesModule,
     CertificatesModule,
     AssignmentsModule,
+    SubmissionsModule,
   ],
   controllers: [AppController],
   providers: [

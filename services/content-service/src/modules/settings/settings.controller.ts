@@ -43,6 +43,18 @@ export class SettingsController {
     return this.settingsService.getThemeCss();
   }
 
+  @Get('forms/:formId')
+  @ApiOperation({ summary: 'Get a public form definition by ID (for storefront rendering)' })
+  @ApiParam({ name: 'formId', type: String })
+  @ApiResponse({ status: 200, description: 'Form definition' })
+  async getPublicForm(@Param('formId') formId: string) {
+    const form = await this.settingsService.getRaw(`form_${formId}`);
+    if (!form) return null;
+    // Strip sensitive fields before returning
+    const { notifyEmail, ...publicForm } = form as any;
+    return publicForm;
+  }
+
   // ── Admin endpoints (auth required) ────────────────────────
 
   @Get()

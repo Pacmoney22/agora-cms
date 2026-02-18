@@ -799,12 +799,13 @@ The course service provides full LMS (Learning Management System) functionality 
 |---|---|---|
 | CoursesModule | `modules/courses/` | Course CRUD, publish/unpublish, versioning |
 | SectionsModule | `modules/sections/` | Course section (module) management |
-| LessonsModule | `modules/lessons/` | Lesson content with video, attachments, versioning |
+| LessonsModule | `modules/lessons/` | Lesson content with video, attachments, versioning. Lesson types: `video`, `text`, `quiz`, `assignment` |
 | EnrollmentsModule | `modules/enrollments/` | Student enrollment, Kafka consumer for auto-enrollment |
 | ProgressModule | `modules/progress/` | Lesson-level progress tracking with video resume points |
 | QuizzesModule | `modules/quizzes/` | Quiz CRUD, question management, attempt submission, auto-grading + manual grading |
 | CertificatesModule | `modules/certificates/` | PDF certificate generation (pdfkit), verification by code |
-| AssignmentsModule | `modules/assignments/` | Instructor assignments with submissions and grading |
+| AssignmentsModule | `modules/assignments/` | Instructor assignments to course sections |
+| SubmissionsModule | `modules/submissions/` | Student assignment submissions with grading rubrics |
 
 #### Authorization Guards
 
@@ -832,12 +833,51 @@ The quiz system supports 4 question types:
 - `fill_blank` - Fill-in-the-blank with multiple accepted answers
 - `essay` - Free-form essay requiring manual grading
 
-Quiz configuration includes: passing score, max attempts, time limit, and question shuffling.
+**Auto-creation:** When a lesson of type `quiz` is created via the curriculum editor, a quiz is automatically created and linked to that lesson.
+
+**CreateQuizDto** — fields are flat (the service wraps `passingScore`, `maxAttempts`, and `timeLimit` into a `quizConfig` JSONB column internally):
+
+```typescript
+{
+  title: string;         // required
+  description?: string;
+  questions: [];         // required (empty array for new quizzes)
+  passingScore?: number; // default 70
+  maxAttempts?: number;  // default 3
+  timeLimit?: number;    // minutes, optional
+}
+```
+
+> **Important:** Do NOT send nested `quizConfig` or `position` — the DTO validation will reject them.
 
 Grading follows a multi-stage workflow:
 1. **Auto-grading**: Multiple choice, true/false, and fill-blank questions are graded immediately
 2. **Manual grading**: Essay questions enter `needs_manual_grading` status
 3. **Final grading**: Instructor provides points, feedback via `POST /api/v1/attempts/:attemptId/grade`
+
+#### Assignment Submissions
+
+Students submit work for `assignment`-type lessons. Submissions support text content plus optional links.
+
+**Grading workflow:**
+1. Student submits via `POST /api/v1/lessons/:lessonId/submissions`
+2. Submission enters pending status, appears in the grading queue
+3. Instructor reviews via `GET /api/v1/grading/pending-submissions`
+4. Instructor grades via `POST /api/v1/submissions/:id/grade` (score, feedback, status: `graded` or `returned`)
+
+#### Section Offerings
+
+Section offerings (delivery instances of a course — on-demand or scheduled) are stored in the **Settings API** under the key `course_sections_registry`, not in the Course database. They are managed via the admin dashboard's Course Sections page and retrieved by the storefront from `GET /api/v1/settings/public`.
+
+#### Settings-Based Registries
+
+Course categories and tags use the same settings-based registry pattern as articles and events:
+
+| Settings Key | Purpose | Admin Route |
+|---|---|---|
+| `course_categories` | Course category taxonomy (name, slug, description, image, SEO) | `/course-categories` |
+| `course_tags` | Course tag taxonomy (name, slug, description, image, color, SEO) | `/course-tags` |
+| `course_sections_registry` | Section offerings (on-demand/scheduled delivery) | `/course-sections` |
 
 #### Certificate Generation
 
@@ -853,7 +893,7 @@ All three frontend applications use Next.js 14 with the App Router, React 18, an
 
 **Package:** `@agora-cms/page-builder`
 
-The page builder is a single-page application (SPA) providing a visual drag-and-drop interface for constructing pages from the 85-component library.
+The page builder is a single-page application (SPA) providing a visual drag-and-drop interface for constructing pages from the 92-component library.
 
 #### State Management
 
@@ -989,11 +1029,14 @@ The admin dashboard has the most extensive routing of all three apps:
 
 **LMS:**
 - `/courses` - Course list
-- `/courses/[id]/curriculum` - Course curriculum editor
+- `/courses/[id]/edit` - Course editor (MediaPicker thumbnail, category/tag selectors)
+- `/courses/[id]/curriculum` - Course curriculum editor (auto-creates quizzes for quiz-type lessons)
 - `/courses/[id]/quizzes` - Quiz management
+- `/course-categories` - Course category registry management
+- `/course-tags` - Course tag registry management
 - `/enrollments` - Enrollment tracking
-- `/grading` - Pending quiz grading queue
-- `/course-sections` - Section management
+- `/grading` - Pending quiz and assignment grading queue
+- `/course-sections` - Section offering management
 
 **Events:**
 - `/events` - Event list
@@ -1091,7 +1134,7 @@ The database uses PostgreSQL 16 with a single schema managed by Prisma. All mode
 | Course | `courses` | title, slug (unique), description, version, status (enum), courseMetadata (JSONB), thumbnailUrl, instructorName/Bio | Author, Sections, Enrollments, Versions |
 | CourseVersion | `course_versions` | courseId, version, title, description, courseMetadata (JSONB) | Course, Author |
 | CourseSection | `course_sections` | courseId, title, description, position | Course, Lessons |
-| CourseLesson | `course_lessons` | courseSectionId, title, version, content (text), videoUrl, videoProvider, videoDuration, attachments (JSONB), position, isFree | Section, Versions, Quizzes, Progress |
+| CourseLesson | `course_lessons` | courseSectionId, title, lessonType (video/text/quiz/assignment), version, content (text), videoUrl, videoProvider, videoDuration, attachments (JSONB), position, isFree | Section, Versions, Quizzes, Submissions, Progress |
 | CourseLessonVersion | `course_lesson_versions` | lessonId, version, content, videoUrl, attachments (JSONB) | Lesson, Author |
 | CourseEnrollment | `course_enrollments` | courseId, userId (unique pair), orderId, status (enum), enrolledAt, completedAt, lastAccessedAt, expiresAt, progressPercent | Course, User, Order, Progress, Attempts, Certificates |
 | CourseProgress | `course_progress` | enrollmentId, lessonId (unique pair), isCompleted, completedAt, videoProgress, lastViewedAt | Enrollment, Lesson |
@@ -1149,7 +1192,7 @@ The UI component system uses a **schema-driven** architecture where each compone
 1. **React Component** (`packages/ui/src/components/<category>/<Name>.tsx`) - The visual implementation
 2. **JSON Schema** (`packages/ui/src/schemas/<name>.schema.json`) - Property definitions for the page builder
 
-### Component Categories (85 total)
+### Component Categories (92 total)
 
 | Category | Components |
 |---|---|
@@ -1166,6 +1209,8 @@ The UI component system uses a **schema-driven** architecture where each compone
 | Blog (6) | BlogPostCard, BlogGrid, AuthorBio, RelatedPosts, PostNavigation, Comments |
 | Trust (5) | TrustBadges, ReviewAggregate, ReviewList, CaseStudiesGrid, Awards |
 | Interactive (5) | Toast, AnimatedTabs, Calculator, SearchableFAQ, Lightbox |
+| Events (4) | EventCard, EventGrid, EventSessionList, EventSponsorBar |
+| Courses (3) | CourseCard, CourseGrid, CourseCurriculum |
 | Global (3) | SiteMeta, ErrorPage, MaintenancePage |
 | Primitives (1) | Button |
 
@@ -1500,6 +1545,25 @@ interface ComponentInstance {
 | DELETE | `/api/v1/questions/:questionId` | Delete question |
 | POST | `/api/v1/attempts/:attemptId/grade` | Grade essay question |
 | GET | `/api/v1/grading/pending` | Get pending grading queue |
+
+#### Instructor Assignments
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/v1/assignments/instructors` | Assign instructor to course section |
+| GET | `/api/v1/assignments/instructors/user/:userId` | Get instructor assignments by user |
+| GET | `/api/v1/assignments/instructors/section/:sectionId` | Get instructors for a section |
+| DELETE | `/api/v1/assignments/instructors/:assignmentId` | Remove instructor assignment |
+
+#### Assignment Submissions
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/v1/lessons/:lessonId/submissions` | Submit assignment (enrollmentId, content, links, totalPoints) |
+| GET | `/api/v1/submissions/:id` | Get submission |
+| GET | `/api/v1/lessons/:lessonId/submissions/:enrollmentId` | Get submissions for lesson by enrollment |
+| POST | `/api/v1/submissions/:id/grade` | Grade submission (score, feedback, gradedBy, status) |
+| GET | `/api/v1/grading/pending-submissions` | List pending submissions (optional `instructorId` query) |
 
 #### Certificates
 

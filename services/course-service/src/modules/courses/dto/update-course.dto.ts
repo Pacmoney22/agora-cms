@@ -60,4 +60,19 @@ export class UpdateCourseDto {
   @ApiPropertyOptional({ description: 'Prerequisites as JSON array' })
   @IsOptional()
   prerequisites?: any;
+
+  @ApiPropertyOptional({ description: 'Certificate and completion settings' })
+  @IsOptional()
+  certificateSettings?: {
+    certificateEnabled?: boolean;
+    certificateTemplateId?: string;
+    completionCriteria?: {
+      requireAllLessons?: boolean;
+      requiredLessonIds?: string[];
+      requireQuizPassing?: boolean;
+      minimumQuizScore?: number;
+      requireAssignmentPassing?: boolean;
+      minimumProgress?: number;
+    };
+  };
 }

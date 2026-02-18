@@ -181,14 +181,20 @@ describe('MediaService', () => {
   // findAll
   // -----------------------------------------------------------------------
   describe('findAll', () => {
-    it('should return paginated media', async () => {
-      const media = [{ id: 'm1', filename: 'file.jpg' }];
+    it('should return paginated media with resolved URLs', async () => {
+      const media = [{ id: 'm1', filename: 'file.jpg', s3Key: 'media/uuid/original.jpg', variants: null }];
       mockPrisma.media.findMany.mockResolvedValue(media);
       mockPrisma.media.count.mockResolvedValue(1);
 
       const result = await service.findAll({});
 
-      expect(result.data).toEqual(media);
+      expect(result.data).toEqual([
+        {
+          ...media[0],
+          url: 'http://localhost:9000/test-bucket/media/uuid/original.jpg',
+          thumbnailUrl: 'http://localhost:9000/test-bucket/media/uuid/original.jpg',
+        },
+      ]);
       expect(result.meta).toEqual({
         page: 1,
         limit: 20,

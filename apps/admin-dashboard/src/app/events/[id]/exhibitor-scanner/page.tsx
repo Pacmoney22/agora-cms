@@ -7,6 +7,14 @@ import { eventsApi } from '@/lib/api-client';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
 
+/** Validate URL for safe navigation — only allow http(s) */
+function validateNavigationUrl(url: unknown): string {
+  if (!url || typeof url !== 'string') return '';
+  const trimmed = url.trim();
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  return '';
+}
+
 interface Lead {
   id: string;
   attendeeId: string;
@@ -101,7 +109,10 @@ export default function ExhibitorScannerPage() {
     eventsApi.exportExhibitorLeads(eventId, exhibitorId, format)
       .then((result: any) => {
         if (result?.url) {
-          window.open(result.url, '_blank');
+          const safeUrl = validateNavigationUrl(result.url);
+          if (safeUrl) {
+            window.open(safeUrl, '_blank', 'noopener,noreferrer');
+          }
           toast.success(`Leads exported as ${format.toUpperCase()}`);
         } else if (result?.data) {
           // Direct download

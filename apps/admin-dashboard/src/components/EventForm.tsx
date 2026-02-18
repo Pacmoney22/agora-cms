@@ -416,7 +416,7 @@ const EMPTY_RECURRENCE: RecurrenceRule = {
 
 interface EventFormProps {
   initialData?: Partial<EventFormData>;
-  onSubmit: (data: EventFormData) => void;
+  onSubmit: (data: Record<string, unknown>) => void;
   isPending: boolean;
 }
 
@@ -487,9 +487,30 @@ export function EventForm({ initialData, onSubmit, isPending }: EventFormProps) 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.title.trim()) return;
+    // Only send fields the backend CreateEventDto accepts — extra fields
+    // cause a 400 because the API uses forbidNonWhitelisted validation.
+    const startDateTime = form.startDate && form.startTime
+      ? `${form.startDate}T${form.startTime}:00` : form.startDate;
+    const endDateTime = form.endDate && form.endTime
+      ? `${form.endDate}T${form.endTime}:00` : form.endDate;
+
     onSubmit({
-      ...form,
-      slug: form.slug || autoSlug(form.title),
+      title: form.title,
+      description: form.description || undefined,
+      startDate: startDateTime,
+      endDate: endDateTime,
+      timezone: form.timezone || undefined,
+      venueId: form.venueId || undefined,
+      virtualEventUrl: form.virtualUrl || undefined,
+      imageUrl: form.image || undefined,
+      maxAttendees: form.venueCapacity || undefined,
+      tags: form.tags?.length ? form.tags : undefined,
+      seo: form.seoTitle ? {
+        title: form.seoTitle,
+        description: form.seoDescription,
+        keywords: form.seoKeywords,
+        ogImage: form.seoOgImage,
+      } : undefined,
     });
   };
 
@@ -2981,24 +3002,6 @@ export function EventForm({ initialData, onSubmit, isPending }: EventFormProps) 
             )}
           </div>
 
-          {/* Email Notifications */}
-          <div className="rounded-lg bg-white p-5 shadow">
-            <h2 className="mb-4 text-sm font-semibold text-gray-900">Notification Emails</h2>
-            <div className="space-y-4">
-              <div>
-                <label className={labelCls}>Confirmation Email Template</label>
-                <textarea value={form.confirmationEmail} onChange={(e) => set({ confirmationEmail: e.target.value })} rows={4} className={inputCls} placeholder="Email content sent after registration. Use {{name}}, {{event}}, {{date}}, {{ticket}}" />
-              </div>
-              <div>
-                <label className={labelCls}>Reminder Email Template</label>
-                <textarea value={form.reminderEmail} onChange={(e) => set({ reminderEmail: e.target.value })} rows={4} className={inputCls} placeholder="Email content sent before the event. Use {{name}}, {{event}}, {{date}}, {{venue}}" />
-              </div>
-              <div className="w-48">
-                <label className={labelCls}>Send Reminder Hours Before</label>
-                <input type="number" min="1" value={form.reminderHoursBefore} onChange={(e) => set({ reminderHoursBefore: +e.target.value })} className={inputCls} />
-              </div>
-            </div>
-          </div>
         </div>
       )}
 

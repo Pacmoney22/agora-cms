@@ -112,7 +112,7 @@ agora-cms/
 | 3002 | Commerce Service | HTTP | Products, orders, cart, checkout, coupons, fulfillment |
 | 3003 | Integration Service | HTTP | Stripe, Salesforce, GA4, webhooks |
 | 3004 | Shipping Gateway | HTTP | Shipping rates, labels, tracking, bin-packing |
-| 3005 | Course Service | HTTP | LMS courses, sections, lessons, quizzes, certificates |
+| 3005 | Course Service | HTTP | LMS courses, sections, lessons, quizzes, assignments, submissions, certificates |
 | 3100 | Page Builder | HTTP | Visual drag-and-drop page builder |
 | 3200 | Storefront | HTTP | Customer-facing storefront |
 | 3300 | Admin Dashboard | HTTP | Administration interface |
@@ -133,7 +133,7 @@ agora-cms/
 - Blog/article system with categories, tags, comments, and reviews
 - E-commerce engine supporting physical, virtual, service, configurable, and course product types
 - Event management with attendees, sessions, sponsors, surveys, badge printing, and QR code check-in
-- LMS with courses, sections, lessons, quizzes (multiple question types), grading, and certificates
+- LMS with courses, category/tag registries, section offerings (on-demand & scheduled), curriculum builder (4 lesson types), quiz builder with auto-creation, assignment submissions with grading rubrics, and PDF certificates
 - Email template system with multi-provider support (SMTP, SendGrid, Mailgun, SES, Postmark, Resend)
 - Product feeds for Google, Facebook, Pinterest, TikTok, and Bing
 - Form builder with Salesforce CRM integration
@@ -2401,6 +2401,14 @@ Kong 3.6 runs in DB-less (declarative) mode using the configuration file at `doc
 | `/api/v1/analytics` | integration-service | 3003 |
 | `/api/v1/webhooks` | integration-service | 3003 |
 | `/api/v1/shipping` | shipping-gateway | 3004 |
+| `/api/v1/courses` | course-service | 3005 |
+| `/api/v1/enrollments` | course-service | 3005 |
+| `/api/v1/lessons` | course-service | 3005 |
+| `/api/v1/quizzes` | course-service | 3005 |
+| `/api/v1/certificates` | course-service | 3005 |
+| `/api/v1/assignments` | course-service | 3005 |
+| `/api/v1/submissions` | course-service | 3005 |
+| `/api/v1/grading` | course-service | 3005 |
 
 All routes use `strip_path: false`, meaning the full path is forwarded to the upstream service.
 
@@ -2495,7 +2503,7 @@ The database uses PostgreSQL 16 with Prisma ORM. The schema is defined at `packa
 | Course | `courses` | LMS courses |
 | CourseVersion | `course_versions` | Course version history |
 | CourseSection | `course_sections` | Course modules/sections |
-| CourseLesson | `course_lessons` | Individual lessons |
+| CourseLesson | `course_lessons` | Individual lessons (types: video, text, quiz, assignment) |
 | CourseLessonVersion | `course_lesson_versions` | Lesson version history |
 | CourseEnrollment | `course_enrollments` | Student enrollments |
 | CourseProgress | `course_progress` | Lesson-level progress tracking |
@@ -4232,7 +4240,7 @@ The Admin Dashboard at http://localhost:3300 provides management interfaces for 
 | **Content** | `/pages`, `/articles`, `/article-categories`, `/article-tags`, `/comments`, `/reviews`, `/media`, `/forms`, `/files`, `/navigation`, `/redirects` | Page management, blog, comments, reviews, media library, forms, gated files, navigation menus, URL redirects |
 | **Commerce** | `/products`, `/categories`, `/product-tags`, `/orders`, `/coupons`, `/users`, `/product-feeds` | Product catalog, categories, orders, coupons, customers, product feeds |
 | **Events** | `/events`, `/event-categories`, `/event-tags`, `/venues`, `/check-in`, `/session-scanner`, `/exhibitor-scanner` | Event management, venues, QR check-in, badge scanning |
-| **Learning** | `/courses`, `/course-sections`, `/enrollments`, `/grading` | Course management, sections, enrollments, quiz grading |
+| **Learning** | `/courses`, `/course-categories`, `/course-tags`, `/course-sections`, `/enrollments`, `/grading` | Course management, category/tag registries, section offerings, enrollments, quiz & assignment grading |
 | **Settings** | `/settings/general`, `/settings/site-status`, `/settings/appearance`, `/settings/blog`, `/settings/seo`, `/settings/analytics`, `/settings/payments`, `/settings/shipping`, `/settings/tax`, `/settings/email`, `/email-templates`, `/settings/system` | Site configuration, appearance, SEO, analytics, payments, shipping, tax, email, system |
 
 ### Settings Categories
@@ -4248,6 +4256,13 @@ Settings are stored in the `site_settings` table as key-value pairs:
 | `payments` | Stripe keys, payment methods, capture method (sensitive fields masked) | admin+ |
 | `system` | Deployment mode, feature backends, Salesforce integration | admin+ |
 | `email` | Email provider, credentials, sender identity, rate limits | admin+ |
+| `article_categories` | Article category registry (name, slug, description, image, SEO) | admin+ |
+| `article_tags` | Article tag registry (name, slug, description, image, color, SEO) | admin+ |
+| `event_categories` | Event category registry | admin+ |
+| `event_tags` | Event tag registry | admin+ |
+| `course_categories` | Course category registry (name, slug, description, image, SEO) | admin+, course_admin |
+| `course_tags` | Course tag registry (name, slug, description, image, color, SEO) | admin+, course_admin |
+| `course_sections_registry` | Section offerings — on-demand and scheduled course delivery instances | admin+, course_admin |
 
 Public settings (no authentication required) are available at `GET /api/v1/settings/public` and include only browser-safe fields (no secrets).
 

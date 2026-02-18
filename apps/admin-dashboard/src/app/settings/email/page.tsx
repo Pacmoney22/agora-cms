@@ -78,8 +78,8 @@ const PROVIDERS: ProviderDef[] = [
     description: 'Cost-effective email at scale through AWS Simple Email Service',
     docsUrl: 'https://docs.aws.amazon.com/ses/latest/dg/send-email-api.html',
     fields: [
-      { key: 'accessKeyId', label: 'Access Key ID', type: 'text', placeholder: 'AKIAIOSFODNN7EXAMPLE', required: true },
-      { key: 'secretAccessKey', label: 'Secret Access Key', type: 'password', placeholder: 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY', required: true },
+      { key: 'accessKeyId', label: 'Access Key ID', type: 'text', placeholder: 'Your AWS access key ID', required: true },
+      { key: 'secretAccessKey', label: 'Secret Access Key', type: 'password', placeholder: 'Your AWS secret access key', required: true },
       {
         key: 'region', label: 'AWS Region', type: 'select', placeholder: '',
         options: [

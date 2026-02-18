@@ -2,6 +2,7 @@
 
 import type { ComponentInstance } from '@agora-cms/shared';
 import React from 'react';
+import { useCart } from '@/lib/cart-context';
 import {
   // Layout
   Container,
@@ -78,6 +79,12 @@ import {
   CookieConsent,
   BackToTop,
   Modal,
+  // Events
+  EventCard,
+  EventGrid,
+  // Courses
+  CourseCard,
+  CourseGrid,
   // Blog & Content
   BlogPostCard,
   BlogGrid,
@@ -102,6 +109,30 @@ import {
   ErrorPage,
   MaintenancePage,
 } from '@agora-cms/ui';
+
+/**
+ * Wrapper that injects the cart context's `addItem` as `onAddToCart`
+ * into ProductCard so detail mode can add to cart.
+ */
+function ProductCardWithCart(props: Record<string, unknown>) {
+  let addItem: ((id: string, qty: number, vid?: string) => Promise<void>) | undefined;
+  try {
+    const cart = useCart();
+    addItem = cart.addItem;
+  } catch {
+    // Outside CartProvider — no cart available
+  }
+  return (
+    <ProductCard
+      {...(props as any)}
+      onAddToCart={
+        addItem
+          ? (id: string, qty: number, vid?: string) => { addItem!(id, qty, vid); }
+          : undefined
+      }
+    />
+  );
+}
 
 /**
  * Registry mapping componentId strings to React components.
@@ -157,7 +188,7 @@ const componentRegistry: Record<string, ComponentRendererFn> = {
   'before-after': ({ props }) => <BeforeAfter {...props as any} />,
 
   // Commerce
-  'product-card': ({ props }) => <ProductCard {...props as any} />,
+  'product-card': ({ props }) => <ProductCardWithCart {...props as any} />,
   'product-grid': ({ props }) => <ProductGrid {...props as any} />,
   'cart-widget': ({ props }) => <CartWidget {...props as any} />,
   'featured-products': ({ props }) => <FeaturedProducts {...props as any} />,
@@ -165,6 +196,14 @@ const componentRegistry: Record<string, ComponentRendererFn> = {
   'product-configurator': ({ props }) => <ProductConfigurator {...props as any} />,
   'cart-page': ({ props }) => <CartPage {...props as any} />,
   'product-quick-view': ({ props }) => <ProductQuickView {...props as any} />,
+
+  // Events
+  'event-card': ({ props }) => <EventCard {...props as any} />,
+  'event-grid': ({ props }) => <EventGrid {...props as any} />,
+
+  // Courses
+  'course-card': ({ props }) => <CourseCard {...props as any} />,
+  'course-grid': ({ props }) => <CourseGrid {...props as any} />,
 
   // Navigation
   'header': ({ props }) => <Header {...props as any} />,
@@ -241,6 +280,7 @@ export interface DataContext {
   basePath?: string;
   items?: unknown[];
   item?: Record<string, unknown>;
+  siteSettings?: Record<string, any>;
 }
 
 /** Component IDs that represent grid/listing components. */
@@ -299,7 +339,18 @@ function mergeDataContext(
     }
   }
 
-  // Inject single item into card components (detail mode)
+  // Enforce blog social sharing settings on ShareButtons
+  if (componentId === 'share-buttons' && dataContext.siteSettings?.blog) {
+    const blog = dataContext.siteSettings.blog;
+    if (blog.showShareButtons === false) {
+      // Hide share buttons entirely when disabled in settings
+      merged.platforms = [];
+    } else if (Array.isArray(blog.shareButtons)) {
+      merged.allowedPlatforms = blog.shareButtons;
+    }
+  }
+
+  // Inject single item into card components (detail mode) and auto-set mode
   if (dataContext.mode === 'detail' && CARD_COMPONENT_IDS.has(componentId) && dataContext.item) {
     const itemPropMap: Record<string, string> = {
       'blog-post-card': 'post',
@@ -312,6 +363,8 @@ function mergeDataContext(
     if (itemProp) {
       merged[itemProp] = dataContext.item;
     }
+    // Auto-set mode to 'detail' so cards render their full interactive view
+    merged.mode = 'detail';
   }
 
   return merged;

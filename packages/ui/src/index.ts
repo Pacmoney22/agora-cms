@@ -112,6 +112,7 @@ export { EventGrid } from './components/events/EventGrid';
 
 // Course Components
 export { CourseCard } from './components/courses/CourseCard';
+export type { CourseCardProps, CourseData, SectionOffering } from './components/courses/CourseCard';
 export { CourseGrid } from './components/courses/CourseGrid';
 
 // Interactive & Engagement Components

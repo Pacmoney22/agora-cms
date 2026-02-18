@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { TemplatesController } from '../../src/modules/templates/templates.controller';
-import { TemplatesService } from '../../src/modules/templates/templates.service';
 import { JwtAuthGuard } from '../../src/common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../src/common/guards/roles.guard';
+import { TemplatesController } from '../../src/modules/templates/templates.controller';
+import { TemplatesService } from '../../src/modules/templates/templates.service';
 
 describe('TemplatesController', () => {
   let controller: TemplatesController;

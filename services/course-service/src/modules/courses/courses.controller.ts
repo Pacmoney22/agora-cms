@@ -62,6 +62,15 @@ export class CoursesController {
     return this.coursesService.create(dto);
   }
 
+  @Get('slug/:slug')
+  @ApiOperation({ summary: 'Get a course by slug with sections and lessons' })
+  @ApiParam({ name: 'slug', type: String, description: 'Course slug' })
+  @ApiResponse({ status: 200, description: 'Course found' })
+  @ApiResponse({ status: 404, description: 'Course not found' })
+  async findBySlug(@Param('slug') slug: string) {
+    return this.coursesService.findBySlug(slug);
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get a course by ID with sections and lessons' })
   @ApiParam({ name: 'id', type: String, description: 'Course UUID' })

@@ -14,6 +14,8 @@ const COMMERCE_API =
   process.env.NEXT_PUBLIC_COMMERCE_API_URL || 'http://localhost:3002';
 const COURSE_API =
   process.env.NEXT_PUBLIC_COURSE_API_URL || 'http://localhost:3005';
+const CONTENT_API =
+  process.env.NEXT_PUBLIC_CONTENT_API_URL || 'http://localhost:3001';
 
 // ---------------------------------------------------------------------------
 // Shared response types
@@ -119,7 +121,7 @@ export async function listProducts(
 
 export async function getProduct(id: string): Promise<ProductDto> {
   return commerceFetch<ProductDto>(`/api/v1/products/${id}`, {
-    cache: 'no-store',
+    next: { revalidate: 60 },
   });
 }
 
@@ -237,6 +239,7 @@ export interface CourseLessonDto {
   id: string;
   courseSectionId: string;
   title: string;
+  lessonType: string;
   content: string;
   videoUrl: string | null;
   videoProvider: string | null;
@@ -304,6 +307,53 @@ export interface QuizAttemptDto {
   gradingStatus: string;
 }
 
+export interface SectionOfferingDto {
+  id: string;
+  courseId: string;
+  courseName: string;
+  name: string;
+  code: string;
+  deliveryMode: 'on_demand' | 'scheduled';
+  status: 'active' | 'inactive' | 'completed' | 'upcoming';
+  instructorId: string;
+  instructorName: string;
+  description: string;
+  maxEnrollment: number;
+  currentEnrollment: number;
+  schedule: {
+    startDate: string;
+    endDate: string;
+    daysOfWeek: string[];
+    startTime: string;
+    endTime: string;
+    timezone: string;
+    location: string;
+    recurrence: string;
+    notes: string;
+  };
+  enrollmentOpen: boolean;
+  enrollmentDeadline: string;
+}
+
+export async function getCourseSectionOfferings(courseId: string): Promise<SectionOfferingDto[]> {
+  try {
+    const res = await fetch(`${CONTENT_API}/api/v1/settings/public`, {
+      cache: 'no-store',
+    });
+    if (!res.ok) return [];
+    const settings = await res.json();
+    const allSections: SectionOfferingDto[] = settings.courseSections ?? [];
+    return allSections.filter(
+      (s) =>
+        s.courseId === courseId &&
+        (s.status === 'active' || s.status === 'upcoming') &&
+        s.enrollmentOpen,
+    );
+  } catch {
+    return [];
+  }
+}
+
 export async function listCourses(params?: {
   page?: number;
   limit?: number;
@@ -323,7 +373,7 @@ export async function listCourses(params?: {
 
 export async function getCourseBySlug(slug: string): Promise<CourseDto> {
   return courseFetch<CourseDto>(`/api/v1/courses/slug/${slug}`, {
-    cache: 'no-store',
+    next: { revalidate: 60 },
   });
 }
 
@@ -384,6 +434,48 @@ export async function getCertificate(enrollmentId: string): Promise<any> {
   return courseFetch<any>(`/api/v1/certificates/${enrollmentId}`, {
     cache: 'no-store',
   });
+}
+
+// ---------------------------------------------------------------------------
+// Assignment Submissions
+// ---------------------------------------------------------------------------
+
+export interface AssignmentSubmissionDto {
+  id: string;
+  lessonId: string;
+  enrollmentId: string;
+  submissionNumber: number;
+  content: string;
+  links: Array<{ url: string; label?: string }> | null;
+  score: number | null;
+  totalPoints: number;
+  passed: boolean | null;
+  gradingStatus: 'pending' | 'graded' | 'returned';
+  feedback: string | null;
+  gradedBy: string | null;
+  gradedAt: string | null;
+  submittedAt: string;
+  updatedAt: string;
+}
+
+export async function submitAssignment(
+  lessonId: string,
+  data: { enrollmentId: string; content: string; links?: Array<{ url: string; label?: string }> },
+): Promise<AssignmentSubmissionDto> {
+  return courseFetch<AssignmentSubmissionDto>(`/api/v1/lessons/${lessonId}/submissions`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function getAssignmentSubmissions(
+  lessonId: string,
+  enrollmentId: string,
+): Promise<AssignmentSubmissionDto[]> {
+  return courseFetch<AssignmentSubmissionDto[]>(
+    `/api/v1/lessons/${lessonId}/submissions/${enrollmentId}`,
+    { cache: 'no-store' },
+  );
 }
 
 // ---------------------------------------------------------------------------

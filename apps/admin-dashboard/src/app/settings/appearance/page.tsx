@@ -1,25 +1,135 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { settingsApi } from '@/lib/api-client';
+import { GOOGLE_FONTS, buildGoogleFontsUrl } from '@agora-cms/shared';
 
-const FONT_OPTIONS = [
-  'Inter',
-  'Roboto',
-  'Open Sans',
-  'Lato',
-  'Montserrat',
-  'Poppins',
-  'Raleway',
-  'Nunito',
-  'Playfair Display',
-  'Merriweather',
-  'Source Sans Pro',
-  'DM Sans',
-  'Space Grotesk',
-];
+const FONT_CATEGORIES = ['sans-serif', 'serif', 'display', 'handwriting', 'monospace'] as const;
+const CATEGORY_LABELS: Record<string, string> = {
+  'sans-serif': 'Sans-Serif',
+  serif: 'Serif',
+  display: 'Display',
+  handwriting: 'Handwriting',
+  monospace: 'Monospace',
+};
+
+/** Searchable font picker component with live preview. */
+function FontPicker({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  onChange: (font: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState<string>('all');
+  const ref = useRef<HTMLDivElement>(null);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const filtered = GOOGLE_FONTS.filter((f) => {
+    if (categoryFilter !== 'all' && f.category !== categoryFilter) return false;
+    if (search && !f.family.toLowerCase().includes(search.toLowerCase())) return false;
+    return true;
+  });
+
+  // Load font for preview when dropdown is open
+  const loadFont = useCallback((family: string) => {
+    const id = `gf-preview-${family.replace(/\s+/g, '-')}`;
+    if (document.getElementById(id)) return;
+    const link = document.createElement('link');
+    link.id = id;
+    link.rel = 'stylesheet';
+    link.href = buildGoogleFontsUrl([family]);
+    document.head.appendChild(link);
+  }, []);
+
+  // Load currently selected font
+  useEffect(() => {
+    if (value) loadFont(value);
+  }, [value, loadFont]);
+
+  return (
+    <div ref={ref} className="relative">
+      <label className="block text-xs font-medium text-gray-700 mb-1">{label}</label>
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-left hover:border-gray-400 focus:border-blue-500 focus:outline-none"
+      >
+        <span style={{ fontFamily: `'${value}', sans-serif` }}>{value}</span>
+        <svg className={`h-4 w-4 text-gray-400 transition-transform ${open ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+
+      {open && (
+        <div className="absolute z-50 mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg">
+          <div className="p-2 border-b border-gray-100 space-y-2">
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search fonts..."
+              className="w-full rounded border border-gray-200 px-2 py-1.5 text-xs focus:border-blue-500 focus:outline-none"
+              autoFocus
+            />
+            <div className="flex gap-1 flex-wrap">
+              <button
+                type="button"
+                onClick={() => setCategoryFilter('all')}
+                className={`rounded px-2 py-0.5 text-[10px] font-medium ${categoryFilter === 'all' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+              >
+                All
+              </button>
+              {FONT_CATEGORIES.map((cat) => (
+                <button
+                  key={cat}
+                  type="button"
+                  onClick={() => setCategoryFilter(cat)}
+                  className={`rounded px-2 py-0.5 text-[10px] font-medium ${categoryFilter === cat ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                >
+                  {CATEGORY_LABELS[cat]}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="max-h-64 overflow-y-auto">
+            {filtered.length === 0 && (
+              <p className="px-3 py-4 text-xs text-gray-400 text-center">No fonts match your search.</p>
+            )}
+            {filtered.map((f) => {
+              loadFont(f.family);
+              return (
+                <button
+                  key={f.family}
+                  type="button"
+                  onClick={() => { onChange(f.family); setOpen(false); setSearch(''); }}
+                  className={`w-full px-3 py-2 text-left text-sm hover:bg-blue-50 flex items-center justify-between ${value === f.family ? 'bg-blue-50 text-blue-700' : 'text-gray-700'}`}
+                >
+                  <span style={{ fontFamily: `'${f.family}', ${f.category}` }}>{f.family}</span>
+                  <span className="text-[10px] text-gray-400">{f.category}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 interface ThemeColors {
   primary: string;
@@ -242,30 +352,16 @@ export default function AppearanceSettingsPage() {
           <div className="rounded-lg bg-white p-6 shadow">
             <h2 className="mb-4 text-sm font-semibold text-gray-900">Typography</h2>
             <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">Heading Font</label>
-                <select
-                  value={form.typography.headingFont}
-                  onChange={(e) => updateTypography('headingFont', e.target.value)}
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
-                >
-                  {FONT_OPTIONS.map((f) => (
-                    <option key={f} value={f}>{f}</option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">Body Font</label>
-                <select
-                  value={form.typography.bodyFont}
-                  onChange={(e) => updateTypography('bodyFont', e.target.value)}
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
-                >
-                  {FONT_OPTIONS.map((f) => (
-                    <option key={f} value={f}>{f}</option>
-                  ))}
-                </select>
-              </div>
+              <FontPicker
+                label="Heading Font"
+                value={form.typography.headingFont}
+                onChange={(f) => updateTypography('headingFont', f)}
+              />
+              <FontPicker
+                label="Body Font"
+                value={form.typography.bodyFont}
+                onChange={(f) => updateTypography('bodyFont', f)}
+              />
               <div>
                 <label className="block text-xs font-medium text-gray-700 mb-1">
                   Base Font Size: {form.typography.baseSize}px

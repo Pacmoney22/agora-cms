@@ -62,4 +62,5 @@ export class CreateCourseDto {
   @ApiPropertyOptional({ description: 'Prerequisites as JSON array' })
   @IsOptional()
   prerequisites?: any;
+
 }

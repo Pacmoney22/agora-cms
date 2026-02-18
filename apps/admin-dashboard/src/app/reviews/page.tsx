@@ -5,6 +5,15 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { reviewsApi } from '@/lib/api-client';
 import toast from 'react-hot-toast';
 
+/** Sanitize a URL for use in img src — only allow http(s) and data:image URIs */
+function sanitizeImageUrl(url: unknown): string {
+  if (!url || typeof url !== 'string') return '';
+  const trimmed = url.trim();
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  if (/^data:image\//i.test(trimmed)) return trimmed;
+  return '';
+}
+
 interface Review {
   id: string;
   authorName: string;
@@ -314,9 +323,12 @@ export default function ReviewsPage() {
                     {/* Media */}
                     {review.media && review.media.length > 0 && (
                       <div className="mt-2 flex gap-2">
-                        {review.media.map((url, i) => (
-                          <img key={i} src={url} alt="" className="h-16 w-16 rounded-md object-cover border border-gray-200" />
-                        ))}
+                        {review.media.map((url, i) => {
+                          const safeUrl = sanitizeImageUrl(url);
+                          return safeUrl ? (
+                            <img key={i} src={safeUrl} alt="" className="h-16 w-16 rounded-md object-cover border border-gray-200" />
+                          ) : null;
+                        })}
                       </div>
                     )}
 

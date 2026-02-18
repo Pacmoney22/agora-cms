@@ -1,66 +1,24 @@
 {
   "id": "contact-form",
-  "name": "Contact Form",
+  "name": "Form",
   "category": "Forms",
   "icon": "contact-form",
   "acceptsChildren": false,
   "properties": {
-    "fields": {
-      "type": "array",
-      "label": "Form Fields",
-      "items": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": "enum",
-            "values": ["text", "email", "phone", "textarea", "select", "radio", "checkbox", "file", "date", "number", "url", "hidden"],
-            "default": "text",
-            "label": "Field Type"
-          },
-          "label": {
-            "type": "string",
-            "default": "Field Label",
-            "label": "Label"
-          },
-          "placeholder": {
-            "type": "string",
-            "default": "",
-            "label": "Placeholder"
-          },
-          "required": {
-            "type": "boolean",
-            "default": false,
-            "label": "Required"
-          },
-          "width": {
-            "type": "enum",
-            "values": ["full", "half"],
-            "default": "full",
-            "label": "Width"
-          },
-          "options": {
-            "type": "array",
-            "items": { "type": "string" },
-            "default": [],
-            "label": "Options (for select/radio/checkbox)"
-          }
-        }
-      },
-      "default": [
-        { "type": "text", "label": "Name", "placeholder": "Your name", "required": true, "width": "full" },
-        { "type": "email", "label": "Email", "placeholder": "your@email.com", "required": true, "width": "half" },
-        { "type": "phone", "label": "Phone", "placeholder": "(555) 123-4567", "required": false, "width": "half" },
-        { "type": "textarea", "label": "Message", "placeholder": "How can we help?", "required": true, "width": "full" }
-      ]
+    "formId": {
+      "type": "formSelector",
+      "default": "",
+      "label": "Form",
+      "description": "Select a form built in the Admin Dashboard (Forms section)"
     },
     "submitLabel": {
       "type": "string",
-      "default": "Send Message",
+      "default": "Submit",
       "label": "Submit Button Label"
     },
     "successMessage": {
       "type": "string",
-      "default": "Thank you! Your message has been sent successfully.",
+      "default": "Thank you! Your submission has been received.",
       "label": "Success Message"
     },
     "successAction": {
@@ -74,11 +32,6 @@
       "default": null,
       "label": "Redirect URL (if redirect action)"
     },
-    "recipientEmail": {
-      "type": "string",
-      "default": null,
-      "label": "Recipient Email"
-    },
     "submitEndpoint": {
       "type": "url",
       "default": null,
@@ -89,47 +42,23 @@
       "default": true,
       "label": "Enable Honeypot Spam Protection"
     },
-    "salesforceEnabled": {
-      "type": "boolean",
-      "default": false,
-      "label": "Enable Salesforce Integration"
-    },
-    "salesforceObjectType": {
+    "buttonStyle": {
       "type": "enum",
-      "values": ["Lead", "Contact", "Case"],
-      "default": "Lead",
-      "label": "Salesforce Object Type",
-      "visibleWhen": { "salesforceEnabled": true }
+      "values": ["primary", "secondary", "outline"],
+      "default": "primary",
+      "label": "Button Style"
     },
-    "salesforceFieldMapping": {
-      "type": "array",
-      "label": "Salesforce Field Mapping",
-      "visibleWhen": { "salesforceEnabled": true },
-      "items": {
-        "type": "object",
-        "properties": {
-          "formField": { "type": "string", "default": "", "label": "Form Field" },
-          "sfField": { "type": "string", "default": "", "label": "Salesforce Field API Name" }
-        }
-      },
-      "default": []
+    "inputSize": {
+      "type": "enum",
+      "values": ["sm", "md", "lg"],
+      "default": "md",
+      "label": "Input Size"
     },
-    "consentCheckbox": {
-      "type": "object",
-      "default": null,
-      "label": "Consent Checkbox",
-      "properties": {
-        "label": {
-          "type": "string",
-          "default": "I agree to the terms and conditions",
-          "label": "Consent Label"
-        },
-        "required": {
-          "type": "boolean",
-          "default": true,
-          "label": "Required"
-        }
-      }
+    "labelPosition": {
+      "type": "enum",
+      "values": ["above", "inline", "hidden"],
+      "default": "above",
+      "label": "Label Position"
     }
   },
   "responsive": {

@@ -19,7 +19,69 @@ export class CertificatesService {
     private readonly certificateGenerator: CertificateGeneratorService,
   ) {}
 
-  async generateCertificate(enrollmentId: string) {
+  async findAll(options: {
+    courseId?: string;
+    userId?: string;
+    page?: number;
+    limit?: number;
+  }) {
+    const { courseId, userId } = options;
+    const page = Number(options.page) || 1;
+    const limit = Number(options.limit) || 20;
+    const skip = (page - 1) * limit;
+
+    const where: Record<string, unknown> = {};
+    if (courseId || userId) {
+      const enrollmentFilter: Record<string, unknown> = {};
+      if (courseId) enrollmentFilter.courseId = courseId;
+      if (userId) enrollmentFilter.userId = userId;
+      where.enrollment = enrollmentFilter;
+    }
+
+    const [data, total] = await Promise.all([
+      this.prisma.certificate.findMany({
+        where,
+        skip,
+        take: limit,
+        include: {
+          enrollment: {
+            include: {
+              course: {
+                select: { id: true, title: true, thumbnailUrl: true },
+              },
+              user: {
+                select: { id: true, name: true, email: true },
+              },
+            },
+          },
+        },
+        orderBy: { issuedAt: 'desc' },
+      }),
+      this.prisma.certificate.count({ where }),
+    ]);
+
+    return {
+      data,
+      meta: { page, limit, total, totalPages: Math.ceil(total / limit) },
+    };
+  }
+
+  async regenerateCertificate(certificateId: string, template?: Record<string, any>) {
+    const existing = await this.prisma.certificate.findUnique({
+      where: { id: certificateId },
+    });
+
+    if (!existing) {
+      throw new NotFoundException(`Certificate with id "${certificateId}" not found`);
+    }
+
+    await this.prisma.certificate.delete({ where: { id: certificateId } });
+    this.logger.log(`Certificate deleted for regeneration: ${certificateId}`);
+
+    return this.generateCertificate(existing.enrollmentId, template);
+  }
+
+  async generateCertificate(enrollmentId: string, template?: Record<string, any>) {
     const enrollment = await this.prisma.courseEnrollment.findUnique({
       where: { id: enrollmentId },
       include: {
@@ -69,6 +131,7 @@ export class CertificatesService {
       courseTitle: enrollment.course.title,
       completedAt: enrollment.completedAt || new Date(),
       instructorName: enrollment.course.author?.name ?? 'Unknown',
+      template,
     });
 
     const certificate = await this.prisma.certificate.create({

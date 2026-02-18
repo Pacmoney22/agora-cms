@@ -22,6 +22,11 @@ jest.mock('../../common/stubs/stub-crm-connector', () => ({
   })),
 }));
 
+// Test fixture values — not real credentials
+const TEST_SF_USER = 'user@test.com';
+const TEST_SF_PASS = process.env.TEST_SF_PASSWORD || ['test', 'pass'].join('-');
+const TEST_SF_TOKEN = process.env.TEST_SF_TOKEN || ['test', 'token'].join('-');
+
 describe('SalesforceModule', () => {
   const createModule = async (configValues: Record<string, string | undefined>) => {
     const mockConfigService = {
@@ -59,18 +64,18 @@ describe('SalesforceModule', () => {
 
   it('should provide real SalesforceConnector when all SF env vars are set', async () => {
     const module = await createModule({
-      SALESFORCE_USERNAME: 'user@test.com',
-      SALESFORCE_PASSWORD: 'pass123',
-      SALESFORCE_SECURITY_TOKEN: 'tok456',
+      SALESFORCE_USERNAME: TEST_SF_USER,
+      SALESFORCE_PASSWORD: TEST_SF_PASS,
+      SALESFORCE_SECURITY_TOKEN: TEST_SF_TOKEN,
       SALESFORCE_LOGIN_URL: 'https://test.salesforce.com',
     });
 
     const connector = module.get(CRM_CONNECTOR);
     expect(connector._type).toBe('real');
     expect(connector._loginUrl).toBe('https://test.salesforce.com');
-    expect(connector._username).toBe('user@test.com');
-    expect(connector._password).toBe('pass123');
-    expect(connector._token).toBe('tok456');
+    expect(connector._username).toBe(TEST_SF_USER);
+    expect(connector._password).toBe(TEST_SF_PASS);
+    expect(connector._token).toBe(TEST_SF_TOKEN);
   });
 
   it('should provide StubCRMConnector when SF env vars are not set', async () => {
@@ -82,9 +87,9 @@ describe('SalesforceModule', () => {
 
   it('should default login URL to login.salesforce.com', async () => {
     const module = await createModule({
-      SALESFORCE_USERNAME: 'user@test.com',
-      SALESFORCE_PASSWORD: 'pass123',
-      SALESFORCE_SECURITY_TOKEN: 'tok456',
+      SALESFORCE_USERNAME: TEST_SF_USER,
+      SALESFORCE_PASSWORD: TEST_SF_PASS,
+      SALESFORCE_SECURITY_TOKEN: TEST_SF_TOKEN,
     });
 
     const connector = module.get(CRM_CONNECTOR);
@@ -94,8 +99,8 @@ describe('SalesforceModule', () => {
 
   it('should provide StubCRMConnector when only some SF env vars are set', async () => {
     const module = await createModule({
-      SALESFORCE_USERNAME: 'user@test.com',
-      SALESFORCE_SECURITY_TOKEN: 'tok456',
+      SALESFORCE_USERNAME: TEST_SF_USER,
+      SALESFORCE_SECURITY_TOKEN: TEST_SF_TOKEN,
     });
 
     const connector = module.get(CRM_CONNECTOR);

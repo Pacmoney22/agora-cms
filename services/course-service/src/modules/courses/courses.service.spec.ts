@@ -85,7 +85,13 @@ describe('CoursesService', () => {
 
       expect(mockPrisma.course.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: { status: 'published', category: 'Programming', level: 'beginner' },
+          where: {
+            status: 'published',
+            AND: [
+              { courseMetadata: { path: ['category'], equals: 'Programming' } },
+              { courseMetadata: { path: ['difficulty'], equals: 'beginner' } },
+            ],
+          },
           skip: 10,
           take: 10,
           orderBy: { title: 'asc' },

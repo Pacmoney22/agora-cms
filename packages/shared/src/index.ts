@@ -21,3 +21,6 @@ export * from './events/event-types';
 // Utils
 export * from './utils/slug';
 export * from './utils/price';
+
+// Data
+export * from './google-fonts';

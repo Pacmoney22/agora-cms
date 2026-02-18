@@ -1,5 +1,21 @@
 import { PrismaClient, UserRole } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+import * as fs from 'fs';
+import * as path from 'path';
+
+// Load root .env so SEED_DEMO_PASSWORD is available when run via tsx
+const rootEnv = path.resolve(__dirname, '../../../.env');
+if (fs.existsSync(rootEnv)) {
+  for (const line of fs.readFileSync(rootEnv, 'utf-8').split('\n')) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#')) continue;
+    const eqIdx = trimmed.indexOf('=');
+    if (eqIdx < 1) continue;
+    const key = trimmed.slice(0, eqIdx).trim();
+    const val = trimmed.slice(eqIdx + 1).trim();
+    if (!process.env[key]) process.env[key] = val;
+  }
+}
 
 const prisma = new PrismaClient();
 
@@ -11,7 +27,10 @@ async function main() {
   // ============================================================
   // Development/test password for seeded demo users only
   // IMPORTANT: This is a well-known demo password - NEVER use in production
-  const DEMO_PASSWORD = 'Password123!';
+  const DEMO_PASSWORD = process.env.SEED_DEMO_PASSWORD || '';
+  if (!DEMO_PASSWORD) {
+    throw new Error('SEED_DEMO_PASSWORD env var is required for seeding. Set it in .env');
+  }
   const passwordHash = await bcrypt.hash(DEMO_PASSWORD, 12);
 
   const users = await Promise.all([

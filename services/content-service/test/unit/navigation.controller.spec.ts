@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { NavigationController } from '../../src/modules/navigation/navigation.controller';
-import { NavigationService } from '../../src/modules/navigation/navigation.service';
 import { JwtAuthGuard } from '../../src/common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../src/common/guards/roles.guard';
+import { NavigationController } from '../../src/modules/navigation/navigation.controller';
+import { NavigationService } from '../../src/modules/navigation/navigation.service';
 
 describe('NavigationController', () => {
   let controller: NavigationController;

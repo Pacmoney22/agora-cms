@@ -5,6 +5,12 @@
   "icon": "file-text",
   "acceptsChildren": false,
   "properties": {
+    "mode": {
+      "type": "enum",
+      "values": ["card", "detail"],
+      "default": "card",
+      "label": "Display Mode"
+    },
     "showImage": {
       "type": "boolean",
       "default": true,
@@ -53,6 +59,42 @@
       "values": ["standard", "overlay", "horizontal", "minimal"],
       "default": "standard",
       "label": "Card Style"
+    },
+    "showContent": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Full Content",
+      "visibleWhen": { "mode": "detail" }
+    },
+    "showShareButtons": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Share Buttons",
+      "visibleWhen": { "mode": "detail" }
+    },
+    "showAuthorBio": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Author Bio",
+      "visibleWhen": { "mode": "detail" }
+    },
+    "showRelatedPosts": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Related Posts",
+      "visibleWhen": { "mode": "detail" }
+    },
+    "showPostNavigation": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Post Navigation",
+      "visibleWhen": { "mode": "detail" }
+    },
+    "showTags": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Tags",
+      "visibleWhen": { "mode": "detail" }
     }
   },
   "responsive": {

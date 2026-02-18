@@ -39,6 +39,11 @@ export default function QuizBuilderPage() {
   const [addingQuestionToQuiz, setAddingQuestionToQuiz] = useState<string | null>(null);
   const [editingQuestionId, setEditingQuestionId] = useState<string | null>(null);
   const [questionType, setQuestionType] = useState<string>('multiple_choice');
+  const [showCreateQuiz, setShowCreateQuiz] = useState(false);
+  const [newQuizLessonId, setNewQuizLessonId] = useState('');
+  const [newQuizTitle, setNewQuizTitle] = useState('');
+  const [newQuizPassingScore, setNewQuizPassingScore] = useState('70');
+  const [newQuizMaxAttempts, setNewQuizMaxAttempts] = useState('3');
 
   // Fetch course details
   const { data: course } = useQuery({
@@ -243,8 +248,114 @@ export default function QuizBuilderPage() {
           <span>/</span>
           <span>Quizzes</span>
         </div>
-        <h1 className="text-3xl font-bold">Quiz Builder</h1>
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-bold">Quiz Builder</h1>
+          {allLessonIds.length > 0 && (
+            <button
+              onClick={() => setShowCreateQuiz(!showCreateQuiz)}
+              className="rounded-md bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700"
+            >
+              {showCreateQuiz ? 'Cancel' : 'Create Quiz'}
+            </button>
+          )}
+        </div>
       </div>
+
+      {/* Create Quiz Form */}
+      {showCreateQuiz && sections && (
+        <div className="mb-6 rounded-lg border-2 border-blue-200 bg-blue-50 p-5">
+          <h2 className="mb-3 text-lg font-semibold">Create New Quiz</h2>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (!newQuizLessonId || !newQuizTitle.trim()) {
+                toast.error('Select a lesson and enter a quiz title');
+                return;
+              }
+              createQuizMutation.mutate({
+                lessonId: newQuizLessonId,
+                data: {
+                  title: newQuizTitle.trim(),
+                  description: '',
+                  passingScore: parseInt(newQuizPassingScore, 10) || 70,
+                  maxAttempts: parseInt(newQuizMaxAttempts, 10) || 3,
+                  questions: [],
+                },
+              });
+              setShowCreateQuiz(false);
+              setNewQuizLessonId('');
+              setNewQuizTitle('');
+              setNewQuizPassingScore('70');
+              setNewQuizMaxAttempts('3');
+            }}
+            className="space-y-3"
+          >
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">Lesson *</label>
+                <select
+                  value={newQuizLessonId}
+                  onChange={(e) => setNewQuizLessonId(e.target.value)}
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+                  required
+                >
+                  <option value="">Select a lesson...</option>
+                  {sections.map((s: any) => (
+                    <optgroup key={s.id} label={s.title}>
+                      {(s.lessons || []).map((l: any) => (
+                        <option key={l.id} value={l.id}>
+                          {l.title}{l.lessonType ? ` (${l.lessonType})` : ''}
+                        </option>
+                      ))}
+                    </optgroup>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">Quiz Title *</label>
+                <input
+                  type="text"
+                  value={newQuizTitle}
+                  onChange={(e) => setNewQuizTitle(e.target.value)}
+                  placeholder="e.g. Module 1 Quiz"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+                  required
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">Passing Score (%)</label>
+                <input
+                  type="number"
+                  min="0"
+                  max="100"
+                  value={newQuizPassingScore}
+                  onChange={(e) => setNewQuizPassingScore(e.target.value)}
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">Max Attempts</label>
+                <input
+                  type="number"
+                  min="1"
+                  value={newQuizMaxAttempts}
+                  onChange={(e) => setNewQuizMaxAttempts(e.target.value)}
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+                />
+              </div>
+            </div>
+            <button
+              type="submit"
+              disabled={createQuizMutation.isPending}
+              className="rounded-md bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700 disabled:opacity-50"
+            >
+              {createQuizMutation.isPending ? 'Creating...' : 'Create Quiz'}
+            </button>
+          </form>
+        </div>
+      )}
 
       {/* Quizzes List */}
       <div className="space-y-4">

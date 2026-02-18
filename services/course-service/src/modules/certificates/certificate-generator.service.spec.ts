@@ -58,8 +58,8 @@ describe('CertificateGeneratorService', () => {
       const config: Record<string, string> = {
         AWS_REGION: 'us-east-1',
         S3_ENDPOINT: 'http://localhost:9000',
-        AWS_ACCESS_KEY_ID: 'testkey',
-        AWS_SECRET_ACCESS_KEY: 'testsecret',
+        AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID || 'test',
+        AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY || 'test',
         S3_BUCKET: 'test-bucket',
       };
       return config[key];
@@ -81,8 +81,8 @@ describe('CertificateGeneratorService', () => {
       const config: Record<string, string> = {
         AWS_REGION: 'us-east-1',
         S3_ENDPOINT: 'http://localhost:9000',
-        AWS_ACCESS_KEY_ID: 'testkey',
-        AWS_SECRET_ACCESS_KEY: 'testsecret',
+        AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID || 'test',
+        AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY || 'test',
         S3_BUCKET: 'test-bucket',
       };
       return config[key];

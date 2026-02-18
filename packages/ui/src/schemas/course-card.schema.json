@@ -5,6 +5,12 @@
   "icon": "book-open",
   "acceptsChildren": false,
   "properties": {
+    "mode": {
+      "type": "enum",
+      "values": ["card", "detail"],
+      "default": "card",
+      "label": "Display Mode"
+    },
     "cardStyle": {
       "type": "enum",
       "values": ["standard", "compact", "featured"],
@@ -40,6 +46,42 @@
       "type": "boolean",
       "default": true,
       "label": "Show Rating"
+    },
+    "showCurriculum": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Curriculum",
+      "visibleWhen": { "mode": "detail" }
+    },
+    "showReviews": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Reviews",
+      "visibleWhen": { "mode": "detail" }
+    },
+    "showObjectives": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Learning Objectives",
+      "visibleWhen": { "mode": "detail" }
+    },
+    "showPrerequisites": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Prerequisites",
+      "visibleWhen": { "mode": "detail" }
+    },
+    "showInstructorBio": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Instructor Bio",
+      "visibleWhen": { "mode": "detail" }
+    },
+    "showEnrollmentCard": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Enrollment Sidebar",
+      "visibleWhen": { "mode": "detail" }
     }
   },
   "responsive": {

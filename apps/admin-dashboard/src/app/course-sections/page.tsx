@@ -127,9 +127,10 @@ export default function CourseSectionsPage() {
   });
 
   // Load courses for dropdown
-  const { data: coursesData } = useQuery({
+  const { data: coursesData, error: coursesError } = useQuery({
     queryKey: ['courses', { limit: 200 }],
     queryFn: () => coursesApi.list({ limit: 200 }),
+    retry: 1,
   });
 
   // Load eligible instructors
@@ -334,17 +335,35 @@ export default function CourseSectionsPage() {
           <div className="grid grid-cols-3 gap-4 mb-4">
             <div>
               <label className="block text-xs font-medium text-gray-700 mb-1">Course *</label>
-              <select
-                value={form.courseId}
-                onChange={(e) => setForm({ ...form, courseId: e.target.value })}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
-                required
-              >
-                <option value="">Select course...</option>
-                {courses.map((c: any) => (
-                  <option key={c.id} value={c.id}>{c.title}</option>
-                ))}
-              </select>
+              {coursesError ? (
+                <div className="rounded-md border border-red-200 bg-red-50 p-2">
+                  <p className="text-xs text-red-600">
+                    Failed to load courses: {(coursesError as Error).message}
+                  </p>
+                  <p className="text-[10px] text-red-500 mt-0.5">
+                    Ensure the course service is running on the correct port.
+                  </p>
+                  <input
+                    type="text"
+                    value={form.courseId}
+                    onChange={(e) => setForm({ ...form, courseId: e.target.value })}
+                    className="mt-2 w-full rounded-md border border-gray-300 px-3 py-1.5 text-xs font-mono focus:border-blue-500 focus:outline-none"
+                    placeholder="Paste a Course ID manually"
+                  />
+                </div>
+              ) : (
+                <select
+                  value={form.courseId}
+                  onChange={(e) => setForm({ ...form, courseId: e.target.value })}
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+                  required
+                >
+                  <option value="">Select course...</option>
+                  {courses.map((c: any) => (
+                    <option key={c.id} value={c.id}>{c.title}</option>
+                  ))}
+                </select>
+              )}
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-700 mb-1">Section Name *</label>
@@ -686,9 +705,11 @@ export default function CourseSectionsPage() {
         <select
           value={courseFilter}
           onChange={(e) => setCourseFilter(e.target.value)}
-          className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+          className={`rounded-md border px-3 py-2 text-sm focus:border-blue-500 focus:outline-none ${
+            coursesError ? 'border-red-300 text-red-500' : 'border-gray-300'
+          }`}
         >
-          <option value="">All Courses</option>
+          <option value="">{coursesError ? 'Courses unavailable' : 'All Courses'}</option>
           {courses.map((c: any) => (
             <option key={c.id} value={c.id}>{c.title}</option>
           ))}

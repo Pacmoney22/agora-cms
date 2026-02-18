@@ -73,9 +73,13 @@ const sections: NavSection[] = [
     title: 'Learning',
     items: [
       { label: 'Courses', href: '/courses', icon: '🎓', minRole: 'admin', allowedRoles: ['course_administrator', 'instructor'] },
+      { label: 'Course Categories', href: '/course-categories', icon: '🗂', minRole: 'admin', allowedRoles: ['course_administrator'] },
+      { label: 'Course Tags', href: '/course-tags', icon: '🏷', minRole: 'admin', allowedRoles: ['course_administrator'] },
       { label: 'Sections', href: '/course-sections', icon: '📚', minRole: 'admin', allowedRoles: ['course_administrator', 'instructor'] },
       { label: 'Enrollments', href: '/enrollments', icon: '📋', minRole: 'admin', allowedRoles: ['course_administrator'] },
       { label: 'Grading', href: '/grading', icon: '✏', minRole: 'admin', allowedRoles: ['course_administrator', 'instructor'] },
+      { label: 'Certificates', href: '/certificates', icon: '📜', minRole: 'admin', allowedRoles: ['course_administrator'] },
+      { label: 'Certificate Designer', href: '/certificates/designer', icon: '🎨', minRole: 'admin', allowedRoles: ['course_administrator'] },
     ],
   },
 

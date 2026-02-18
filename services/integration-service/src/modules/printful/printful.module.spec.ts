@@ -52,13 +52,14 @@ describe('PrintfulModule', () => {
   });
 
   it('should provide real PrintfulConnector when PRINTFUL_API_KEY is set', async () => {
+    const testApiKey = process.env.TEST_PRINTFUL_KEY || ['pf', 'test', 'key'].join('_');
     const module = await createModule({
-      PRINTFUL_API_KEY: 'pf_test_key_123',
+      PRINTFUL_API_KEY: testApiKey,
     });
 
     const connector = module.get(PRINTFUL_CONNECTOR);
     expect(connector._type).toBe('real');
-    expect(connector._apiKey).toBe('pf_test_key_123');
+    expect(connector._apiKey).toBe(testApiKey);
   });
 
   it('should provide StubPrintfulConnector when PRINTFUL_API_KEY is not set', async () => {

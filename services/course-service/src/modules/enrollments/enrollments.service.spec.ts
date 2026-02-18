@@ -20,6 +20,18 @@ describe('EnrollmentsService', () => {
     course: {
       findUnique: jest.fn(),
     },
+    siteSettings: {
+      findUnique: jest.fn(),
+    },
+    quizAttempt: {
+      findMany: jest.fn(),
+    },
+    quiz: {
+      findMany: jest.fn(),
+    },
+    assignmentSubmission: {
+      findMany: jest.fn(),
+    },
   };
 
   const mockCertificatesService = {
@@ -225,7 +237,7 @@ describe('EnrollmentsService', () => {
     it('should complete an enrollment and auto-generate certificate', async () => {
       const enrollment = {
         id: 'e1',
-        course: { sections: [] },
+        course: { id: 'c1', sections: [], courseMetadata: {} },
         progress: [],
       };
       mockPrisma.courseEnrollment.findUnique.mockResolvedValue(enrollment);
@@ -244,13 +256,13 @@ describe('EnrollmentsService', () => {
           progressPercent: 100,
         },
       });
-      expect(mockCertificatesService.generateCertificate).toHaveBeenCalledWith('e1');
+      expect(mockCertificatesService.generateCertificate).toHaveBeenCalledWith('e1', undefined);
     });
 
     it('should not fail if certificate generation throws', async () => {
       const enrollment = {
         id: 'e1',
-        course: { sections: [] },
+        course: { id: 'c1', sections: [], courseMetadata: {} },
         progress: [],
       };
       mockPrisma.courseEnrollment.findUnique.mockResolvedValue(enrollment);

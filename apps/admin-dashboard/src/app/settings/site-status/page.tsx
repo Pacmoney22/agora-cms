@@ -3,13 +3,15 @@
 import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import { settingsApi } from '@/lib/api-client';
+import { settingsApi, pagesApi } from '@/lib/api-client';
 import { RichTextEditor } from '@/components/RichTextEditor';
 import { MediaPicker } from '@/components/MediaPicker';
 
 interface SiteStatusSettings {
   isLive: boolean;
   comingSoon: {
+    pageSource: 'built-in' | 'page-builder';
+    comingSoonPageId: string;
     headline: string;
     message: string;
     backgroundImage: string;
@@ -27,6 +29,8 @@ interface SiteStatusSettings {
   };
   maintenance: {
     enabled: boolean;
+    pageSource: 'built-in' | 'page-builder';
+    maintenancePageId: string;
     headline: string;
     message: string;
     allowedIps: string;
@@ -36,6 +40,8 @@ interface SiteStatusSettings {
 const DEFAULT_SETTINGS: SiteStatusSettings = {
   isLive: false,
   comingSoon: {
+    pageSource: 'built-in',
+    comingSoonPageId: '',
     headline: 'Coming Soon',
     message: '<p>We\'re working on something amazing. Stay tuned!</p>',
     backgroundImage: '',
@@ -53,6 +59,8 @@ const DEFAULT_SETTINGS: SiteStatusSettings = {
   },
   maintenance: {
     enabled: false,
+    pageSource: 'built-in',
+    maintenancePageId: '',
     headline: 'Under Maintenance',
     message: '<p>We\'re performing scheduled maintenance. We\'ll be back shortly.</p>',
     allowedIps: '',
@@ -68,6 +76,12 @@ export default function SiteStatusPage() {
     queryKey: ['settings', 'site_status'],
     queryFn: () => settingsApi.get('site_status').catch(() => DEFAULT_SETTINGS),
   });
+
+  const { data: pagesData } = useQuery({
+    queryKey: ['pages', 'published'],
+    queryFn: () => pagesApi.list({ status: 'published', limit: 200 }),
+  });
+  const publishedPages = pagesData?.data ?? [];
 
   const [settings, setSettings] = useState<SiteStatusSettings>(DEFAULT_SETTINGS);
   const [dirty, setDirty] = useState(false);
@@ -211,7 +225,47 @@ export default function SiteStatusPage() {
       {/* Coming Soon Tab */}
       {activeTab === 'coming-soon' && (
         <div className="max-w-2xl space-y-6">
-          {/* Content */}
+          {/* Page Source */}
+          <div className="rounded-lg bg-white p-6 shadow space-y-4">
+            <h3 className="text-sm font-semibold text-gray-900">Page Source</h3>
+            <p className="text-[10px] text-gray-400">Choose whether to use the built-in editor below or a page you&apos;ve created in the Page Builder.</p>
+            <div className="flex gap-3">
+              {(['built-in', 'page-builder'] as const).map((src) => (
+                <button
+                  key={src}
+                  onClick={() => updateComingSoon('pageSource', src)}
+                  className={`flex-1 rounded-md border px-4 py-3 text-sm font-medium transition-colors ${
+                    settings.comingSoon.pageSource === src
+                      ? 'border-blue-500 bg-blue-50 text-blue-700'
+                      : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                  }`}
+                >
+                  {src === 'built-in' ? 'Built-in Editor' : 'Page Builder Page'}
+                </button>
+              ))}
+            </div>
+            {settings.comingSoon.pageSource === 'page-builder' && (
+              <div>
+                <label className="block text-xs font-medium text-gray-700 mb-1">Select Page</label>
+                <select
+                  value={settings.comingSoon.comingSoonPageId}
+                  onChange={(e) => updateComingSoon('comingSoonPageId', e.target.value)}
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+                >
+                  <option value="">-- Select a page --</option>
+                  {publishedPages.map((p: any) => (
+                    <option key={p.id} value={p.id}>{p.title}</option>
+                  ))}
+                </select>
+                {!settings.comingSoon.comingSoonPageId && (
+                  <p className="mt-1 text-[10px] text-amber-600">Please select a page to use as your Coming Soon page.</p>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Content (only shown for built-in source) */}
+          {settings.comingSoon.pageSource === 'built-in' && (<>
           <div className="rounded-lg bg-white p-6 shadow space-y-4">
             <h3 className="text-sm font-semibold text-gray-900">Page Content</h3>
             <div>
@@ -490,6 +544,7 @@ export default function SiteStatusPage() {
               </div>
             </div>
           </div>
+          </>)}
         </div>
       )}
 
@@ -521,6 +576,46 @@ export default function SiteStatusPage() {
             )}
           </div>
 
+          {/* Page Source */}
+          <div className="rounded-lg bg-white p-6 shadow space-y-4">
+            <h3 className="text-sm font-semibold text-gray-900">Page Source</h3>
+            <p className="text-[10px] text-gray-400">Choose whether to use the built-in editor or a page from the Page Builder.</p>
+            <div className="flex gap-3">
+              {(['built-in', 'page-builder'] as const).map((src) => (
+                <button
+                  key={src}
+                  onClick={() => updateMaintenance('pageSource', src)}
+                  className={`flex-1 rounded-md border px-4 py-3 text-sm font-medium transition-colors ${
+                    settings.maintenance.pageSource === src
+                      ? 'border-blue-500 bg-blue-50 text-blue-700'
+                      : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                  }`}
+                >
+                  {src === 'built-in' ? 'Built-in Editor' : 'Page Builder Page'}
+                </button>
+              ))}
+            </div>
+            {settings.maintenance.pageSource === 'page-builder' && (
+              <div>
+                <label className="block text-xs font-medium text-gray-700 mb-1">Select Page</label>
+                <select
+                  value={settings.maintenance.maintenancePageId}
+                  onChange={(e) => updateMaintenance('maintenancePageId', e.target.value)}
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+                >
+                  <option value="">-- Select a page --</option>
+                  {publishedPages.map((p: any) => (
+                    <option key={p.id} value={p.id}>{p.title}</option>
+                  ))}
+                </select>
+                {!settings.maintenance.maintenancePageId && (
+                  <p className="mt-1 text-[10px] text-amber-600">Please select a page to use as your Maintenance page.</p>
+                )}
+              </div>
+            )}
+          </div>
+
+          {settings.maintenance.pageSource === 'built-in' && (<>
           <div className="rounded-lg bg-white p-6 shadow space-y-4">
             <h3 className="text-sm font-semibold text-gray-900">Maintenance Page Content</h3>
             <div>
@@ -542,6 +637,7 @@ export default function SiteStatusPage() {
               />
             </div>
           </div>
+          </>)}
 
           <div className="rounded-lg bg-white p-6 shadow space-y-4">
             <h3 className="text-sm font-semibold text-gray-900">IP Allowlist</h3>

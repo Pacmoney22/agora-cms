@@ -189,7 +189,8 @@ export default function ArticlesPage() {
     mutationFn: async (article: Article) => {
       await settingsApi.update(`article_${article.id}`, article as any);
       const reg = registry || { articles: [], categories };
-      const existing = reg.articles.findIndex((a: any) => a.id === article.id);
+      const articlesArr = Array.isArray(reg.articles) ? reg.articles : [];
+      const existing = articlesArr.findIndex((a: any) => a.id === article.id);
       const summary = {
         id: article.id,
         title: article.title,
@@ -201,11 +202,11 @@ export default function ArticlesPage() {
         createdAt: article.createdAt,
       };
       if (existing >= 0) {
-        reg.articles[existing] = summary;
+        articlesArr[existing] = summary;
       } else {
-        reg.articles.unshift(summary);
+        articlesArr.unshift(summary);
       }
-      await settingsApi.update('articles_registry', reg);
+      await settingsApi.update('articles_registry', { ...reg, articles: articlesArr });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['settings', 'articles_registry'] });
@@ -218,8 +219,8 @@ export default function ArticlesPage() {
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
       const reg = registry || { articles: [], categories };
-      reg.articles = reg.articles.filter((a: any) => a.id !== id);
-      await settingsApi.update('articles_registry', reg);
+      const articlesArr = Array.isArray(reg.articles) ? reg.articles : [];
+      await settingsApi.update('articles_registry', { ...reg, articles: articlesArr.filter((a: any) => a.id !== id) });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['settings', 'articles_registry'] });
@@ -290,9 +291,10 @@ export default function ArticlesPage() {
   const addCategory = () => {
     if (!newCategory.trim()) return;
     const reg = registry || { articles: [], categories };
-    if (!reg.categories.includes(newCategory.trim())) {
-      reg.categories = [...reg.categories, newCategory.trim()];
-      settingsApi.update('articles_registry', reg).then(() => {
+    const cats = Array.isArray(reg.categories) ? reg.categories : [];
+    if (!cats.includes(newCategory.trim())) {
+      const updatedReg = { ...reg, articles: Array.isArray(reg.articles) ? reg.articles : [], categories: [...cats, newCategory.trim()] };
+      settingsApi.update('articles_registry', updatedReg).then(() => {
         queryClient.invalidateQueries({ queryKey: ['settings', 'articles_registry'] });
         toast.success('Category added');
       });

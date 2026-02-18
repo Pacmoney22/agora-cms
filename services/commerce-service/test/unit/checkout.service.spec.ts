@@ -1,6 +1,6 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { ConfigService } from '@nestjs/config';
 import { BadRequestException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { Test, TestingModule } from '@nestjs/testing';
 
 jest.mock('kafkajs', () => ({
   Kafka: jest.fn().mockImplementation(() => ({
@@ -22,11 +22,11 @@ jest.mock('@agora-cms/shared', () => ({
   },
 }));
 
-import { CheckoutService } from '../../src/modules/checkout/checkout.service';
 import { CartService } from '../../src/modules/cart/cart.service';
-import { OrderService } from '../../src/modules/orders/order.service';
-import { ReservationService } from '../../src/modules/inventory/reservation.service';
+import { CheckoutService } from '../../src/modules/checkout/checkout.service';
 import { TaxCalculationService } from '../../src/modules/checkout/tax-calculation.service';
+import { ReservationService } from '../../src/modules/inventory/reservation.service';
+import { OrderService } from '../../src/modules/orders/order.service';
 
 describe('CheckoutService', () => {
   let service: CheckoutService;

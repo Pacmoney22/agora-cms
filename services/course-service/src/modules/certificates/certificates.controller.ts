@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Post,
+  Body,
   Param,
   Query,
   ParseUUIDPipe,
@@ -25,6 +26,35 @@ import { CertificatesService } from './certificates.service';
 export class CertificatesController {
   constructor(private readonly certificatesService: CertificatesService) {}
 
+  @Get()
+  @ApiOperation({ summary: 'List all certificates with filtering and pagination' })
+  @ApiQuery({ name: 'courseId', required: false, type: String })
+  @ApiQuery({ name: 'userId', required: false, type: String })
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'limit', required: false, type: Number })
+  @ApiResponse({ status: 200, description: 'Paginated list of certificates' })
+  async findAll(
+    @Query('courseId') courseId?: string,
+    @Query('userId') userId?: string,
+    @Query('page') page?: number,
+    @Query('limit') limit?: number,
+  ) {
+    return this.certificatesService.findAll({ courseId, userId, page, limit });
+  }
+
+  @Post(':id/regenerate')
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({ summary: 'Regenerate a certificate (deletes old, creates new)' })
+  @ApiParam({ name: 'id', type: String, description: 'Certificate UUID' })
+  @ApiResponse({ status: 201, description: 'Certificate regenerated successfully' })
+  @ApiResponse({ status: 404, description: 'Certificate not found' })
+  async regenerateCertificate(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() body?: { template?: Record<string, any> },
+  ) {
+    return this.certificatesService.regenerateCertificate(id, body?.template);
+  }
+
   @Post('enrollments/:enrollmentId')
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Generate a certificate for a completed enrollment' })
@@ -32,8 +62,11 @@ export class CertificatesController {
   @ApiResponse({ status: 201, description: 'Certificate generated successfully' })
   @ApiResponse({ status: 400, description: 'Enrollment not completed' })
   @ApiResponse({ status: 404, description: 'Enrollment not found' })
-  async generateCertificate(@Param('enrollmentId', ParseUUIDPipe) enrollmentId: string) {
-    return this.certificatesService.generateCertificate(enrollmentId);
+  async generateCertificate(
+    @Param('enrollmentId', ParseUUIDPipe) enrollmentId: string,
+    @Body() body?: { template?: Record<string, any> },
+  ) {
+    return this.certificatesService.generateCertificate(enrollmentId, body?.template);
   }
 
   @Get('enrollments/:enrollmentId')

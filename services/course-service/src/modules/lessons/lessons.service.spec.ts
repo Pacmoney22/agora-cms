@@ -121,8 +121,10 @@ describe('LessonsService', () => {
           videoUrl: 'http://video.mp4',
           videoDuration: 15,
           position: 2,
+          lessonType: 'video',
           isFree: true,
           createdBy: 'user-1',
+          attachments: undefined,
         },
       });
     });
@@ -151,7 +153,7 @@ describe('LessonsService', () => {
       });
     });
 
-    it('should use default userId when not provided', async () => {
+    it('should leave createdBy undefined when userId not provided', async () => {
       mockPrisma.courseSection.findUnique.mockResolvedValue({ id: 's1' });
       mockPrisma.courseLesson.create.mockResolvedValue({ id: 'l1' });
 
@@ -159,7 +161,20 @@ describe('LessonsService', () => {
 
       expect(mockPrisma.courseLesson.create).toHaveBeenCalledWith({
         data: expect.objectContaining({
-          createdBy: '00000000-0000-0000-0000-000000000000',
+          createdBy: undefined,
+        }),
+      });
+    });
+
+    it('should pass userId as createdBy when provided', async () => {
+      mockPrisma.courseSection.findUnique.mockResolvedValue({ id: 's1' });
+      mockPrisma.courseLesson.create.mockResolvedValue({ id: 'l1' });
+
+      await service.create('s1', { title: 'Test', type: 'text' as any, position: 0 }, 'user-123');
+
+      expect(mockPrisma.courseLesson.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          createdBy: 'user-123',
         }),
       });
     });

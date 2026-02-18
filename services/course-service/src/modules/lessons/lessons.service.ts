@@ -5,6 +5,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
 import { CreateLessonDto } from './dto/create-lesson.dto';
 
@@ -51,7 +52,7 @@ export class LessonsService {
     return lesson;
   }
 
-  async create(sectionId: string, dto: CreateLessonDto, userId: string = '00000000-0000-0000-0000-000000000000') {
+  async create(sectionId: string, dto: CreateLessonDto, userId?: string) {
     // Verify section exists
     const section = await this.prisma.courseSection.findUnique({
       where: { id: sectionId },
@@ -79,8 +80,12 @@ export class LessonsService {
         videoUrl: dto.videoUrl,
         videoDuration: dto.duration,
         position,
+        lessonType: dto.type || 'video',
         isFree: dto.isFreePreview || false,
-        createdBy: userId,
+        createdBy: userId || undefined,
+        attachments: dto.attachments
+          ? (dto.attachments as unknown as Prisma.InputJsonValue)
+          : undefined,
       },
     });
 
@@ -100,6 +105,10 @@ export class LessonsService {
         ...(dto.duration !== undefined && { videoDuration: dto.duration }),
         ...(dto.position !== undefined && { position: dto.position }),
         ...(dto.isFreePreview !== undefined && { isFree: dto.isFreePreview }),
+        ...(dto.type !== undefined && { lessonType: dto.type }),
+        ...(dto.attachments !== undefined && {
+          attachments: dto.attachments as unknown as Prisma.InputJsonValue,
+        }),
       },
     });
 

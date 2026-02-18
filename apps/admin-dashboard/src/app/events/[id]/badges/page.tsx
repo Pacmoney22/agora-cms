@@ -9,6 +9,15 @@ import { QRCodeSVG } from 'qrcode.react';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
 
+/** Sanitize a URL for use in img src — only allow http(s) and data:image URIs */
+function sanitizeImageUrl(url: unknown): string {
+  if (!url || typeof url !== 'string') return '';
+  const trimmed = url.trim();
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  if (/^data:image\//i.test(trimmed)) return trimmed;
+  return '';
+}
+
 interface BadgeTemplate {
   width: number;
   height: number;
@@ -106,7 +115,8 @@ export default function BadgesPage() {
     mutationFn: (attendeeIds: string[]) => eventsApi.printBadges(eventId, attendeeIds),
     onSuccess: (result: any) => {
       toast.success(`${result?.count || 'Badges'} generated for printing`);
-      if (result?.url) window.open(result.url, '_blank');
+      const printUrl = sanitizeImageUrl(result?.url);
+      if (printUrl) window.open(printUrl, '_blank', 'noopener,noreferrer');
     },
     onError: (err: Error) => toast.error(err.message),
   });
@@ -420,8 +430,8 @@ export default function BadgesPage() {
                 {template.showLogo && template.logoImage && template.logoPosition === 'top' && (
                   <img src={template.logoImage} alt="Logo" className="h-8 mb-2 object-contain" />
                 )}
-                {template.showPhoto && a.photo && (
-                  <img src={a.photo} alt="" className="h-12 w-12 rounded-full object-cover mb-1" />
+                {template.showPhoto && a.photo && sanitizeImageUrl(a.photo) && (
+                  <img src={sanitizeImageUrl(a.photo)} alt="" className="h-12 w-12 rounded-full object-cover mb-1" />
                 )}
                 {template.showName && (
                   <p style={{ fontSize: template.nameSize * scaleFactor, color: template.nameColor }} className="font-bold text-center">

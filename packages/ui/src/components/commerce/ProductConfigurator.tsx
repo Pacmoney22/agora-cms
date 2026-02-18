@@ -1,3 +1,9 @@
+/**
+ * @deprecated Use `ProductCard` with `mode="detail"` for configurable products.
+ * The ProductCard detail mode supports all product types including configurable
+ * products with step-by-step option selection and price modifiers.
+ */
+
 import React, { useState, useMemo } from 'react';
 import { clsx } from 'clsx';
 import { ShoppingCart, ChevronLeft, ChevronRight } from 'lucide-react';

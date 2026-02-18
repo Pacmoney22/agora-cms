@@ -14,6 +14,8 @@ export type SharePlatform =
 
 export interface ShareButtonsProps {
   platforms?: SharePlatform[];
+  /** When set, only platforms in this list will be rendered (intersection with platforms). */
+  allowedPlatforms?: string[];
   style?: 'icon-only' | 'icon-text' | 'button';
   shareUrl?: 'current-page' | 'custom';
   customUrl?: string | null;
@@ -91,33 +93,40 @@ function ShareIcon({ platform, size }: { platform: string; size: number }) {
 }
 
 /**
- * Validates that a URL is safe (no javascript:, data:, or file: schemes)
- * Returns the validated URL or empty string if invalid
+ * Validates that a URL is safe for navigation — only allows http(s), mailto, and relative paths.
+ * Uses URL constructor to parse and verify the protocol, preventing open-redirect attacks.
  */
 function validateUrl(url: string): string {
   if (!url || typeof url !== 'string') return '';
 
-  const trimmed = url.trim().toLowerCase();
+  const trimmed = url.trim();
 
-  // Block dangerous protocols
-  const dangerousProtocols = ['javascript:', 'data:', 'file:', 'vbscript:'];
-  if (dangerousProtocols.some(protocol => trimmed.startsWith(protocol))) {
-    console.warn('ShareButtons: Blocked potentially unsafe URL protocol');
-    return '';
+  // Allow relative URLs
+  if (trimmed.startsWith('/') || trimmed.startsWith('./')) {
+    return trimmed;
   }
 
-  // Only allow http(s):, mailto:, or relative URLs
-  if (trimmed.startsWith('http://') || trimmed.startsWith('https://') ||
-      trimmed.startsWith('mailto:') || trimmed.startsWith('/') || trimmed.startsWith('./')) {
-    return url.trim();
+  // Allow mailto: links (common for share buttons)
+  if (/^mailto:/i.test(trimmed)) {
+    return trimmed;
   }
 
-  // If no protocol, assume https for safety
+  // Parse with URL constructor to verify protocol
+  try {
+    const parsed = new URL(trimmed);
+    if (parsed.protocol === 'https:' || parsed.protocol === 'http:') {
+      return parsed.href;
+    }
+  } catch {
+    // Invalid URL
+  }
+
   return '';
 }
 
 export const ShareButtons: React.FC<ShareButtonsProps> = ({
   platforms = ['facebook', 'x', 'linkedin', 'email'],
+  allowedPlatforms,
   style = 'icon-only',
   shareUrl = 'current-page',
   customUrl = null,
@@ -125,6 +134,16 @@ export const ShareButtons: React.FC<ShareButtonsProps> = ({
   showCount = false,
   className,
 }) => {
+  // Filter platforms by allowedPlatforms from blog settings (if provided).
+  // Blog settings use 'twitter' while the component uses 'x' — handle both.
+  const activePlatforms = allowedPlatforms
+    ? platforms.filter((p) => {
+        if (p === 'x') return allowedPlatforms.includes('x') || allowedPlatforms.includes('twitter');
+        if (p === 'copy-link') return true; // always allow copy-link
+        return allowedPlatforms.includes(p);
+      })
+    : platforms;
+
   const [copied, setCopied] = useState(false);
   // Resolve current-page URL after mount to avoid SSR/client hydration mismatch.
   const [currentPageUrl, setCurrentPageUrl] = useState('');
@@ -166,12 +185,27 @@ export const ShareButtons: React.FC<ShareButtonsProps> = ({
     }
 
     const shareHref = config.buildUrl(url, document?.title);
-    if (shareHref) {
-      // Additional validation: share URLs should only be to known platforms
-      const validatedShareHref = validateUrl(shareHref);
-      if (validatedShareHref) {
-        window.open(validatedShareHref, '_blank', 'noopener,noreferrer,width=600,height=400');
+    if (!shareHref) return;
+
+    // Allowlist of known share platform domains to prevent open redirect
+    const ALLOWED_SHARE_DOMAINS = [
+      'www.facebook.com',
+      'twitter.com',
+      'www.linkedin.com',
+      'wa.me',
+      'pinterest.com',
+      'reddit.com',
+    ];
+
+    try {
+      const parsed = new URL(shareHref);
+      const isMail = parsed.protocol === 'mailto:';
+      const isAllowed = ALLOWED_SHARE_DOMAINS.includes(parsed.hostname);
+      if (isMail || isAllowed) {
+        window.open(parsed.href, '_blank', 'noopener,noreferrer,width=600,height=400');
       }
+    } catch {
+      // Invalid URL — do not open
     }
   };
 
@@ -187,7 +221,7 @@ export const ShareButtons: React.FC<ShareButtonsProps> = ({
       role="group"
       aria-label="Share this page"
     >
-      {platforms.map((platform) => {
+      {activePlatforms.map((platform) => {
         const config = platformConfig[platform];
         if (!config) return null;
 

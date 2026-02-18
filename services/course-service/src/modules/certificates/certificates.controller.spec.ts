@@ -7,6 +7,8 @@ describe('CertificatesController', () => {
   let controller: CertificatesController;
 
   const mockCertificatesService = {
+    findAll: jest.fn(),
+    regenerateCertificate: jest.fn(),
     generateCertificate: jest.fn(),
     getCertificateByEnrollmentId: jest.fn(),
     verifyCertificate: jest.fn(),
@@ -36,7 +38,54 @@ describe('CertificatesController', () => {
       const response = await controller.generateCertificate('e1');
 
       expect(response).toEqual({ id: 'cert1' });
-      expect(mockCertificatesService.generateCertificate).toHaveBeenCalledWith('e1');
+      expect(mockCertificatesService.generateCertificate).toHaveBeenCalledWith('e1', undefined);
+    });
+
+    it('should pass template when provided', async () => {
+      mockCertificatesService.generateCertificate.mockResolvedValue({ id: 'cert2' });
+      const template = { primaryColor: '#ff0000' };
+
+      const response = await controller.generateCertificate('e1', { template });
+
+      expect(response).toEqual({ id: 'cert2' });
+      expect(mockCertificatesService.generateCertificate).toHaveBeenCalledWith('e1', template);
+    });
+  });
+
+  describe('regenerateCertificate', () => {
+    it('should call certificatesService.regenerateCertificate', async () => {
+      mockCertificatesService.regenerateCertificate.mockResolvedValue({ id: 'cert1' });
+
+      const response = await controller.regenerateCertificate('c1');
+
+      expect(response).toEqual({ id: 'cert1' });
+      expect(mockCertificatesService.regenerateCertificate).toHaveBeenCalledWith('c1', undefined);
+    });
+
+    it('should pass template when provided', async () => {
+      mockCertificatesService.regenerateCertificate.mockResolvedValue({ id: 'cert1' });
+      const template = { titleText: 'Custom Title' };
+
+      const response = await controller.regenerateCertificate('c1', { template });
+
+      expect(response).toEqual({ id: 'cert1' });
+      expect(mockCertificatesService.regenerateCertificate).toHaveBeenCalledWith('c1', template);
+    });
+  });
+
+  describe('findAll', () => {
+    it('should call certificatesService.findAll with query params', async () => {
+      mockCertificatesService.findAll.mockResolvedValue({ data: [], meta: { total: 0 } });
+
+      const response = await controller.findAll('course-1', undefined, 1, 20);
+
+      expect(response).toEqual({ data: [], meta: { total: 0 } });
+      expect(mockCertificatesService.findAll).toHaveBeenCalledWith({
+        courseId: 'course-1',
+        userId: undefined,
+        page: 1,
+        limit: 20,
+      });
     });
   });
 

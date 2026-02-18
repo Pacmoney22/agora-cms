@@ -4,10 +4,10 @@ A modern, all-in-one platform combining a headless CMS, e-commerce engine, learn
 
 ## Features
 
-- **Visual Page Builder** — Drag-and-drop editor with 88 components across 14 categories
+- **Visual Page Builder** — Drag-and-drop editor with 92 components across 16 categories (including event and course components)
 - **E-Commerce** — 7 product types (physical, digital, service, configurable, course, affiliate, print-on-demand), cart, checkout, orders, coupons, inventory
 - **Content Management** — Pages, articles, media library, navigation menus, forms, SEO analyzer, Apple Wallet pass generation
-- **Learning Management** — Courses, curriculum builder, assignments, quizzes, enrollments, grading, certificates
+- **Learning Management** — Courses with category/tag registries, curriculum builder (sections + lessons), quiz builder with auto-creation, assignment submissions with grading rubrics, section offerings (on-demand & scheduled), enrollments, grading queue, certificates
 - **Event Management** — Events, sessions, attendees, badge printing, QR check-in, Apple Wallet tickets, sponsors, surveys
 - **Email System** — 22 email templates with merge tags and trigger-based automation
 - **Integrations** — Stripe payments, Google Analytics 4, Salesforce CRM, Printful print-on-demand, shipping carriers (UPS, USPS, FedEx, DHL)

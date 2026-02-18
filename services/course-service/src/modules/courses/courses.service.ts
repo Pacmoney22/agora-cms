@@ -26,20 +26,30 @@ export class CoursesService {
     sortOrder?: 'asc' | 'desc';
   }) {
     const {
-      page = 1,
-      limit = 20,
       status,
       category,
       level,
       sortBy = 'createdAt',
       sortOrder = 'desc',
     } = options;
+    const page = Number(options.page) || 1;
+    const limit = Number(options.limit) || 20;
     const skip = (page - 1) * limit;
 
     const where: Record<string, unknown> = {};
     if (status) where.status = status;
-    if (category) where.category = category;
-    if (level) where.level = level;
+
+    // category and level live inside courseMetadata (JSON); use AND for multiple JSON path filters
+    const jsonFilters: Array<{ courseMetadata: { path: string[]; equals: string } }> = [];
+    if (category) {
+      jsonFilters.push({ courseMetadata: { path: ['category'], equals: category } });
+    }
+    if (level) {
+      jsonFilters.push({ courseMetadata: { path: ['difficulty'], equals: level } });
+    }
+    if (jsonFilters.length > 0) {
+      where.AND = jsonFilters;
+    }
 
     const [data, total] = await Promise.all([
       this.prisma.course.findMany({
@@ -50,10 +60,12 @@ export class CoursesService {
         select: {
           id: true,
           title: true,
+          slug: true,
           description: true,
           thumbnailUrl: true,
           status: true,
           courseMetadata: true,
+          publishedAt: true,
           createdAt: true,
           updatedAt: true,
         },
@@ -79,6 +91,7 @@ export class CoursesService {
               select: {
                 id: true,
                 title: true,
+                lessonType: true,
                 videoUrl: true,
                 videoDuration: true,
                 position: true,
@@ -91,6 +104,36 @@ export class CoursesService {
 
     if (!course) {
       throw new NotFoundException(`Course with id "${id}" not found`);
+    }
+
+    return course;
+  }
+
+  async findBySlug(slug: string) {
+    const course = await this.prisma.course.findUnique({
+      where: { slug },
+      include: {
+        sections: {
+          orderBy: { position: 'asc' },
+          include: {
+            lessons: {
+              orderBy: { position: 'asc' },
+              select: {
+                id: true,
+                title: true,
+                lessonType: true,
+                videoUrl: true,
+                videoDuration: true,
+                position: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!course) {
+      throw new NotFoundException(`Course with slug "${slug}" not found`);
     }
 
     return course;
@@ -138,6 +181,11 @@ export class CoursesService {
     if (dto.tags !== undefined) metadataUpdates.tags = dto.tags;
     if (dto.objectives !== undefined) metadataUpdates.learningObjectives = dto.objectives;
     if (dto.prerequisites !== undefined) metadataUpdates.prerequisites = dto.prerequisites;
+    if (dto.certificateSettings !== undefined) {
+      metadataUpdates.certificateEnabled = dto.certificateSettings.certificateEnabled;
+      metadataUpdates.certificateTemplateId = dto.certificateSettings.certificateTemplateId;
+      metadataUpdates.completionCriteria = dto.certificateSettings.completionCriteria;
+    }
 
     const course = await this.prisma.course.update({
       where: { id },

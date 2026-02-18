@@ -34,7 +34,7 @@ Agora CMS is a modern, all-in-one content management system that combines a visu
 
 ### Key Features
 
-- **Visual Page Builder** -- 88 drag-and-drop components across 14 categories with responsive preview, undo/redo, and auto-save
+- **Visual Page Builder** -- 92 drag-and-drop components across 16 categories with responsive preview, undo/redo, and auto-save
 - **Content Management** -- Pages, articles, categories, tags, comments, reviews, custom forms, gated files, and navigation menus
 - **Media Library** -- Upload images, videos, and documents with automatic WebP conversion and responsive thumbnail generation
 - **Built-in SEO Analyzer** -- 12 automated checks with letter-grade scoring and actionable recommendations
@@ -161,7 +161,7 @@ The page builder interface has three main areas:
 
 ### Component Library
 
-Agora CMS includes 88 pre-built components organized across 14 categories. Below is the complete library.
+Agora CMS includes 92 pre-built components organized across 16 categories. Below is the complete library.
 
 #### Layout Components (8)
 
@@ -308,6 +308,22 @@ Agora CMS includes 88 pre-built components organized across 14 categories. Below
 | **Calculator** | Interactive calculator widget for quotes or estimates |
 | **Searchable FAQ** | Frequently asked questions with search filtering |
 | **Lightbox** | Full-screen image or content viewer overlay |
+
+#### Event Components (2)
+
+| Component | Description |
+|-----------|-------------|
+| **Event Card** | Event display card with date, venue, and registration link. Supports card and detail display modes. |
+| **Event Grid** | Grid of event cards with filtering and pagination. Fetches events automatically at runtime. |
+
+#### Course Components (2)
+
+| Component | Description |
+|-----------|-------------|
+| **Course Card** | Course display with two modes: **Card mode** (compact grid view with thumbnail, instructor, price, level, and rating) and **Detail mode** (full course page with curriculum accordion, learning objectives, prerequisites, instructor bio, reviews, and an enrollment sidebar showing available section offerings for purchase). Supports three card styles: standard, compact, and featured. |
+| **Course Grid** | Grid of course cards with filtering and pagination. Fetches courses automatically at runtime. |
+
+> **Course Card Detail Mode:** When used in detail mode, the Course Card renders a complete course landing page. The right sidebar displays available **Section Offerings** (on-demand and scheduled) with instructor name, schedule, spots remaining, and an enrollment button. Configure which sections are visible using the toggle properties: Show Curriculum, Show Reviews, Show Objectives, Show Prerequisites, Show Instructor Bio, and Show Enrollment Sidebar.
 
 #### Global / Site-Wide Components (3)
 
@@ -1620,7 +1636,37 @@ The exhibitor scanner is a lead capture tool for exhibitors and sponsors at your
 
 ## 12. Online Courses & LMS
 
-Agora CMS includes a full Learning Management System (LMS) for creating, selling, and delivering online courses.
+Agora CMS includes a full Learning Management System (LMS) for creating, selling, and delivering online courses. Courses are content containers with a curriculum of sections and lessons. Course delivery happens through **Section Offerings** -- scheduled or on-demand instances that students enroll in.
+
+### Course Categories & Tags
+
+Before creating courses, set up your organizational taxonomy:
+
+#### Managing Course Categories
+
+1. Click **Course Categories** in the sidebar (under Learning).
+2. Click **Add Category** to create a new category.
+3. Fill in:
+   - **Name** -- Category name (for example, "Web Development", "Data Science")
+   - **Slug** -- URL-friendly identifier (auto-generated from name)
+   - **Parent Category** -- Nest under another category for subcategories
+   - **Description** -- Optional description displayed on category archive pages
+   - **Image** -- Category image (uses the Media Library picker)
+   - **SEO Settings** -- Title, description, keywords, and OG image for the category page
+4. Use the arrow buttons to reorder categories within the same level.
+
+#### Managing Course Tags
+
+1. Click **Course Tags** in the sidebar (under Learning).
+2. Click **Add Tag** to create a new tag.
+3. Fill in:
+   - **Name** -- Tag name (for example, "JavaScript", "Beginner Friendly")
+   - **Slug** -- URL-friendly identifier (auto-generated)
+   - **Color** -- Pick from 8 preset colors or choose a custom color
+   - **Description** -- Optional description
+   - **Image** -- Tag image (uses the Media Library picker)
+   - **SEO Settings** -- Title, description, keywords, and OG image
+4. Tags appear as colored pills when assigned to courses.
 
 ### Creating a Course
 
@@ -1634,16 +1680,22 @@ Agora CMS includes a full Learning Management System (LMS) for creating, selling
      - **Draft** -- Work in progress, not available to students
      - **Published** -- Open for enrollment
      - **Archived** -- No longer available but preserved for reference
-   - **Thumbnail** -- Course cover image
+   - **Thumbnail** -- Course cover image selected from the **Media Library** (upload, browse, or paste a URL)
+   - **Category** -- Select from the course categories registry (or type manually if no categories are configured yet). A "Manage categories" link opens the categories page.
+   - **Tags** -- Select tags from the course tags registry. Selected tags appear as colored pills with a remove button. Multiple tags can be assigned.
+   - **Difficulty Level** -- Beginner, Intermediate, or Advanced
+   - **Estimated Hours** -- Approximate time to complete
+   - **Learning Objectives** -- List of skills or knowledge students will gain
+   - **Prerequisites** -- List of prior knowledge or courses required
 4. Click **Save**.
 
 ### Building the Curriculum
 
-Courses are structured as **Sections** containing **Lessons**.
+Courses are structured as **Sections** (chapters) containing **Lessons**. Navigate to the **Curriculum** tab from the course edit page.
 
 #### Adding Sections
 
-1. Open the course editor.
+1. Open the course and click **Curriculum**.
 2. Click **Add Section** to create a major division of the course (for example, "Getting Started," "Core Concepts," "Advanced Topics").
 3. Enter the section **Title** and optional **Description**.
 4. Drag sections to reorder them.
@@ -1653,35 +1705,47 @@ Courses are structured as **Sections** containing **Lessons**.
 1. Within a section, click **Add Lesson**.
 2. Fill in:
    - **Title** -- Lesson name
-   - **Content** -- Use the rich text editor to write lesson material. You can include text, images, and embedded media.
-   - **Media** -- Attach video, audio, or downloadable files
-   - **Order** -- The position of the lesson within the section (drag to reorder)
-   - **Prerequisites** -- Optionally require students to complete earlier lessons before accessing this one
+   - **Lesson Type** -- Choose from:
+     - **Video** -- Video-based lesson with duration tracking
+     - **Text** -- Written lesson content
+     - **Quiz** -- Quiz-type lesson (a quiz is automatically created when you save)
+     - **Assignment** -- Assignment-type lesson for student submissions
+   - **Content** -- Use the rich text editor to write lesson material
+   - **Video URL** -- For video lessons, paste the video URL
+   - **Video Duration** -- Duration in seconds for progress tracking
 3. Click **Save**.
+
+**Automatic quiz creation:** When you create a lesson with type "Quiz", the system automatically creates a linked quiz with default settings (70% passing score, 3 max attempts). A **Manage Quiz** link appears on the lesson so you can immediately add questions.
+
+**Assignment lessons:** Assignment-type lessons show a **Submissions** link that takes you to the Grading page to review student work.
 
 ### Quizzes
 
-Quizzes assess student knowledge and can be placed within any section of the course.
+Quizzes assess student knowledge and are linked to quiz-type lessons in the curriculum.
 
 #### Creating a Quiz
 
-1. Within a section, click **Add Quiz**.
-2. Configure quiz settings:
-   - **Title** -- Quiz name
-   - **Passing Score** -- Minimum percentage to pass (for example, 70%)
-   - **Time Limit** -- Optional countdown timer (for example, 30 minutes)
-   - **Attempts Allowed** -- Number of retries permitted (for example, 3 attempts)
-3. Add questions:
+**From the Curriculum page:** Create a lesson with type "Quiz" -- a quiz is auto-created with default settings.
+
+**From the Quiz Builder page:** Click the **Quiz Builder** tab on a course, then click **Create Quiz**:
+
+1. Select the lesson to attach the quiz to (lessons are grouped by section in the dropdown).
+2. Enter the quiz **Title**.
+3. Set the **Passing Score** (default 70%) and **Max Attempts** (default 3).
+4. Click **Create Quiz**.
+
+#### Adding Questions
+
+Once a quiz is created, expand it in the Quiz Builder to add questions:
 
 | Question Type | Description | Grading |
 |---------------|-------------|---------|
 | **Multiple Choice** | Select one correct answer from several options | Automatic |
-| **Short Answer** | Type a text response | Manual grading required |
+| **True/False** | True or false statement | Automatic |
+| **Fill in the Blank** | Type a text response matched against accepted answers | Automatic |
 | **Essay** | Write a longer text response | Manual grading required |
 
-4. For each question, set the **Points** value.
-5. Build a **Question Bank** -- create a pool of questions and have the system randomly select a subset for each student.
-6. Click **Save Quiz**.
+For each question, set the **Points** value and provide any required answer options or accepted answers. Essay questions enter the grading queue for manual review.
 
 ### Assignments (v2.0)
 
@@ -1737,11 +1801,49 @@ Instructors can create assignments for students to complete and submit for gradi
 - Bulk download all submissions for offline review
 - Export grades to CSV for record-keeping
 
+### Section Offerings
+
+A course is a content container. Students enroll through **Section Offerings** -- delivery instances of the course that can be on-demand (self-paced) or scheduled with an instructor and specific dates.
+
+#### Creating a Section Offering
+
+1. Click **Sections** in the sidebar (under Learning).
+2. Click **New Section**.
+3. Fill in:
+   - **Course** -- Select the course this section is for
+   - **Section Name** -- For example, "Spring 2026 -- Section A" or "Self-Paced"
+   - **Section Code** -- Auto-generated if left empty (e.g., SEC-001)
+   - **Delivery Mode**:
+     - **On-Demand** -- Always available, students learn at their own pace
+     - **Scheduled** -- Runs on set days and times between a start and end date
+   - **Instructor** -- Assign an instructor (users with editor role or higher)
+   - **Status** -- Active, Upcoming, Inactive, or Completed
+   - **Max Enrollment** -- Set capacity (0 = unlimited)
+   - **Enrollment Open/Closed** -- Control whether students can register
+   - **Enrollment Deadline** -- Optional cutoff date
+4. For **Scheduled** sections, configure the schedule:
+   - Start and end dates
+   - Days of week (click to toggle each day)
+   - Start and end times
+   - Recurrence (weekly, biweekly, daily, custom)
+   - Timezone
+   - Location or meeting link
+   - Schedule notes
+5. Click **Create Section**.
+
+#### Managing Sections
+
+- **Filter** by course, status, or search by name/code/instructor
+- **Duplicate** a section to quickly create another offering with the same settings
+- **Edit** or **Delete** sections as needed
+
+> **Note:** When selling courses through the storefront, the CourseCard component displays available section offerings so buyers can select which section to enroll in.
+
 ### Enrollments
 
 Manage who has access to each course.
 
-1. Open a course and click the **Enrollments** tab.
+1. Click **Enrollments** in the sidebar (under Learning).
 2. View all enrolled students with their status and progress.
 
 **Enrollment statuses:**

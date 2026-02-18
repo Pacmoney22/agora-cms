@@ -282,6 +282,9 @@ export class SettingsService {
     const analytics = (await this.getRaw('analytics')) as any;
     const payments = (await this.getRaw('payments')) as any;
     const contentRouting = (await this.getRaw('content_routing')) as any;
+    const blogSettings = (await this.getRaw('blog_settings')) as any;
+    const siteStatus = (await this.getRaw('site_status')) as any;
+    const courseSections = (await this.getRaw('course_sections_registry')) as any;
 
     return {
       general: {
@@ -310,6 +313,39 @@ export class SettingsService {
             : payments?.testPublishableKey,
       },
       contentRouting,
+      blog: {
+        showShareButtons: blogSettings?.showShareButtons ?? true,
+        shareButtons: blogSettings?.shareButtons ?? ['twitter', 'facebook', 'linkedin', 'email'],
+      },
+      siteStatus: {
+        isLive: siteStatus?.isLive ?? false,
+        comingSoon: {
+          pageSource: siteStatus?.comingSoon?.pageSource ?? 'built-in',
+          comingSoonPageId: siteStatus?.comingSoon?.comingSoonPageId ?? null,
+          headline: siteStatus?.comingSoon?.headline ?? 'Coming Soon',
+          message: siteStatus?.comingSoon?.message ?? '<p>We\'re working on something amazing. Stay tuned!</p>',
+          backgroundImage: siteStatus?.comingSoon?.backgroundImage ?? '',
+          logoImage: siteStatus?.comingSoon?.logoImage ?? '',
+          showCountdown: siteStatus?.comingSoon?.showCountdown ?? false,
+          launchDate: siteStatus?.comingSoon?.launchDate ?? '',
+          showEmailSignup: siteStatus?.comingSoon?.showEmailSignup ?? true,
+          emailPlaceholder: siteStatus?.comingSoon?.emailPlaceholder ?? 'Enter your email',
+          emailButtonText: siteStatus?.comingSoon?.emailButtonText ?? 'Notify Me',
+          socialLinks: siteStatus?.comingSoon?.socialLinks ?? [],
+          backgroundColor: siteStatus?.comingSoon?.backgroundColor ?? '#ffffff',
+          textColor: siteStatus?.comingSoon?.textColor ?? '#111827',
+          accentColor: siteStatus?.comingSoon?.accentColor ?? '#2563eb',
+        },
+        maintenance: {
+          enabled: siteStatus?.maintenance?.enabled ?? false,
+          pageSource: siteStatus?.maintenance?.pageSource ?? 'built-in',
+          maintenancePageId: siteStatus?.maintenance?.maintenancePageId ?? null,
+          headline: siteStatus?.maintenance?.headline ?? 'Under Maintenance',
+          message: siteStatus?.maintenance?.message ?? '<p>We\'re performing scheduled maintenance. We\'ll be back shortly.</p>',
+          allowedIps: siteStatus?.maintenance?.allowedIps ?? '',
+        },
+      },
+      courseSections: courseSections?.sections ?? [],
     };
   }
 }

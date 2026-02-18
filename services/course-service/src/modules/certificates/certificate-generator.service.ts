@@ -12,17 +12,17 @@ export class CertificateGeneratorService {
   private readonly s3Client: S3Client;
 
   constructor(private readonly config: ConfigService) {
-    // MinIO default credentials for local development only
-    // IMPORTANT: These are public MinIO defaults - do NOT use in production
-    const MINIO_DEFAULT_USER = 'minioadmin';
-    const MINIO_DEFAULT_PASSWORD = 'minioadmin';
+    const accessKeyId = this.config.get<string>('AWS_ACCESS_KEY_ID')
+      || this.config.get<string>('S3_ACCESS_KEY') || '';
+    const secretAccessKey = this.config.get<string>('AWS_SECRET_ACCESS_KEY')
+      || this.config.get<string>('S3_SECRET_KEY') || '';
 
     this.s3Client = new S3Client({
       region: this.config.get<string>('AWS_REGION') || 'us-east-1',
       endpoint: this.config.get<string>('S3_ENDPOINT') || 'http://localhost:9000',
       credentials: {
-        accessKeyId: this.config.get<string>('AWS_ACCESS_KEY_ID') || MINIO_DEFAULT_USER,
-        secretAccessKey: this.config.get<string>('AWS_SECRET_ACCESS_KEY') || MINIO_DEFAULT_PASSWORD,
+        accessKeyId,
+        secretAccessKey,
       },
       forcePathStyle: true, // Required for MinIO
     });
@@ -34,6 +34,7 @@ export class CertificateGeneratorService {
     courseTitle: string;
     completedAt: Date;
     instructorName?: string;
+    template?: Record<string, any>;
   }): Promise<{ certificateUrl: string; verificationCode: string; pdfBuffer: Buffer }> {
     const verificationCode = this.generateVerificationCode();
 
@@ -44,6 +45,7 @@ export class CertificateGeneratorService {
       completedAt: data.completedAt,
       verificationCode,
       instructorName: data.instructorName,
+      template: data.template,
     });
 
     // Upload to S3
@@ -83,11 +85,34 @@ export class CertificateGeneratorService {
     completedAt: Date;
     verificationCode: string;
     instructorName?: string;
+    template?: Record<string, any>;
   }): Promise<Buffer> {
     return new Promise((resolve, reject) => {
+      const t = data.template || {};
+
+      // Template values with fallbacks to original hardcoded design
+      const primaryColor = t.primaryColor || '#1e40af';
+      const borderColor = t.borderColor || '#3b82f6';
+      const textColor = t.textColor || '#111827';
+      const accentColor = t.accentColor || '#4b5563';
+      const titleText = t.titleText || 'Certificate of Completion';
+      const subtitleText = t.subtitleText || 'This is to certify that';
+      const completionText = t.completionText || 'has successfully completed';
+      const nameFontSize = t.nameFontSize || 36;
+      const courseTitleFontSize = t.courseTitleFontSize || 28;
+      const showBorder = t.showBorder !== undefined ? t.showBorder : true;
+      const showDate = t.showDate !== undefined ? t.showDate : true;
+      const showInstructor = t.showInstructor !== undefined ? t.showInstructor : true;
+      const showVerificationCode = t.showVerificationCode !== undefined ? t.showVerificationCode : true;
+      const borderStyle = t.borderStyle || 'double';
+      const borderWidth = t.borderWidth || 5;
+      const orientation = t.orientation || 'landscape';
+      const organizationName = t.organizationName || '';
+      const customFooterText = t.customFooterText || '';
+
       const doc = new PDFDocument({
         size: 'A4',
-        layout: 'landscape',
+        layout: orientation,
         margin: 50,
       });
 
@@ -97,92 +122,118 @@ export class CertificateGeneratorService {
       doc.on('end', () => resolve(Buffer.concat(chunks)));
       doc.on('error', reject);
 
-      // Certificate design
       const pageWidth = doc.page.width;
       const pageHeight = doc.page.height;
       const centerX = pageWidth / 2;
 
       // Border
-      doc
-        .lineWidth(5)
-        .strokeColor('#1e40af')
-        .rect(30, 30, pageWidth - 60, pageHeight - 60)
-        .stroke();
+      if (showBorder && borderStyle !== 'none') {
+        doc
+          .lineWidth(borderWidth)
+          .strokeColor(primaryColor)
+          .rect(30, 30, pageWidth - 60, pageHeight - 60)
+          .stroke();
 
-      doc
-        .lineWidth(2)
-        .strokeColor('#3b82f6')
-        .rect(40, 40, pageWidth - 80, pageHeight - 80)
-        .stroke();
+        if (borderStyle === 'double') {
+          doc
+            .lineWidth(Math.max(1, borderWidth * 0.4))
+            .strokeColor(borderColor)
+            .rect(40, 40, pageWidth - 80, pageHeight - 80)
+            .stroke();
+        }
+      }
+
+      let yPos = 100;
+
+      // Organization name
+      if (organizationName) {
+        doc
+          .fontSize(12)
+          .font('Helvetica')
+          .fillColor(accentColor)
+          .text(organizationName.toUpperCase(), 60, yPos, {
+            align: 'center',
+            width: pageWidth - 120,
+            characterSpacing: 2,
+          });
+        yPos += 30;
+      }
 
       // Title
       doc
         .fontSize(54)
         .font('Helvetica-Bold')
-        .fillColor('#1e40af')
-        .text('Certificate of Completion', 60, 120, {
+        .fillColor(primaryColor)
+        .text(titleText, 60, yPos, {
           align: 'center',
           width: pageWidth - 120,
         });
+      yPos += 80;
 
       // Subtitle
       doc
         .fontSize(16)
         .font('Helvetica')
-        .fillColor('#4b5563')
-        .text('This is to certify that', 60, 200, {
+        .fillColor(accentColor)
+        .text(subtitleText, 60, yPos, {
           align: 'center',
           width: pageWidth - 120,
         });
+      yPos += 30;
 
       // Student name
       doc
-        .fontSize(36)
+        .fontSize(nameFontSize)
         .font('Helvetica-Bold')
-        .fillColor('#111827')
-        .text(data.studentName, 60, 240, {
+        .fillColor(textColor)
+        .text(data.studentName, 60, yPos, {
           align: 'center',
           width: pageWidth - 120,
         });
+      yPos += nameFontSize + 25;
 
       // Completion text
       doc
         .fontSize(16)
         .font('Helvetica')
-        .fillColor('#4b5563')
-        .text('has successfully completed', 60, 310, {
+        .fillColor(accentColor)
+        .text(completionText, 60, yPos, {
           align: 'center',
           width: pageWidth - 120,
         });
+      yPos += 30;
 
       // Course title
       doc
-        .fontSize(28)
+        .fontSize(courseTitleFontSize)
         .font('Helvetica-Bold')
-        .fillColor('#1e40af')
-        .text(data.courseTitle, 60, 345, {
+        .fillColor(primaryColor)
+        .text(data.courseTitle, 60, yPos, {
           align: 'center',
           width: pageWidth - 120,
         });
+      yPos += courseTitleFontSize + 25;
 
       // Date
-      const formattedDate = data.completedAt.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      });
-
-      doc
-        .fontSize(14)
-        .font('Helvetica')
-        .fillColor('#6b7280')
-        .text(`Completed on ${formattedDate}`, 60, 420, {
-          align: 'center',
-          width: pageWidth - 120,
+      if (showDate) {
+        const formattedDate = data.completedAt.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
         });
 
-      // Instructor signature line (if provided)
-      if (data.instructorName) {
+        doc
+          .fontSize(14)
+          .font('Helvetica')
+          .fillColor('#6b7280')
+          .text(`Completed on ${formattedDate}`, 60, yPos, {
+            align: 'center',
+            width: pageWidth - 120,
+          });
+      }
+
+      // Instructor signature line
+      if (showInstructor && data.instructorName) {
         const signatureY = pageHeight - 150;
 
         doc
@@ -211,15 +262,29 @@ export class CertificateGeneratorService {
           });
       }
 
+      // Custom footer text
+      if (customFooterText) {
+        doc
+          .fontSize(8)
+          .font('Helvetica')
+          .fillColor('#d1d5db')
+          .text(customFooterText, 60, pageHeight - 45, {
+            align: 'center',
+            width: pageWidth - 120,
+          });
+      }
+
       // Verification code at bottom
-      doc
-        .fontSize(10)
-        .font('Helvetica')
-        .fillColor('#9ca3af')
-        .text(`Verification Code: ${data.verificationCode}`, 60, pageHeight - 60, {
-          align: 'center',
-          width: pageWidth - 120,
-        });
+      if (showVerificationCode) {
+        doc
+          .fontSize(10)
+          .font('Helvetica')
+          .fillColor('#9ca3af')
+          .text(`Verification Code: ${data.verificationCode}`, 60, pageHeight - 60, {
+            align: 'center',
+            width: pageWidth - 120,
+          });
+      }
 
       // Finalize PDF
       doc.end();

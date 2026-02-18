@@ -3,7 +3,7 @@
 const CONTENT_API = process.env.NEXT_PUBLIC_CONTENT_API_URL || 'http://localhost:3001';
 const COMMERCE_API = process.env.NEXT_PUBLIC_COMMERCE_API_URL || 'http://localhost:3002';
 const COURSE_API = process.env.NEXT_PUBLIC_COURSE_API_URL || 'http://localhost:3005';
-const EVENTS_API = process.env.NEXT_PUBLIC_EVENTS_API_URL || 'http://localhost:3006';
+const EVENTS_API = process.env.NEXT_PUBLIC_EVENTS_API_URL || 'http://localhost:3001';
 
 interface FetchOptions extends RequestInit {
   params?: Record<string, string | number | undefined>;
@@ -232,7 +232,7 @@ export const coursesApi = {
   create: (data: any) =>
     courseFetch<any>('/api/v1/courses', { method: 'POST', body: JSON.stringify(data) }),
   update: (id: string, data: any) =>
-    courseFetch<any>(`/api/v1/courses/${id}`, { method: 'PATCH', body: JSON.stringify(data) }),
+    courseFetch<any>(`/api/v1/courses/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
   delete: (id: string) =>
     courseFetch<void>(`/api/v1/courses/${id}`, { method: 'DELETE' }),
   publish: (id: string) =>
@@ -244,9 +244,9 @@ export const coursesApi = {
   createSection: (courseId: string, data: any) =>
     courseFetch<any>(`/api/v1/courses/${courseId}/sections`, { method: 'POST', body: JSON.stringify(data) }),
   updateSection: (sectionId: string, data: any) =>
-    courseFetch<any>(`/api/v1/sections/${sectionId}`, { method: 'PATCH', body: JSON.stringify(data) }),
+    courseFetch<any>(`/api/v1/courses/sections/${sectionId}`, { method: 'PUT', body: JSON.stringify(data) }),
   deleteSection: (sectionId: string) =>
-    courseFetch<void>(`/api/v1/sections/${sectionId}`, { method: 'DELETE' }),
+    courseFetch<void>(`/api/v1/courses/sections/${sectionId}`, { method: 'DELETE' }),
 
   // Lessons
   listLessons: (sectionId: string) =>
@@ -254,7 +254,7 @@ export const coursesApi = {
   createLesson: (sectionId: string, data: any) =>
     courseFetch<any>(`/api/v1/sections/${sectionId}/lessons`, { method: 'POST', body: JSON.stringify(data) }),
   updateLesson: (lessonId: string, data: any) =>
-    courseFetch<any>(`/api/v1/lessons/${lessonId}`, { method: 'PATCH', body: JSON.stringify(data) }),
+    courseFetch<any>(`/api/v1/lessons/${lessonId}`, { method: 'PUT', body: JSON.stringify(data) }),
   deleteLesson: (lessonId: string) =>
     courseFetch<void>(`/api/v1/lessons/${lessonId}`, { method: 'DELETE' }),
 
@@ -266,7 +266,7 @@ export const coursesApi = {
   getQuiz: (quizId: string) =>
     courseFetch<any>(`/api/v1/quizzes/${quizId}`),
   updateQuiz: (quizId: string, data: any) =>
-    courseFetch<any>(`/api/v1/quizzes/${quizId}`, { method: 'PATCH', body: JSON.stringify(data) }),
+    courseFetch<any>(`/api/v1/quizzes/${quizId}`, { method: 'PUT', body: JSON.stringify(data) }),
   deleteQuiz: (quizId: string) =>
     courseFetch<void>(`/api/v1/quizzes/${quizId}`, { method: 'DELETE' }),
 
@@ -274,7 +274,7 @@ export const coursesApi = {
   createQuestion: (quizId: string, data: any) =>
     courseFetch<any>(`/api/v1/quizzes/${quizId}/questions`, { method: 'POST', body: JSON.stringify(data) }),
   updateQuestion: (questionId: string, data: any) =>
-    courseFetch<any>(`/api/v1/questions/${questionId}`, { method: 'PATCH', body: JSON.stringify(data) }),
+    courseFetch<any>(`/api/v1/questions/${questionId}`, { method: 'PUT', body: JSON.stringify(data) }),
   deleteQuestion: (questionId: string) =>
     courseFetch<void>(`/api/v1/questions/${questionId}`, { method: 'DELETE' }),
 
@@ -283,6 +283,14 @@ export const coursesApi = {
     courseFetch<any[]>('/api/v1/grading/pending', { params: { instructorId } }),
   gradeEssay: (attemptId: string, data: { pointsAwarded: number; gradedBy: string; feedback?: string }) =>
     courseFetch<any>(`/api/v1/attempts/${attemptId}/grade`, { method: 'POST', body: JSON.stringify(data) }),
+
+  // Assignment Submissions
+  getPendingSubmissions: (instructorId?: string) =>
+    courseFetch<any[]>('/api/v1/grading/pending-submissions', { params: { instructorId } }),
+  getSubmission: (id: string) =>
+    courseFetch<any>(`/api/v1/submissions/${id}`),
+  gradeSubmission: (id: string, data: { score: number; feedback?: string; gradedBy: string; status?: 'graded' | 'returned' }) =>
+    courseFetch<any>(`/api/v1/submissions/${id}/grade`, { method: 'POST', body: JSON.stringify(data) }),
 };
 
 // Enrollments
@@ -296,6 +304,28 @@ export const enrollmentsApi = {
     courseFetch<any>(`/api/v1/enrollments/${id}/cancel`, { method: 'POST' }),
   complete: (id: string) =>
     courseFetch<any>(`/api/v1/enrollments/${id}/complete`, { method: 'POST' }),
+};
+
+// Certificates
+export const certificatesApi = {
+  list: (params?: { page?: number; limit?: number; courseId?: string; userId?: string }) =>
+    courseFetch<{ data: any[]; meta: any }>('/api/v1/certificates', { params }),
+  getByEnrollment: (enrollmentId: string) =>
+    courseFetch<any>(`/api/v1/certificates/enrollments/${enrollmentId}`),
+  generate: (enrollmentId: string, template?: Record<string, any>) =>
+    courseFetch<any>(`/api/v1/certificates/enrollments/${enrollmentId}`, {
+      method: 'POST',
+      ...(template ? { body: JSON.stringify({ template }), headers: { 'Content-Type': 'application/json' } } : {}),
+    }),
+  regenerate: (id: string, template?: Record<string, any>) =>
+    courseFetch<any>(`/api/v1/certificates/${id}/regenerate`, {
+      method: 'POST',
+      ...(template ? { body: JSON.stringify({ template }), headers: { 'Content-Type': 'application/json' } } : {}),
+    }),
+  verify: (code: string) =>
+    courseFetch<any>(`/api/v1/certificates/verify/${code}`),
+  getByUser: (userId: string) =>
+    courseFetch<any[]>(`/api/v1/certificates/user/${userId}`),
 };
 
 // Products

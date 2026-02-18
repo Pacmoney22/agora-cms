@@ -5,6 +5,12 @@
   "icon": "form-wizard",
   "acceptsChildren": false,
   "properties": {
+    "formId": {
+      "type": "formSelector",
+      "default": "",
+      "label": "Form",
+      "description": "Select a multi-step form built in the Admin Dashboard (Forms section)"
+    },
     "steps": {
       "type": "array",
       "label": "Steps",

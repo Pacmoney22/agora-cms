@@ -5,8 +5,8 @@
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
-const DEV_EMAIL = 'pagebuilder@agora-cms.local';
-const DEV_PASSWORD = 'PB_Dev#2026!secure';
+const DEV_EMAIL = process.env.NEXT_PUBLIC_PB_DEV_EMAIL || 'pagebuilder@agora-cms.local';
+const DEV_PASSWORD = process.env.PB_DEV_PASSWORD || process.env.NEXT_PUBLIC_PB_DEV_PASSWORD || '';
 const DEV_NAME = 'Page Builder Dev';
 
 /** Check whether a JWT is still valid (not expired). */

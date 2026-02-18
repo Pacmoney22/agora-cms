@@ -179,10 +179,11 @@ export function ProductForm({ initialData, onSubmit, isPending, submitLabel = 'S
     queryFn: () => categoriesApi.tree(),
   });
 
-  const { data: coursesData } = useQuery({
+  const { data: coursesData, error: coursesError } = useQuery({
     queryKey: ['courses', 'picker'],
     queryFn: () => coursesApi.list({ limit: 100 }),
     enabled: form.type === 'course',
+    retry: 1,
   });
 
   // Product search for sub-products and product_select steps
@@ -969,11 +970,18 @@ export function ProductForm({ initialData, onSubmit, isPending, submitLabel = 'S
                   )}
                 </>
               ) : (
-                <div className="rounded-md border border-gray-200 bg-gray-50 p-3">
-                  <p className="text-xs text-gray-500">
-                    No courses available.{' '}
-                    <a href="/courses" className="text-blue-500 hover:underline">Create a course</a> in the Learning section first.
-                  </p>
+                <div className={`rounded-md border p-3 ${coursesError ? 'border-red-200 bg-red-50' : 'border-gray-200 bg-gray-50'}`}>
+                  {coursesError ? (
+                    <p className="text-xs text-red-600">
+                      Failed to load courses: {(coursesError as Error).message}.{' '}
+                      Ensure the course service is running.
+                    </p>
+                  ) : (
+                    <p className="text-xs text-gray-500">
+                      No courses available.{' '}
+                      <a href="/courses" className="text-blue-500 hover:underline">Create a course</a> in the Learning section first.
+                    </p>
+                  )}
                   <input
                     type="text"
                     value={form.course.courseId}

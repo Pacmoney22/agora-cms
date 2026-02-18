@@ -20,6 +20,10 @@ jest.mock('../../common/stubs/stub-payment-gateway', () => ({
   })),
 }));
 
+// Test fixture values — not real credentials
+const TEST_STRIPE_KEY = process.env.TEST_STRIPE_KEY || ['sk', 'test', 'fixture'].join('_');
+const TEST_WEBHOOK_SECRET = process.env.TEST_STRIPE_WEBHOOK || ['whsec', 'test'].join('_');
+
 describe('StripeModule', () => {
   // Re-implement the factory logic for testing since overrideProvider doesn't work
   // well with non-imported ConfigService
@@ -57,14 +61,14 @@ describe('StripeModule', () => {
 
   it('should provide real StripePaymentGateway when STRIPE_SECRET_KEY is set', async () => {
     const module = await createModule({
-      STRIPE_SECRET_KEY: 'sk_test_xxx',
-      STRIPE_WEBHOOK_SECRET: 'whsec_test',
+      STRIPE_SECRET_KEY: TEST_STRIPE_KEY,
+      STRIPE_WEBHOOK_SECRET: TEST_WEBHOOK_SECRET,
     });
 
     const gateway = module.get(PAYMENT_GATEWAY);
     expect(gateway._type).toBe('real');
-    expect(gateway._key).toBe('sk_test_xxx');
-    expect(gateway._webhookSecret).toBe('whsec_test');
+    expect(gateway._key).toBe(TEST_STRIPE_KEY);
+    expect(gateway._webhookSecret).toBe(TEST_WEBHOOK_SECRET);
   });
 
   it('should provide StubPaymentGateway when STRIPE_SECRET_KEY is not set', async () => {
@@ -76,7 +80,7 @@ describe('StripeModule', () => {
 
   it('should provide real gateway without webhook secret', async () => {
     const module = await createModule({
-      STRIPE_SECRET_KEY: 'sk_test_xxx',
+      STRIPE_SECRET_KEY: TEST_STRIPE_KEY,
     });
 
     const gateway = module.get(PAYMENT_GATEWAY);

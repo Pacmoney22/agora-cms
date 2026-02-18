@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { SeoController } from '../../src/modules/seo/seo.controller';
-import { SeoService } from '../../src/modules/seo/seo.service';
-import { SeoAnalyzerService } from '../../src/modules/seo/seo-analyzer.service';
-import { StructuredDataService } from '../../src/modules/seo/structured-data.service';
 import { JwtAuthGuard } from '../../src/common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../src/common/guards/roles.guard';
+import { SeoAnalyzerService } from '../../src/modules/seo/seo-analyzer.service';
+import { SeoController } from '../../src/modules/seo/seo.controller';
+import { SeoService } from '../../src/modules/seo/seo.service';
+import { StructuredDataService } from '../../src/modules/seo/structured-data.service';
 
 describe('SeoController', () => {
   let controller: SeoController;

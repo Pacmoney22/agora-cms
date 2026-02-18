@@ -5,6 +5,12 @@
   "icon": "newsletter-signup",
   "acceptsChildren": false,
   "properties": {
+    "formId": {
+      "type": "formSelector",
+      "default": "",
+      "label": "Form",
+      "description": "Select a newsletter form built in the Admin Dashboard (Forms section)"
+    },
     "heading": {
       "type": "string",
       "default": "Stay up to date",

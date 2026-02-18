@@ -19,6 +19,7 @@ import { MultiProductField } from './MultiProductField';
 import { MultiCategoryField } from './MultiCategoryField';
 import { ReviewSourceField } from './ReviewSourceField';
 import { ArticleField } from './ArticleField';
+import { FormSelectorField } from './FormSelectorField';
 
 export interface PropertyFieldProps {
   name: string;
@@ -281,6 +282,14 @@ export function renderInput(
         <ReviewSourceField
           value={value && typeof value === 'object' ? value as { productId: string; productName?: string } : null}
           onChange={(v) => onChange(v)}
+        />
+      );
+
+    case 'formSelector':
+      return (
+        <FormSelectorField
+          value={String(value ?? '')}
+          onChange={(v) => onChange(v || null)}
         />
       );
 

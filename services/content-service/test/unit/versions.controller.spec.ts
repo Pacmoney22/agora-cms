@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { VersionsController } from '../../src/modules/versions/versions.controller';
-import { VersionsService } from '../../src/modules/versions/versions.service';
 import { JwtAuthGuard } from '../../src/common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../src/common/guards/roles.guard';
+import { VersionsController } from '../../src/modules/versions/versions.controller';
+import { VersionsService } from '../../src/modules/versions/versions.service';
 
 describe('VersionsController', () => {
   let controller: VersionsController;

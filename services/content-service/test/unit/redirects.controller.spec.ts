@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { RedirectsController } from '../../src/modules/redirects/redirects.controller';
-import { RedirectsService } from '../../src/modules/redirects/redirects.service';
 import { JwtAuthGuard } from '../../src/common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../src/common/guards/roles.guard';
+import { RedirectsController } from '../../src/modules/redirects/redirects.controller';
+import { RedirectsService } from '../../src/modules/redirects/redirects.service';
 
 describe('RedirectsController', () => {
   let controller: RedirectsController;

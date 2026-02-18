@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { AuthController } from '../../src/modules/auth/auth.controller';
-import { AuthService } from '../../src/modules/auth/auth.service';
 import { JwtAuthGuard } from '../../src/common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../src/common/guards/roles.guard';
+import { AuthController } from '../../src/modules/auth/auth.controller';
+import { AuthService } from '../../src/modules/auth/auth.service';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -13,6 +13,7 @@ describe('AuthController', () => {
     login: jest.fn(),
     refresh: jest.fn(),
     logout: jest.fn(),
+    getProfile: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -142,12 +143,15 @@ describe('AuthController', () => {
   // ── getProfile ────────────────────────────────────────────────
 
   describe('getProfile', () => {
-    it('should return the user from the request', async () => {
+    it('should call authService.getProfile with user sub', async () => {
       const req = { user: { sub: 'user-1', role: 'admin', email: 'a@b.com' } };
+      const profile = { id: 'user-1', email: 'a@b.com', name: 'Admin', role: 'admin' };
+      mockAuthService.getProfile.mockResolvedValue(profile);
 
       const result = await controller.getProfile(req);
 
-      expect(result).toEqual(req.user);
+      expect(mockAuthService.getProfile).toHaveBeenCalledWith('user-1');
+      expect(result).toEqual(profile);
     });
   });
 });

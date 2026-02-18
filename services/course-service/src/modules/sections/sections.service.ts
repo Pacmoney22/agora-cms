@@ -33,9 +33,11 @@ export class SectionsService {
           select: {
             id: true,
             title: true,
+            lessonType: true,
             videoUrl: true,
             videoDuration: true,
             position: true,
+            attachments: true,
           },
         },
       },
