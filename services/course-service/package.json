@@ -9,9 +9,9 @@
     "start": "node dist/main",
     "start:debug": "nest start --debug --watch",
     "lint": "eslint \"{src,test}/**/*.ts\" --fix",
-    "test": "jest --passWithNoTests",
+    "test": "jest --passWithNoTests --forceExit",
     "test:watch": "jest --watch",
-    "test:cov": "jest --coverage"
+    "test:cov": "jest --coverage --forceExit"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.490.0",
