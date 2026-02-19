@@ -176,7 +176,7 @@ describe('Pages API (Integration)', () => {
     });
   });
 
-  describe('/api/v1/pages/:id (PATCH)', () => {
+  describe('/api/v1/pages/:id (PUT)', () => {
     it('should update page', async () => {
       // Create a page first
       const timestamp = Date.now();
@@ -192,7 +192,7 @@ describe('Pages API (Integration)', () => {
 
       // Update the page
       return request(app.getHttpServer())
-        .patch(`/api/v1/pages/${pageId}`)
+        .put(`/api/v1/pages/${pageId}`)
         .set('Authorization', `Bearer ${authToken}`)
         .send({
           title: `Updated Title ${timestamp}`,
@@ -206,7 +206,7 @@ describe('Pages API (Integration)', () => {
     it('should return 404 when updating non-existent page', async () => {
       const fakeId = '00000000-0000-0000-0000-000000000000';
       return request(app.getHttpServer())
-        .patch(`/api/v1/pages/${fakeId}`)
+        .put(`/api/v1/pages/${fakeId}`)
         .set('Authorization', `Bearer ${authToken}`)
         .send({
           title: 'Updated Title',
@@ -233,7 +233,7 @@ describe('Pages API (Integration)', () => {
       await request(app.getHttpServer())
         .delete(`/api/v1/pages/${pageId}`)
         .set('Authorization', `Bearer ${authToken}`)
-        .expect(200);
+        .expect(204);
 
       // Verify it's deleted
       return request(app.getHttpServer())
@@ -265,11 +265,11 @@ describe('Pages API (Integration)', () => {
 
       const pageId = createResponse.body.id;
 
-      // Publish the page
+      // Publish the page (POST defaults to 201)
       return request(app.getHttpServer())
         .post(`/api/v1/pages/${pageId}/publish`)
         .set('Authorization', `Bearer ${authToken}`)
-        .expect(200)
+        .expect(201)
         .expect((res) => {
           expect(res.body.status).toBe('published');
           expect(res.body.publishedAt).toBeDefined();
@@ -294,13 +294,13 @@ describe('Pages API (Integration)', () => {
       await request(app.getHttpServer())
         .post(`/api/v1/pages/${pageId}/publish`)
         .set('Authorization', `Bearer ${authToken}`)
-        .expect(200);
+        .expect(201);
 
-      // Unpublish the page
+      // Unpublish the page (POST defaults to 201)
       return request(app.getHttpServer())
         .post(`/api/v1/pages/${pageId}/unpublish`)
         .set('Authorization', `Bearer ${authToken}`)
-        .expect(200)
+        .expect(201)
         .expect((res) => {
           expect(res.body.status).toBe('draft');
         });
