@@ -12,7 +12,7 @@
     "test": "jest --forceExit",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage --forceExit",
-    "test:integration": "jest --config jest.integration.config.ts --forceExit"
+    "test:integration": "jest --config jest.integration.config.js --forceExit"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.490.0",
