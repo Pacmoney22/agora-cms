@@ -92,6 +92,7 @@ jobs:
     env:
       DATABASE_URL: postgresql://agora:agora_test@localhost:5432/agora_cms_test
       REDIS_URL: redis://localhost:6379
+      SEED_DEMO_PASSWORD: Password123!
 
     steps:
       - uses: actions/checkout@v4
@@ -110,6 +111,9 @@ jobs:
 
       - name: Run Migrations
         run: pnpm db:migrate
+
+      - name: Seed Test Database
+        run: pnpm db:seed
 
       - name: Run Integration Tests
         run: pnpm test:integration
